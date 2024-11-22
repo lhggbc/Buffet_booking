@@ -1,492 +1,616 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment Page</title>
-    <link rel="icon" href=".\assets\images\features-icon-3.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="../src/css/style.css" />
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 
     <style>
-
-    .headimg {
+      .headimg {
         height: 150px;
         width: 1900px;
         object-fit: cover;
-    }
-    .header {
-      visibility: visible;
-      transition: top 0.3s; /* Smooth transition for the header */
-      position: fixed; /* Keep header fixed at the top */
-      width: 100%;
-      z-index: 1000; /* Ensure it's above other content */
-      top: 0; /* Start at the top */
-    }
-    .header.hide {
-            transform: translateY(-100%);
-            transition-delay: 250ms;
-            visibility: hidden; /* Hide visibility when scrolling down */
-    }
+      }
+      .header {
+        visibility: visible;
+        transition: top 0.3s; /* Smooth transition for the header */
+        position: fixed; /* Keep header fixed at the top */
+        width: 100%;
+        z-index: 1000; /* Ensure it's above other content */
+        top: 0; /* Start at the top */
+      }
+      .header.hide {
+        transform: translateY(-100%);
+        transition-delay: 250ms;
+        visibility: hidden; /* Hide visibility when scrolling down */
+      }
 
-    .header.show {
-            visibility: visible; /* Ensure it's visible when shown */
-            transform: translateY(0); /* Reset translation */
-    }
-  
-    .gourmet-gala {
-            font-size: 4rem; /* Large text size */
-            color: hsl(0, 0%, 100%); /* Dark gray color */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
-            font-family: 'Georgia', serif;
-    }
-  
-    
-        body {
-            font-family: 'Georgia', serif;
+      .header.show {
+        visibility: visible; /* Ensure it's visible when shown */
+        transform: translateY(0); /* Reset translation */
+      }
 
-        }
+      .gourmet-gala {
+        font-size: 4rem; /* Large text size */
+        color: hsl(0, 0%, 100%); /* Dark gray color */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+        font-family: 'Georgia', serif;
+      }
 
-        .hidden {
-            display: none;
-        }
+      body {
+        font-family: 'Georgia', serif;
+      }
 
-        .payment-methods {
-            margin-top: 20px;
-        }
+      .hidden {
+        display: none;
+      }
 
-        .qr-code {
-            margin-top: 20px;
-            text-align: center;
-        }
+      .payment-methods {
+        margin-top: 20px;
+      }
 
-        .ticket {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-        }
+      .qr-code {
+        margin-top: 20px;
+        text-align: center;
+      }
 
+      .ticket {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 0;
+      }
 
-
-
-        .box-style {
+      .box-style {
         background-color: #f0f0f0; /* Light grey background */
         border: 2px solid hsl(38, 61%, 73%); /* Gold border */
         border-radius: 8px; /* Rounded corners */
         padding: 20px; /* Padding inside the box */
         margin-bottom: 20px; /* Space between boxes */
-    }
-    .button-container {
+      }
+      .button-container {
         display: flex; /* Enable flexbox */
         justify-content: flex-end; /* Align items to the right */
         margin-top: 20px; /* Space above the button */
-    }
+      }
 
-    /* Button styling */
-    button {
+      /* Button styling */
+      button {
         background-color: hsl(38, 61%, 73%); /* Gold background for the button */
         color: black; /* Black text */
         padding: 10px 20px; /* Padding for the button */
         border: none; /* Remove default border */
         border-radius: 5px; /* Rounded corners for the button */
         cursor: pointer; /* Pointer cursor on hover */
-    }
+      }
 
-    button:hover {
+      button:hover {
         background-color: #d4af37; /* Slightly darker gold on hover */
-    }
+      }
 
+      input[type='text'],
+      input[type='number'],
+      input[type='tel'],
+      input[type='email'],
+      input[type='datetime-local'] {
+        width: 100%; /* Full width */
+        color: white; /* Set input text color to white */
+        border: 1px solid hsl(38, 61%, 73%); /* Gold border for input fields */
+        border-radius: 4px; /* Rounded corners */
+        padding: 10px; /* Padding for better spacing */
+        margin-top: 5px; /* Space above input */
+        margin-bottom: 15px; /* Space below input */
+      }
 
-input[type="text"],
-input[type="number"],
-input[type="tel"],
-input[type="email"],
-input[type="datetime-local"] {
-    width: 100%; /* Full width */
-    color: white; /* Set input text color to white */
-    border: 1px solid hsl(38, 61%, 73%); /* Gold border for input fields */
-    border-radius: 4px; /* Rounded corners */
-    padding: 10px; /* Padding for better spacing */
-    margin-top: 5px; /* Space above input */
-    margin-bottom: 15px; /* Space below input */
-}
+      .ticket {
+        background-color: #333; /* Dark grey background for the ticket */
+        color: white; /* White text for better contrast */
+        padding: 20px; /* Padding around the ticket content */
+        border-radius: 8px; /* Rounded corners for the ticket */
+      }
 
-.ticket {
-    background-color: #333; /* Dark grey background for the ticket */
-    color: white; /* White text for better contrast */
-    padding: 20px; /* Padding around the ticket content */
-    border-radius: 8px; /* Rounded corners for the ticket */
-}
+      #barcode {
+        background-color: #333; /* Dark grey background for the canvas */
+      }
+    </style>
+  </head>
 
-#barcode {
-    background-color: #333; /* Dark grey background for the canvas */
-}
-  </style>
-</head>
+  <body>
+    <header class="header" data-header>
+      <div class="container">
+        <a href="index.html" class="logo">
+          <img src="..\src\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
+        </a>
 
-<body>
-      <header class="header" data-header>
-        <div class="container">
-    
-          <a href="index.html" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala">
-          </a>
+        <div class="gourmet-gala">Gourmet Gala</div>
 
+        <nav class="navbar" data-navbar style="display: flexbox; justify-content: center">
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="index.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
-          <div class="gourmet-gala">Gourmet Gala</div>
-    
-          <nav class="navbar" data-navbar style="display: flexbox; justify-content: center;">
-            
-    
-            <ul class="navbar-list">
-    
-              <li class="navbar-item">
-                <a href="index.html" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Home</span>
-                </a>
-              </li>
+                <span class="span">Home</span>
+              </a>
+            </li>
 
+            <li class="navbar-item">
+              <a href="booking.html" class="navbar-link hover-underline active">
+                <div class="separator"></div>
 
-              <li class="navbar-item">
-                <a href="booking.html" class="navbar-link hover-underline active">
-                  <div class="separator"></div>
-    
-                  <span class="span">Table Booking</span>
-                </a>
-              </li>
-    
-              <li class="navbar-item">
-                <a href="#contact" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Contact</span>
-                </a>
-              </li>
+                <span class="span">Table Booking</span>
+              </a>
+            </li>
 
-              <li class="navbar-item">
-                <a href="#" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Account</span>
-                </a>
-              </li>
+            <li class="navbar-item">
+              <a href="#contact" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
-              <li class="navbar-item" style="margin-left: 300px;">
-                  <span class="span"></span>
-              </li>
-            </ul>
-          </nav>
+                <span class="span">Contact</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="profile.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Account</span>
+              </a>
+            </li>
+
+            <li class="navbar-item" style="margin-left: 300px">
+              <span class="span"></span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div><img src="..\src\images\footer-bg.jpg" alt="h1" class="headimg" /></div>
+
+    <div class="container" style="margin-top: 100px; margin-bottom: 100px">
+      <div class="seating-area footer-brand has-before has-after" style="margin-top: 50px">
+        <p class="label-2 section-subtitle"></p>
+        <h1 style="margin-bottom: 20px">Booking Details</h1>
+        <div id="booking-details" style="display: flex">
+          <p>
+            Table number: <span id="seat-info" style="margin-left: 50px; font-size: 1.25em; font-weight: bold">25</span>
+          </p>
         </div>
-      </header>
-
-      <div ><img src=".\assets\images\footer-bg.jpg" alt="h1" class="headimg"></div>
-
-
-
-
-
-
-      <div class="container" style="margin-top: 100px;margin-bottom: 100px;">
-        <div class="seating-area footer-brand has-before has-after" style="margin-top: 50px;">
-            <p class="label-2 section-subtitle" ></p>
-            <h1 style="margin-bottom: 20px;">Booking Details</h1>
-        <div id="booking-details" style="display: flex;">
-            <p>Table number: <h2 id="seat-info" style="margin-left: 50px;">25</h2></p>
-        </div>
-
-        <p class="label-2 section-subtitle" ></p>
-
-        <h1 style="margin-top: 50px;">Select Payment Method</h1>
-        <div class="payment-methods">
-            <label>
-                <input type="radio" name="payment-method" value="credit-card" checked>
-                Credit Card
-            </label>
-            <label>
-                <input type="radio" name="payment-method" value="alipay">
-                Alipay
-            </label>
-        </div>
-
-
-        <div id="payment-form">
-            <h2 style="margin-top: 20px;margin-bottom: 20px;">Enter Payment Details</h2>
-            <form onsubmit="processPayment(event)">
-                <div id="credit-card-fields" style="color: #ccc;">
-                    <label for="card-name">Name on Card:</label>
-                    <input type="text" id="card-name" required>
-                    <label for="card-number">Card Number:</label>
-                    <input type="text" id="card-number" required>
-                    <label for="expiry">Expiry Date (MM/YY):</label>
-                    <input type="text" id="expiry" required>
-                    <label for="cvv">CVV:</label>
-                    <input type="text" id="cvv" required>
-                </div>
-                <div id="alipay-fields" class="hidden">
-                    <p>Scan the QR code to pay with Alipay.</p>
-                    <div id="qrcode" class="qr-code"></div>
-                </div>
-                
-
-                    <div class="wrapper" style="display: flex;">
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                        <div class="separator"></div>
-                      </div>
-               
-
-
-                <p>Total Cost: <h2 id="total-cost">$100</h2></p>
-
-                <div class="wrapper" style="display: flex;">
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div><div class="separator"></div><div class="separator"></div><div class="separator"></div>
-                    <div class="separator"></div>
-                  </div>
-
-                <div class="button-container">
-                    <button type="submit">Pay Now</button>
-                </div>
-            </form>
-        </div>
-
-        
-    
-        <div id="payment-status" class="hidden">
-            <h2>Payment Status</h2>
-            <p id="status-message"></p>
-        </div>
-    
-        <div id="tickets" class="hidden">
-            <h2>Your Electronic Tickets</h2>
-            <div class="ticket">
-                <p>Ticket for Seat / Parking Bay: <span id="ticket-seat-info">A1</span></p>
-                <p>Total Amount Paid: <span id="ticket-total-cost">$100</span></p>
-                <svg id="barcode"></svg> <!-- Barcode will be rendered here -->
-            </div>
-        </div>
-
-
-
 
         <p class="label-2 section-subtitle"></p>
+
+        <h1 style="margin-top: 50px">Select Payment Method</h1>
+        <div class="payment-methods">
+          <label>
+            <input type="radio" name="payment-method" value="credit-card" checked />
+            Credit Card
+          </label>
+          <label>
+            <input type="radio" name="payment-method" value="alipay" />
+            Alipay
+          </label>
         </div>
-      </div>
 
-
-
-
-
-    <footer class="footer section has-bg-image text-center" id="contact"
-    style="background-image: url('./assets/images/footer-bg.jpg')">
-    <div class="container">
-
-      <div class="footer-top grid-list">
-
-        <div class="footer-brand has-before has-after">
-
-          <a href="#" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home">
-          </a>
-
-          <address class="body-4">
-            Restaurant St, Delicious City, Kowloon, HK
-          </address>
-
-          <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@ggala.com</a>
-
-          <a href="tel:+85287654321" class="body-4 contact-link">Booking Request : +852-87654321</a>
-
-          <p class="body-4">
-            Open : 10:00 am - 09:00 pm
-          </p>
-
-          <div class="wrapper">
-            <div class="separator"></div>
-            <div class="separator"></div>
-            <div class="separator"></div>
-          </div>
-
-          <p class="title-1">Get News & Offers</p>
-
-          <p class="label-1">
-            Subscribe us & Get <span class="span">25% Off.</span>
-          </p>
-
-          <form action="" class="input-wrapper">
-            <div class="icon-wrapper">
-              <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
-
-              <input type="email" name="email_address" placeholder="Your email" autocomplete="off" class="input-field">
+        <div id="payment-form">
+          <h2 style="margin-top: 20px; margin-bottom: 20px">Enter Payment Details</h2>
+          <form onsubmit="processPayment(event)">
+            <div id="credit-card-fields" style="color: #ccc">
+              <label for="card-name">Name on Card:</label>
+              <input type="text" id="card-name" required />
+              <label for="card-number">Card Number:</label>
+              <input type="text" id="card-number" required />
+              <label for="expiry">Expiry Date (MM/YY):</label>
+              <input type="text" id="expiry" required />
+              <label for="cvv">CVV:</label>
+              <input type="text" id="cvv" required />
+            </div>
+            <div id="alipay-fields" class="hidden">
+              <p>Scan the QR code to pay with Alipay.</p>
+              <div id="qrcode" class="qr-code"></div>
             </div>
 
-            <button type="submit" class="btn btn-secondary">
-              <span class="text text-1">Subscribe</span>
+            <div class="wrapper" style="display: flex">
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+            </div>
 
-              <span class="text text-2" aria-hidden="true">Subscribe</span>
-            </button>
+            <p>
+              Total Cost:
+              <span id="total-cost" style="margin-left: 50px; font-size: 1.5em; font-weight: bold">$100</span>
+            </p>
+
+            <div class="wrapper" style="display: flex">
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+            </div>
+
+            <div class="button-container">
+              <button type="submit">Pay Now</button>
+            </div>
           </form>
-
         </div>
+
+        <div id="payment-status" class="hidden">
+          <h2>Payment Status</h2>
+          <p id="status-message"></p>
+        </div>
+
+        <div id="tickets" class="hidden">
+          <h2>Your Electronic Tickets</h2>
+          <div class="ticket">
+            <p>Ticket for Seat / Parking Bay: <span id="ticket-seat-info">A1</span></p>
+            <p>Total Amount Paid: <span id="ticket-total-cost">$100</span></p>
+            <svg id="barcode"></svg>
+            <!-- Barcode will be rendered here -->
+          </div>
+        </div>
+
+        <p class="label-2 section-subtitle"></p>
+      </div>
     </div>
-  </footer>
 
+    <footer
+      class="footer section has-bg-image text-center"
+      id="contact"
+      style="background-image: url('../src/images/footer-bg.jpg')">
+      <div class="container">
+        <div class="footer-top grid-list">
+          <div class="footer-brand has-before has-after">
+            <a href="#" class="logo">
+              <img src="..\src\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home" />
+            </a>
 
-  <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
-    <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
-  </a>
+            <address class="body-4">Restaurant St, Delicious City, Kowloon, HK</address>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-  <script src="https://cdn.rawgit.com/lrsjng/jspdf/master/dist/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.0/JsBarcode.all.min.js"></script>
+            <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@ggala.com</a>
+
+            <a href="tel:+85287654321" class="body-4 contact-link">Booking Request : +852-87654321</a>
+
+            <p class="body-4">Open : 10:00 am - 09:00 pm</p>
+
+            <div class="wrapper">
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+            </div>
+
+            <p class="title-1">Get News & Offers</p>
+
+            <p class="label-1">Subscribe us & Get <span class="span">25% Off.</span></p>
+
+            <form action="" class="input-wrapper">
+              <div class="icon-wrapper">
+                <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+
+                <input
+                  type="email"
+                  name="email_address"
+                  placeholder="Your email"
+                  autocomplete="off"
+                  class="input-field" />
+              </div>
+
+              <button type="submit" class="btn btn-secondary">
+                <span class="text text-1">Subscribe</span>
+
+                <span class="text text-2" aria-hidden="true">Subscribe</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
+      <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+    </a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdn.rawgit.com/lrsjng/jspdf/master/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.0/JsBarcode.all.min.js"></script>
     <script>
-        let lastScrollTop = 0;
-        const header = document.querySelector('.header');
+      let lastScrollTop = 0;
+      const header = document.querySelector('.header');
 
-        window.addEventListener('scroll', function () {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-            if (scrollTop > lastScrollTop) {
-                // Scrolling down
-                header.classList.add('hide');
-                header.classList.remove('show'); // Ensure the show class is removed
-            } else if (scrollTop == 0) {
-                // Scrolling up
-                header.classList.remove('hide');
-                header.classList.add('show'); // Add show class to make it visible
-            }
-            lastScrollTop = scrollTop;
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          header.classList.add('hide');
+          header.classList.remove('show'); // Ensure the show class is removed
+        } else if (scrollTop == 0) {
+          // Scrolling up
+          header.classList.remove('hide');
+          header.classList.add('show'); // Add show class to make it visible
+        }
+        lastScrollTop = scrollTop;
+      });
+
+      $(document).ready(function () {
+        $('input[name="payment-method"]').change(function () {
+          if ($(this).val() === 'alipay') {
+            $('#credit-card-fields').hide();
+            $('#alipay-fields').show();
+            generateQRCode();
+          } else {
+            $('#credit-card-fields').show();
+            $('#alipay-fields').hide();
+            clearQRCode();
+          }
         });
-        
+      });
 
-
-
-
-        $(document).ready(function() {
-        $('input[name="payment-method"]').change(function() {
-            if ($(this).val() === 'alipay') {
-                $('#credit-card-fields').hide();
-                $('#alipay-fields').show();
-                generateQRCode();
-            } else {
-                $('#credit-card-fields').show();
-                $('#alipay-fields').hide();
-                clearQRCode();
-            }
-        });
-    });
-
-    function generateQRCode() {
+      function generateQRCode() {
         clearQRCode(); // Clear any existing QR code
-        const qrCodeUrl = "https://example.com/pay"; // Replace with actual payment URL
-        const qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: qrCodeUrl,
-            width: 128,
-            height: 128,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
+        const qrCodeUrl = 'https://example.com/pay'; // Replace with actual payment URL
+        const qrcode = new QRCode(document.getElementById('qrcode'), {
+          text: qrCodeUrl,
+          width: 128,
+          height: 128,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H,
         });
-    }
+      }
 
-    function clearQRCode() {
-        document.getElementById("qrcode").innerHTML = ""; // Clear the QR code display
-    }
+      function clearQRCode() {
+        document.getElementById('qrcode').innerHTML = ''; // Clear the QR code display
+      }
 
-
-
-    function processPayment(event) {
+      function processPayment(event) {
         event.preventDefault(); // Prevent default form submission
         const statusMessage = document.getElementById('status-message');
         const paymentStatusDiv = document.getElementById('payment-status');
         const ticketsDiv = document.getElementById('tickets');
-        
+
         const isPaymentSuccessful = Math.random() > 0.01; // Simulate payment success/failure
 
         if (isPaymentSuccessful) {
-            statusMessage.textContent = 'Payment successful! Thank you for your purchase.';
-            paymentStatusDiv.classList.remove('hidden');
-            ticketsDiv.classList.remove('hidden');
+          statusMessage.textContent = 'Payment successful! Thank you for your purchase.';
+          paymentStatusDiv.classList.remove('hidden');
+          ticketsDiv.classList.remove('hidden');
 
-            // Display electronic tickets
-            document.getElementById('ticket-seat-info').textContent = document.getElementById('seat-info').textContent;
-            document.getElementById('ticket-total-cost').textContent = document.getElementById('total-cost').textContent;
+          // Display electronic tickets
+          document.getElementById('ticket-seat-info').textContent = document.getElementById('seat-info').textContent;
+          document.getElementById('ticket-total-cost').textContent = document.getElementById('total-cost').textContent;
 
-            // Generate barcode
-            const barcodeValue = '25-$100'; // Example value, could be order ID, seat info, etc.
-            JsBarcode("#barcode", barcodeValue, {
-                format: "CODE128", // Barcode format
-                lineColor: "rgba(0, 0, 0, 0.1)",
-                background: "#ffffff",
-                width: 2,
-                height: 40,
-                displayValue: true // Show the value below the barcode
-            });
+          // Generate barcode
+          const barcodeValue = '25-$100'; // Example value, could be order ID, seat info, etc.
+          JsBarcode('#barcode', barcodeValue, {
+            format: 'CODE128', // Barcode format
+            lineColor: 'rgba(0, 0, 0, 0.1)',
+            background: '#ffffff',
+            width: 2,
+            height: 40,
+            displayValue: true, // Show the value below the barcode
+          });
         } else {
-            statusMessage.textContent = 'Payment failed. Please try again.';
-            paymentStatusDiv.classList.remove('hidden');
+          statusMessage.textContent = 'Payment failed. Please try again.';
+          paymentStatusDiv.classList.remove('hidden');
         }
-    }
+      }
     </script>
-    
-
-  
-  
-</body>
-
+  </body>
 </html>
