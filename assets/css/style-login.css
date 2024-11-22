@@ -1,0 +1,114 @@
+/* 定义颜色变量 */
+:root {
+    --gold-crayola: hsl(38, 61%, 73%);
+  }
+  
+  /* 全局样式 */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: 'Arial', sans-serif; /* 默认字体：无衬线字体 */
+  }
+  
+  /* 背景图片样式 */
+  body {
+    background-image: url('../../assets/images/hero-slider-2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* 通用表单容器样式 */
+  .form-container {
+    background-color: rgba(0, 0, 0, 0.9); /* 黑色背景，稍微透明 */
+    padding: 40px;
+    border-radius: 15px;
+    width: 400px;
+    text-align: center;
+    color: var(--gold-crayola);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    
+  }
+  
+  .form-container h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+  
+  /* 表单元素样式 */
+  .form-container input[type="text"],
+  .form-container input[type="password"],
+  .form-container input[type="email"],
+  .form-container input[type="date"],
+  .form-container select {
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid var(--gold-crayola);
+    border-radius: 5px;
+    background-color: #222;
+    color: var(--gold-crayola);
+    font-size: 16px;
+  }
+  
+  .form-container input[type="text"]::placeholder,
+  .form-container input[type="password"]::placeholder,
+  .form-container input[type="email"]::placeholder {
+    color: #888;
+  }
+  
+  .form-container input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--gold-crayola);
+    border: none;
+    color: black;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-container input[type="submit"]:hover {
+    background-color: hsl(38, 61%, 66%);
+  }
+  
+  /* 链接样式 */
+  .option a {
+    color: var(--gold-crayola);
+    text-decoration: none;
+  }
+  
+  .option a:hover {
+    text-decoration: underline;
+  }
+  
+  /* 登录页面的特定样式 */
+  .login-container {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* 注册页面的特定样式 */
+  .register-container {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* 容器的底部链接 */
+  .option {
+    margin-top: 20px;
+  }
+  
