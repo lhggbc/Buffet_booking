@@ -1,42 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Page</title>
-  <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon">
-  <link rel="stylesheet" href="../src\css\style-login.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Page</title>
+    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon" />
+    <link rel="stylesheet" href="../src\css\style-login.css" />
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  </head>
+  <body>
+    <div class="form-container register-container">
+      <h2>Register</h2>
+      <form action="/register" method="POST">
+        <input type="text" name="user_id" placeholder="User ID" required />
+        <input type="text" name="nickname" placeholder="Nickname" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required />
 
-  <div class="form-container register-container">
-    <h2>Register</h2>
-    <form action="/register" method="POST">
-      <input type="text" name="user_id" placeholder="User ID" required>
-      <input type="text" name="nickname" placeholder="Nickname" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        <select name="gender" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+          <option value="prefer_not_to_say">Prefer not to say</option>
+        </select>
 
-      <select name="gender" required>
-        <option value="" disabled selected>Select Gender</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-        <option value="prefer_not_to_say">Prefer not to say</option>
-      </select>
+        <input type="date" name="birthdate" required />
 
-      <input type="date" name="birthdate" required>
+        <input type="submit" value="Register" />
+      </form>
 
-      <input type="submit" value="Register">
-    </form>
-
-    <div class="option">
-      <p>Already have an account? <a href="login.html">Login</a></p>
+      <div class="option">
+        <p>Already have an account? <a href="login.html">Login</a></p>
+      </div>
     </div>
-  </div>
-  <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn></a>
-    <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
-  </a>
-</body>
+    <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
+      <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+    </a>
+  </body>
 </html>

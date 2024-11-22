@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="..\src\css\style.css" />
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   </head>
 
   <style>
@@ -99,7 +100,7 @@
             </li>
 
             <li class="navbar-item">
-              <a href="account-admin.html" class="navbar-link hover-underline">
+              <a href="user-management.html" class="navbar-link hover-underline">
                 <div class="separator"></div>
 
                 <span class="span">Account Management</span>
@@ -130,17 +131,22 @@
           User Account Management
         </a>
 
-        <a href="seat-management.html" class="btn management-btn">
+        <a href="booking-admin.html" class="btn management-btn">
           <i class="bi bi-cart-plus"></i>
           Seat Management
         </a>
 
-        <a href="event-management.html" class="btn management-btn">
+        <a href="index-admin.html" class="btn management-btn">
           <i class="bi bi-calendar-event-fill"></i>
           Event Management
         </a>
       </div>
     </div>
+
+    <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
+      <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+    </a>
+
     <script>
       let lastScrollTop = 0;
       const header = document.querySelector('.header');
