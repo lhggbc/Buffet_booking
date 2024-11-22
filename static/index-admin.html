@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Event Management</title>
-    <link rel="icon" href=".\assets\images\features-icon-3.png" type="image/x-icon">
+    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../src/css/style.css">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -302,7 +302,7 @@
         <div class="container">
     
           <a href="index-admin.html" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala">
+            <img src="..\src\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala">
           </a>
 
 
@@ -366,7 +366,7 @@
       </header>
 
     <div class="hero-slider" id="event">
-        <div class="hero-slide active" style="background-image: url('./assets/images/hero-slider-1.jpg');">
+        <div class="hero-slide active" style="background-image: url('../src/images/hero-slider-1.jpg');">
             <div class="hero-slide-content">
                 <h1>Christmas Buffet</h1>
                 <p>Date: December 25, 2024</p>
@@ -376,7 +376,7 @@
                 <a href="booking.html?event=1" class="find-table-btn">View Description</a>
             </div>
         </div>
-        <div class="hero-slide" style="background-image: url('./assets/images/hero-slider-2.jpg');">
+        <div class="hero-slide" style="background-image: url('../src/images/hero-slider-2.jpg');">
             <div class="hero-slide-content">
                 <h1>New Year's Eve Gala</h1>
                 <p>Date: January 1, 2025</p>
@@ -411,7 +411,7 @@
   
           <div class="events-list">
             <div class="event-card">
-                <div class="event-image" style="background-image: url('./assets/images/hero-slider-1.jpg');">
+                <div class="event-image" style="background-image: url('../src/images/hero-slider-1.jpg');">
                     <h3>Christmas Buffet</h3>
                     <p>Date: December 25, 2024</p>
                     <p>Venue: Grand Hall, Delicious City</p>
@@ -423,7 +423,7 @@
                 </div>
             </div>
             <div class="event-card">
-                <div class="event-image" style="background-image: url('./assets/images/hero-slider-2.jpg');">
+                <div class="event-image" style="background-image: url('../src/images/hero-slider-2.jpg');">
                     <h3>New Year's Eve Gala</h3>
                     <p>Date: January 1, 2025</p>
                     <p>Venue: Rooftop Lounge, Delicious City</p>
@@ -440,7 +440,7 @@
             </div>
 
             <div class="plus-card">
-                <div class="event-image" style="background-image: url('./assets/images/hero-slider-3.jpg');">
+                <div class="event-image" style="background-image: url('../src/images/hero-slider-3.jpg');">
                     <button class="add-event-btn" onclick="toggleEventForm()">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -467,7 +467,7 @@
 
 
     <footer class="footer section has-bg-image text-center" id="contact"
-    style="background-image: url('./assets/images/footer-bg.jpg')">
+    style="background-image: url('../src/images/footer-bg.jpg')">
     <div class="container">
 
       <div class="footer-top grid-list">
@@ -475,7 +475,7 @@
         <div class="footer-brand has-before has-after">
 
           <a href="#" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home">
+            <img src="..\src\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home">
           </a>
 
           <address class="body-4">
@@ -634,7 +634,7 @@
             const newCard = document.createElement('div');
             newCard.className = 'event-card';
             newCard.innerHTML = `
-                <div class="event-image" style="background-image: url('./assets/images/default-event.jpg');"> 
+                <div class="event-image" style="background-image: url('../src/images/default-event.jpg');"> 
                     <h3>${title}</h3>
                     <p>Date: ${date}</p>
                     <p>Venue: ${venue}</p>
