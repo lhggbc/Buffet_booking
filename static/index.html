@@ -1,510 +1,500 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gourmet Gala</title>
-    <link rel="icon" href=".\assets\images\features-icon-3.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="../src/css/style.css" />
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 
     <style>
-    .header {
-      visibility: visible;
-      transition: top 0.3s; /* Smooth transition for the header */
-      position: fixed; /* Keep header fixed at the top */
-      width: 100%;
-      z-index: 1000; /* Ensure it's above other content */
-      top: 0; /* Start at the top */
-    }
-    .header.hide {
-            transform: translateY(-100%);
-            transition-delay: 250ms;
-            visibility: hidden; /* Hide visibility when scrolling down */
-    }
+      .header {
+        visibility: visible;
+        transition: top 0.3s; /* Smooth transition for the header */
+        position: fixed; /* Keep header fixed at the top */
+        width: 100%;
+        z-index: 1000; /* Ensure it's above other content */
+        top: 0; /* Start at the top */
+      }
+      .header.hide {
+        transform: translateY(-100%);
+        transition-delay: 250ms;
+        visibility: hidden; /* Hide visibility when scrolling down */
+      }
 
-    .header.show {
-            visibility: visible; /* Ensure it's visible when shown */
-            transform: translateY(0); /* Reset translation */
-    }
-  
-    .gourmet-gala {
-            font-size: 4rem; /* Large text size */
-            color: hsl(0, 0%, 100%); /* Dark gray color */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
-            font-family: 'Georgia', serif;
-    }
-  
-    .search-container {
-    position: relative;
-    margin-bottom: 30px;
-}
+      .header.show {
+        visibility: visible; /* Ensure it's visible when shown */
+        transform: translateY(0); /* Reset translation */
+      }
 
-#event-search {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-}
+      .gourmet-gala {
+        font-size: 4rem; /* Large text size */
+        color: hsl(0, 0%, 100%); /* Dark gray color */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+        font-family: 'Georgia', serif;
+      }
 
-.suggestions-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    z-index: 1000;
-    display: none;
-}
+      .search-container {
+        position: relative;
+        margin-bottom: 30px;
+      }
 
-.suggestions-list.active {
-    display: block;
-}
+      #event-search {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+      }
 
-.suggestion-item {
-    padding: 10px;
-    cursor: pointer;
-}
+      .suggestions-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 1000;
+        display: none;
+      }
 
-.suggestion-item:hover {
-    background: #f0f0f0;
-}
+      .suggestions-list.active {
+        display: block;
+      }
 
-.events-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+      .suggestion-item {
+        padding: 10px;
+        cursor: pointer;
+      }
 
-.event-card {
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    border-radius: 5px;
-    margin: 15px;
-    padding: 20px;
-    width: 400px; /* Set a fixed width for cards */
-    position: relative;
-    overflow: hidden;
-}
+      .suggestion-item:hover {
+        background: #f0f0f0;
+      }
 
-.event-image {
-    background-size: cover;
-    background-position: center;
-    height: 200px; /* Fixed height for image */
-    border-radius: 10px;
-    padding: 20px;
-}
+      .events-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
 
-.view-description-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px;
-    background-color:hsl(38, 61%, 73%);
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-}
+      .event-card {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 5px;
+        margin: 15px;
+        padding: 20px;
+        width: 400px; /* Set a fixed width for cards */
+        position: relative;
+        overflow: hidden;
+      }
 
-.view-description-btn:hover {
-    background-color: hsl(38, 61%, 73%);
-}
+      .event-image {
+        background-size: cover;
+        background-position: center;
+        height: 200px; /* Fixed height for image */
+        border-radius: 10px;
+        padding: 20px;
+      }
 
-.search-container input#event-search {
-    background-color: #000000; /* White background on focus */
-    border: 1px solid hsl(38, 61%, 73%);
-    color: #495057; /* Dark text color */
-    border-radius: 0.25rem; /* Bootstrap's default border radius */
-    margin: 40px; /* Padding for better appearance */
-}
+      .view-description-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: hsl(38, 61%, 73%);
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+      }
 
-.search-container input#event-search:focus {
-    background-color: hsl(38, 61%, 73%);
-    border-color: #495057; /* Dark text color */
-    box-shadow: 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Shadow effect on focus */
-    margin: 40px; /* Padding for better appearance */
-}
-.suggestions-list {
-    position: absolute;
-    top: 100%; /* Position below the input */
-    left: 0;
-    width: 100%; /* Full width of the search input */
-    background: #000000; /* White background for suggestions */
-    border-radius: 0.25rem; /* Match Bootstrap's border radius */
-    z-index: 1000; /* Ensure it appears above other elements */
-    max-height: 200px; /* Limit height */
-    overflow-y: auto; /* Enable scrolling if necessary */
-    display: none; /* Hidden by default */
-    margin-bottom: 40px;
-    margin-left: 40px;
-    margin-right: 40px;
-}
+      .view-description-btn:hover {
+        background-color: hsl(38, 61%, 73%);
+      }
 
-.suggestions-list.active {
-    display: block; /* Show when active */
-}
+      .search-container input#event-search {
+        background-color: #000000; /* White background on focus */
+        border: 1px solid hsl(38, 61%, 73%);
+        color: #495057; /* Dark text color */
+        border-radius: 0.25rem; /* Bootstrap's default border radius */
+        margin: 40px; /* Padding for better appearance */
+      }
 
-.suggestion-item {
-    padding: 10px; /* Padding inside each suggestion */
-    cursor: pointer; /* Pointer cursor for hover effect */
-    transition: background-color 0.2s; /* Smooth background transition */
-    color: hsl(38, 61%, 73%);
-}
+      .search-container input#event-search:focus {
+        background-color: hsl(38, 61%, 73%);
+        border-color: #495057; /* Dark text color */
+        box-shadow: 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Shadow effect on focus */
+        margin: 40px; /* Padding for better appearance */
+      }
+      .suggestions-list {
+        position: absolute;
+        top: 100%; /* Position below the input */
+        left: 0;
+        width: 100%; /* Full width of the search input */
+        background: #000000; /* White background for suggestions */
+        border-radius: 0.25rem; /* Match Bootstrap's border radius */
+        z-index: 1000; /* Ensure it appears above other elements */
+        max-height: 200px; /* Limit height */
+        overflow-y: auto; /* Enable scrolling if necessary */
+        display: none; /* Hidden by default */
+        margin-bottom: 40px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
 
-.suggestion-item:hover {
-    background-color: #3d3d3d; /* Light gray background on hover */
-    color: hsl(38, 61%, 73%);
-}
-  </style>
-</head>
+      .suggestions-list.active {
+        display: block; /* Show when active */
+      }
 
-<body>
-      <header class="header" data-header>
-        <div class="container">
-    
-          <a href="#event" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala">
-          </a>
+      .suggestion-item {
+        padding: 10px; /* Padding inside each suggestion */
+        cursor: pointer; /* Pointer cursor for hover effect */
+        transition: background-color 0.2s; /* Smooth background transition */
+        color: hsl(38, 61%, 73%);
+      }
 
+      .suggestion-item:hover {
+        background-color: #3d3d3d; /* Light gray background on hover */
+        color: hsl(38, 61%, 73%);
+      }
+    </style>
+  </head>
 
-          <div class="gourmet-gala">Gourmet Gala</div>
-    
-          <nav class="navbar" data-navbar>
-            
-    
-            <ul class="navbar-list">
-    
-              <li class="navbar-item">
-                <a href="#event" class="navbar-link hover-underline active">
-                  <div class="separator"></div>
-    
-                  <span class="span">Home</span>
-                </a>
-              </li>
+  <body>
+    <header class="header" data-header>
+      <div class="container">
+        <a href="index.html" class="logo">
+          <img src="..\src\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
+        </a>
 
+        <div class="gourmet-gala">Gourmet Gala</div>
 
-              <li class="navbar-item">
-                <a href="#eventcards" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Search events</span>
-                </a>
-              </li>
+        <nav class="navbar" data-navbar>
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="index.html" class="navbar-link hover-underline active">
+                <div class="separator"></div>
 
+                <span class="span">Home</span>
+              </a>
+            </li>
 
-    
-              <li class="navbar-item">
-                <a href="#about" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">About Us</span>
-                </a>
-              </li>
-    
-              <li class="navbar-item">
-                <a href="#contact" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Contact</span>
-                </a>
-              </li>
+            <li class="navbar-item">
+              <a href="#eventcards" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
-              <li class="navbar-item">
-                <a href="profile.html" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Account</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-    
-          <a href="#" class="btn btn-secondary" style="margin-left: 100px;">
-            <span class="text text-1">Log out</span>
-            <span class="text text-2" aria-hidden="true">Log out</span>
-          </a>
-        </div>
-      </header>
+                <span class="span">Search events</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="#about" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">About Us</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="#contact" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Contact</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="profile.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Account</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <a href="logout.html" class="btn btn-secondary" style="margin-left: 100px">
+          <span class="text text-1">Log out</span>
+          <span class="text text-2" aria-hidden="true">Log out</span>
+        </a>
+      </div>
+    </header>
 
     <div class="hero-slider" id="event">
-        <div class="hero-slide active" style="background-image: url('./assets/images/hero-slider-1.jpg');">
-            <div class="hero-slide-content">
-                <h1>Christmas Buffet</h1>
-                <p>Date: December 25, 2024</p>
-                <p>Time: 6:00 PM - 10:00 PM</p>
-                <p>Venue: Grand Hall, Delicious City</p>
-                <p>Ticket left: 10</p>
-                <a href="booking.html?event=1" class="find-table-btn">View Description</a>
-            </div>
+      <div class="hero-slide active" style="background-image: url('../src/images/hero-slider-1.jpg')">
+        <div class="hero-slide-content">
+          <h1>Christmas Buffet</h1>
+          <p>Date: December 25, 2024</p>
+          <p>Time: 6:00 PM - 10:00 PM</p>
+          <p>Venue: Grand Hall, Delicious City</p>
+          <p>Ticket left: 10</p>
+          <a href="booking.html?event=1" class="find-table-btn">View Description</a>
         </div>
-        <div class="hero-slide" style="background-image: url('./assets/images/hero-slider-2.jpg');">
-            <div class="hero-slide-content">
-                <h1>New Year's Eve Gala</h1>
-                <p>Date: January 1, 2025</p>
-                <p>Time: 8:00 PM - 1:00 AM</p>
-                <p>Venue: Rooftop Lounge, Delicious City</p>
-                <p>Ticket left: 10</p>
-                <a href="booking.html?event=2" class="find-table-btn">View Description</a>
-            </div>
+      </div>
+      <div class="hero-slide" style="background-image: url('../src/images/hero-slider-2.jpg')">
+        <div class="hero-slide-content">
+          <h1>New Year's Eve Gala</h1>
+          <p>Date: January 1, 2025</p>
+          <p>Time: 8:00 PM - 1:00 AM</p>
+          <p>Venue: Rooftop Lounge, Delicious City</p>
+          <p>Ticket left: 10</p>
+          <a href="booking.html?event=2" class="find-table-btn">View Description</a>
         </div>
-        <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
-          <ion-icon name="chevron-back"></ion-icon>
-        </button>
+      </div>
+      <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
+        <ion-icon name="chevron-back"></ion-icon>
+      </button>
 
-        <button class="slider-btn next" aria-label="slide to next" data-next-btn>
-          <ion-icon name="chevron-forward"></ion-icon>
-        </button>
+      <button class="slider-btn next" aria-label="slide to next" data-next-btn>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
 
-        <a href="booking.html" class="hero-btn has-after">
-          <img src="./assets/images/hero-icon.png" width="48" height="48" alt="booking icon">
+      <a href="booking.html" class="hero-btn has-after">
+        <img src="../src/images/hero-icon.png" width="48" height="48" alt="booking icon" />
 
-          <span class="label-2 text-center span">Book A Table</span>
-        </a>
+        <span class="label-2 text-center span">Book A Table</span>
+      </a>
     </div>
-
-
-
 
     <section class="section events text-center" aria-labelledby="events-label" id="eventcards">
       <div class="container">
-          <p class="label-2 section-subtitle" id="events-label">Search for Events</p>
-          <h2 class="headline-1 section-title">Find Your Perfect Event</h2>
-  
-          <div class="search-container">
-              <input type="text" id="event-search" class="form-control" placeholder="Search events by title, date, venue..." aria-label="Search events">
-              <div id="suggestions" class="suggestions-list"></div>
+        <p class="label-2 section-subtitle" id="events-label">Search for Events</p>
+        <h2 class="headline-1 section-title">Find Your Perfect Event</h2>
+
+        <div class="search-container">
+          <input
+            type="text"
+            id="event-search"
+            class="form-control"
+            placeholder="Search events by title, date, venue..."
+            aria-label="Search events" />
+          <div id="suggestions" class="suggestions-list"></div>
+        </div>
+
+        <div class="events-list">
+          <div class="event-card">
+            <div class="event-image" style="background-image: url('../src/images/hero-slider-1.jpg')">
+              <h3>Christmas Buffet</h3>
+              <p>Date: December 25, 2024</p>
+              <p>Venue: Grand Hall, Delicious City</p>
+              <p>Ticket left: 10</p>
+              <a href="booking.html?event=1" class="view-description-btn">View Description</a>
+            </div>
           </div>
-  
-          <div class="events-list">
-              <div class="event-card">
-                  <div class="event-image" style="background-image: url('./assets/images/hero-slider-1.jpg');">
-                      <h3>Christmas Buffet</h3>
-                      <p>Date: December 25, 2024</p>
-                      <p>Venue: Grand Hall, Delicious City</p>
-                      <p>Ticket left: 10</p>
-                      <a href="booking.html?event=1" class="view-description-btn">View Description</a>
-                  </div>
-              </div>
-              <div class="event-card">
-                  <div class="event-image" style="background-image: url('./assets/images/hero-slider-2.jpg');">
-                      <h3>New Year's Eve Gala</h3>
-                      <p>Date: January 1, 2025</p>
-                      <p>Venue: Rooftop Lounge, Delicious City</p>
-                      <p>Ticket left: 10</p>
-                      <a href="booking.html?event=2" class="view-description-btn">View Description</a>
-                  </div>
-              </div>
-              <!-- Add more event cards as needed -->
+          <div class="event-card">
+            <div class="event-image" style="background-image: url('../src/images/hero-slider-2.jpg')">
+              <h3>New Year's Eve Gala</h3>
+              <p>Date: January 1, 2025</p>
+              <p>Venue: Rooftop Lounge, Delicious City</p>
+              <p>Ticket left: 10</p>
+              <a href="booking.html?event=2" class="view-description-btn">View Description</a>
+            </div>
           </div>
+          <!-- Add more event cards as needed -->
+        </div>
       </div>
-  </section>
+    </section>
 
     <!-- 
         - #ABOUT
       -->
 
-      <section class="section about text-center" aria-labelledby="about-label" id="about">
-        <div class="container">
+    <section class="section about text-center" aria-labelledby="about-label" id="about">
+      <div class="container">
+        <div class="about-content">
+          <p class="label-2 section-subtitle" id="about-label">Our Story</p>
 
-          <div class="about-content">
+          <h2 class="headline-1 section-title">Every Flavor Tells a Story</h2>
 
-            <p class="label-2 section-subtitle" id="about-label">Our Story</p>
+          <p class="section-text">
+            Gourmet Gala, established in 1950 in Hong Kong, is a renowned western food buffet celebrated for its fine
+            dining experience. Known for hosting themed dinners, it offers a diverse array of global flavors alongside
+            classic dishes. Resilient through economic changes, it adopted a farm-to-table approach in the 1980s,
+            sourcing fresh local ingredients. Gourmet Gala blends exquisite recipes with modern twists, inviting guests
+            to savor rich history and delightful flavors at every themed event, creating unforgettable dining
+            experiences.
+          </p>
 
-            <h2 class="headline-1 section-title">Every Flavor Tells a Story</h2>
+          <div class="contact-label">Book Through Call</div>
 
-            <p class="section-text">
-              Gourmet Gala, established in 1950 in Hong Kong, is a renowned western food buffet
-               celebrated for its fine dining experience. Known for hosting themed dinners, 
-               it offers a diverse array of global flavors alongside classic dishes. Resilient 
-               through economic changes, it adopted a farm-to-table approach in the 1980s, sourcing 
-               fresh local ingredients. Gourmet Gala blends exquisite recipes with modern twists, 
-               inviting guests to savor rich history and delightful flavors at every themed event, 
-               creating unforgettable dining experiences.
-            </p>
+          <a href="tel:+85287654321" class="body-1 contact-number hover-underline">+852-87654321</a>
 
-            <div class="contact-label">Book Through Call</div>
+          <a href="booking.html" class="btn btn-primary">
+            <span class="text text-1">Book Table Now</span>
 
-            <a href="tel:+85287654321" class="body-1 contact-number hover-underline">+852-87654321</a>
+            <span class="text text-2" aria-hidden="true">Book Table Now</span>
+          </a>
+        </div>
 
-            <a href="booking.html" class="btn btn-primary">
-              <span class="text text-1">Book Table Now</span>
+        <figure class="about-banner">
+          <img
+            src="../src/images/about-banner.jpg"
+            width="570"
+            height="570"
+            loading="lazy"
+            alt="about banner"
+            class="w-100"
+            data-parallax-item
+            data-parallax-speed="1" />
 
-              <span class="text text-2" aria-hidden="true">Book Table Now</span>
+          <div class="abs-img abs-img-1 has-before" data-parallax-item data-parallax-speed="1.75">
+            <img src="../src/images/about-abs-image.jpg" width="285" height="285" loading="lazy" alt="" class="w-100" />
+          </div>
+
+          <div class="abs-img abs-img-2 has-before">
+            <img src="../src/images/badge-2.png" width="133" height="134" loading="lazy" alt="" />
+          </div>
+        </figure>
+
+        <img src="../src/images/shape-3.png" width="197" height="194" loading="lazy" alt="" class="shape" />
+      </div>
+    </section>
+
+    <footer
+      class="footer section has-bg-image text-center"
+      id="contact"
+      style="background-image: url('../src/images/footer-bg.jpg')">
+      <div class="container">
+        <div class="footer-top grid-list">
+          <div class="footer-brand has-before has-after">
+            <a href="#" class="logo">
+              <img src="..\src\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home" />
             </a>
 
+            <address class="body-4">Restaurant St, Delicious City, Kowloon, HK</address>
+
+            <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@ggala.com</a>
+
+            <a href="tel:+85287654321" class="body-4 contact-link">Booking Request : +852-87654321</a>
+
+            <p class="body-4">Open : 10:00 am - 09:00 pm</p>
+
+            <div class="wrapper">
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
+            </div>
+
+            <p class="title-1">Get News & Offers</p>
+
+            <p class="label-1">Subscribe us & Get <span class="span">25% Off.</span></p>
+
+            <form action="" class="input-wrapper">
+              <div class="icon-wrapper">
+                <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+
+                <input
+                  type="email"
+                  name="email_address"
+                  placeholder="Your email"
+                  autocomplete="off"
+                  class="input-field" />
+              </div>
+
+              <button type="submit" class="btn btn-secondary">
+                <span class="text text-1">Subscribe</span>
+
+                <span class="text text-2" aria-hidden="true">Subscribe</span>
+              </button>
+            </form>
           </div>
-
-          <figure class="about-banner">
-
-            <img src="./assets/images/about-banner.jpg" width="570" height="570" loading="lazy" alt="about banner"
-              class="w-100" data-parallax-item data-parallax-speed="1">
-
-            <div class="abs-img abs-img-1 has-before" data-parallax-item data-parallax-speed="1.75">
-              <img src="./assets/images/about-abs-image.jpg" width="285" height="285" loading="lazy" alt=""
-                class="w-100">
-            </div>
-
-            <div class="abs-img abs-img-2 has-before">
-              <img src="./assets/images/badge-2.png" width="133" height="134" loading="lazy" alt="">
-            </div>
-
-          </figure>
-
-          <img src="./assets/images/shape-3.png" width="197" height="194" loading="lazy" alt="" class="shape">
-
         </div>
-      </section>
+      </div>
+    </footer>
 
-
-
-
-    <footer class="footer section has-bg-image text-center" id="contact"
-    style="background-image: url('./assets/images/footer-bg.jpg')">
-    <div class="container">
-
-      <div class="footer-top grid-list">
-
-        <div class="footer-brand has-before has-after">
-
-          <a href="#" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home">
-          </a>
-
-          <address class="body-4">
-            Restaurant St, Delicious City, Kowloon, HK
-          </address>
-
-          <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@ggala.com</a>
-
-          <a href="tel:+85287654321" class="body-4 contact-link">Booking Request : +852-87654321</a>
-
-          <p class="body-4">
-            Open : 10:00 am - 09:00 pm
-          </p>
-
-          <div class="wrapper">
-            <div class="separator"></div>
-            <div class="separator"></div>
-            <div class="separator"></div>
-          </div>
-
-          <p class="title-1">Get News & Offers</p>
-
-          <p class="label-1">
-            Subscribe us & Get <span class="span">25% Off.</span>
-          </p>
-
-          <form action="" class="input-wrapper">
-            <div class="icon-wrapper">
-              <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
-
-              <input type="email" name="email_address" placeholder="Your email" autocomplete="off" class="input-field">
-            </div>
-
-            <button type="submit" class="btn btn-secondary">
-              <span class="text text-1">Subscribe</span>
-
-              <span class="text text-2" aria-hidden="true">Subscribe</span>
-            </button>
-          </form>
-
-        </div>
-    </div>
-  </footer>
-
-
-  <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
-    <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
-  </a>
+    <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
+      <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+    </a>
 
     <script>
-        const heroSlides = document.querySelectorAll('.hero-slide');
-        const prevBtn = document.querySelector('.slider-btn.prev');
-        const nextBtn = document.querySelector('.slider-btn.next');
-        let currentSlide = 0;
+      const heroSlides = document.querySelectorAll('.hero-slide');
+      const prevBtn = document.querySelector('.slider-btn.prev');
+      const nextBtn = document.querySelector('.slider-btn.next');
+      let currentSlide = 0;
 
-        function showSlide(n) {
-            heroSlides[currentSlide].classList.remove('active');
-            currentSlide = (n + heroSlides.length) % heroSlides.length;
-            heroSlides[currentSlide].classList.add('active');
+      function showSlide(n) {
+        heroSlides[currentSlide].classList.remove('active');
+        currentSlide = (n + heroSlides.length) % heroSlides.length;
+        heroSlides[currentSlide].classList.add('active');
+      }
+
+      function prevSlide() {
+        showSlide(currentSlide - 1);
+      }
+
+      function nextSlide() {
+        showSlide(currentSlide + 1);
+      }
+
+      prevBtn.addEventListener('click', prevSlide);
+      nextBtn.addEventListener('click', nextSlide);
+      setInterval(nextSlide, 5000);
+
+      let lastScrollTop = 0;
+      const header = document.querySelector('.header');
+
+      window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          header.classList.add('hide');
+          header.classList.remove('show'); // Ensure the show class is removed
+        } else if (scrollTop == 0) {
+          // Scrolling up
+          header.classList.remove('hide');
+          header.classList.add('show'); // Add show class to make it visible
         }
+        lastScrollTop = scrollTop;
+      });
 
-        function prevSlide() {
-            showSlide(currentSlide - 1);
-        }
-
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
-
-        prevBtn.addEventListener('click', prevSlide);
-        nextBtn.addEventListener('click', nextSlide);
-        setInterval(nextSlide, 5000);
-        
-        let lastScrollTop = 0;
-        const header = document.querySelector('.header');
-
-        window.addEventListener('scroll', function () {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > lastScrollTop) {
-                // Scrolling down
-                header.classList.add('hide');
-                header.classList.remove('show'); // Ensure the show class is removed
-            } else if (scrollTop == 0) {
-                // Scrolling up
-                header.classList.remove('hide');
-                header.classList.add('show'); // Add show class to make it visible
-            }
-            lastScrollTop = scrollTop;
-        });
-
-
-
-        //search events
-        const events = [
-        { title: "Christmas Buffet", date: "December 25, 2024", venue: "Grand Hall, Delicious City", description: "Celebrate the festive season with a feast!" },
-        { title: "New Year's Eve Gala", date: "January 1, 2025", venue: "Rooftop Lounge, Delicious City", description: "Ring in the new year with style and class!" },
+      //search events
+      const events = [
+        {
+          title: 'Christmas Buffet',
+          date: 'December 25, 2024',
+          venue: 'Grand Hall, Delicious City',
+          description: 'Celebrate the festive season with a feast!',
+        },
+        {
+          title: "New Year's Eve Gala",
+          date: 'January 1, 2025',
+          venue: 'Rooftop Lounge, Delicious City',
+          description: 'Ring in the new year with style and class!',
+        },
         // Add more events as needed
-    ];
+      ];
 
-    const searchInput = document.getElementById('event-search');
-    const suggestionsList = document.getElementById('suggestions');
+      const searchInput = document.getElementById('event-search');
+      const suggestionsList = document.getElementById('suggestions');
 
-    searchInput.addEventListener('input', function () {
+      searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase();
         suggestionsList.innerHTML = ''; // Clear previous suggestions
 
         if (query) {
-            const filteredEvents = events.filter(event => event.title.toLowerCase().includes(query));
-            filteredEvents.forEach(event => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = 'suggestion-item';
-                suggestionItem.textContent = event.title;
-                suggestionItem.onclick = () => {
-                    searchInput.value = event.title; // Fill input with selected event
-                    suggestionsList.innerHTML = ''; // Clear suggestions
-                };
-                suggestionsList.appendChild(suggestionItem);
-            });
-            suggestionsList.classList.add('active'); // Show suggestions
+          const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(query));
+          filteredEvents.forEach((event) => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'suggestion-item';
+            suggestionItem.textContent = event.title;
+            suggestionItem.onclick = () => {
+              searchInput.value = event.title; // Fill input with selected event
+              suggestionsList.innerHTML = ''; // Clear suggestions
+            };
+            suggestionsList.appendChild(suggestionItem);
+          });
+          suggestionsList.classList.add('active'); // Show suggestions
         } else {
-            suggestionsList.classList.remove('active'); // Hide suggestions if input is empty
+          suggestionsList.classList.remove('active'); // Hide suggestions if input is empty
         }
-    });
+      });
 
-    document.addEventListener('click', function (e) {
+      document.addEventListener('click', function (e) {
         if (!searchInput.contains(e.target)) {
-            suggestionsList.classList.remove('active'); // Hide suggestions if clicked outside
+          suggestionsList.classList.remove('active'); // Hide suggestions if clicked outside
         }
-    });
-        
+      });
     </script>
-    
-
-  
-  
-</body>
-
+  </body>
 </html>

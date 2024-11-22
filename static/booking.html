@@ -1,458 +1,432 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Table Booking</title>
-    <link rel="icon" href=".\assets\images\features-icon-3.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="../src/css/style.css" />
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 
     <style>
-
-    .headimg {
+      .headimg {
         height: 150px;
         width: 1700px;
         object-fit: cover;
-    }
-    .header {
-      visibility: visible;
-      transition: top 0.3s; /* Smooth transition for the header */
-      position: fixed; /* Keep header fixed at the top */
-      width: 100%;
-      z-index: 1000; /* Ensure it's above other content */
-      top: 0; /* Start at the top */
-    }
-    .header.hide {
-            transform: translateY(-100%);
-            transition-delay: 250ms;
-            visibility: hidden; /* Hide visibility when scrolling down */
-    }
+      }
+      .header {
+        visibility: visible;
+        transition: top 0.3s; /* Smooth transition for the header */
+        position: fixed; /* Keep header fixed at the top */
+        width: 100%;
+        z-index: 1000; /* Ensure it's above other content */
+        top: 0; /* Start at the top */
+      }
+      .header.hide {
+        transform: translateY(-100%);
+        transition-delay: 250ms;
+        visibility: hidden; /* Hide visibility when scrolling down */
+      }
 
-    .header.show {
-            visibility: visible; /* Ensure it's visible when shown */
-            transform: translateY(0); /* Reset translation */
-    }
-  
-    .gourmet-gala {
-            font-size: 4rem; /* Large text size */
-            color: hsl(0, 0%, 100%); /* Dark gray color */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
-            font-family: 'Georgia', serif;
-    }
-  
-    .container {
-            width: 90%;
-            margin: auto;
-            max-width: 1200px;
-            font-family: 'Georgia', serif;
-        }
+      .header.show {
+        visibility: visible; /* Ensure it's visible when shown */
+        transform: translateY(0); /* Reset translation */
+      }
 
-        .reservation-form {
-            margin: 20px 0;
-            padding: 20px;
-            background: rgb(56, 56, 56);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+      .gourmet-gala {
+        font-size: 4rem; /* Large text size */
+        color: hsl(0, 0%, 100%); /* Dark gray color */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+        font-family: 'Georgia', serif;
+      }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+      .container {
+        width: 90%;
+        margin: auto;
+        max-width: 1200px;
+        font-family: 'Georgia', serif;
+      }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
+      .reservation-form {
+        margin: 20px 0;
+        padding: 20px;
+        background: rgb(56, 56, 56);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
 
-        .form-group input,
-        .form-group select {
-            color: hsl(38, 61%, 73%);
-            width: 100%;
-            padding: 10px;
-            border: 1px solid hsl(38, 61%, 73%);
-            border-radius: 4px;
-        }
+      .form-group {
+        margin-bottom: 15px;
+      }
 
-        .seating-area {
-            text-align: center;
-            margin: 20px 0;
-        }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
 
-        .table {
-            fill: hsl(38, 61%, 73%);;
-            cursor: pointer;
-        }
+      .form-group input,
+      .form-group select {
+        color: hsl(38, 61%, 73%);
+        width: 100%;
+        padding: 10px;
+        border: 1px solid hsl(38, 61%, 73%);
+        border-radius: 4px;
+      }
 
-        .table:hover {
-            fill: #ddd;
-        }
+      .seating-area {
+        text-align: center;
+        margin: 20px 0;
+      }
 
-        .stage {
-            fill: #ffcc00;
-        }
+      .table {
+        fill: hsl(38, 61%, 73%);
+        cursor: pointer;
+      }
 
-        .total-price {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+      .table:hover {
+        fill: #ddd;
+      }
 
-        .book-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: hsl(38, 61%, 73%);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      .stage {
+        fill: #ffcc00;
+      }
 
-        .book-button:hover {
-            background-color: hsl(38, 49%, 63%);
-        }
+      .total-price {
+        margin-top: 20px;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
 
-  </style>
-</head>
+      .book-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: hsl(38, 61%, 73%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-<body>
-      <header class="header" data-header>
-        <div class="container">
-    
-          <a href="index.html" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala">
-          </a>
+      .book-button:hover {
+        background-color: hsl(38, 49%, 63%);
+      }
+    </style>
+  </head>
 
+  <body>
+    <header class="header" data-header>
+      <div class="container">
+        <a href="index.html" class="logo">
+          <img src="..\src\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
+        </a>
 
-          <div class="gourmet-gala">Gourmet Gala</div>
-    
-          <nav class="navbar" data-navbar style="display: flexbox; justify-content: center;">
-            
-    
-            <ul class="navbar-list">
-    
-              <li class="navbar-item">
-                <a href="index.html" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Home</span>
-                </a>
-              </li>
+        <div class="gourmet-gala">Gourmet Gala</div>
 
+        <nav class="navbar" data-navbar style="display: flexbox; justify-content: center">
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="index.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
-              <li class="navbar-item">
-                <a href="booking.html" class="navbar-link hover-underline active">
-                  <div class="separator"></div>
-    
-                  <span class="span">Table Booking</span>
-                </a>
-              </li>
-    
-              <li class="navbar-item">
-                <a href="#contact" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Contact</span>
-                </a>
-              </li>
+                <span class="span">Home</span>
+              </a>
+            </li>
 
-              <li class="navbar-item">
-                <a href="#" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Account</span>
-                </a>
-              </li>
+            <li class="navbar-item">
+              <a href="booking.html" class="navbar-link hover-underline active">
+                <div class="separator"></div>
 
-              <li class="navbar-item" style="margin-left: 300px;">
-                  <span class="span"></span>
-              </li>
-            </ul>
-          </nav>
+                <span class="span">Table Booking</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="#contact" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Contact</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="profile.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Account</span>
+              </a>
+            </li>
+
+            <li class="navbar-item" style="margin-left: 300px">
+              <span class="span"></span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div><img src="..\src\images\footer-bg.jpg" alt="h1" class="headimg" /></div>
+
+    <div class="container" style="margin-top: 100px">
+      <div class="reservation-form">
+        <h2>Online Reservation</h2>
+        <div class="form-group">
+          <label for="event-select">Select Event</label>
+          <select id="event-select" required>
+            <option value="">Select an event</option>
+            <option value="Gourmet Gala">Gourmet Gala</option>
+            <option value="Wine Tasting">Wine Tasting</option>
+            <option value="Live Music Night">Live Music Night</option>
+          </select>
         </div>
-      </header>
-
-      <div ><img src=".\assets\images\footer-bg.jpg" alt="h1" class="headimg"></div>
-
-      <div class="container" style="margin-top: 100px;">
-        <div class="reservation-form">
-            <h2>Online Reservation</h2>
-            <div class="form-group">
-                <label for="event-select">Select Event</label>
-                <select id="event-select" required>
-                    <option value="">Select an event</option>
-                    <option value="Gourmet Gala">Gourmet Gala</option>
-                    <option value="Wine Tasting">Wine Tasting</option>
-                    <option value="Live Music Night">Live Music Night</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" placeholder="Enter your name" required>
-            </div>
-            <div class="form-group">
-                <label for="people">Number of People</label>
-                <input type="number" id="people" placeholder="Enter number of people" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" placeholder="Enter your phone number" required>
-            </div>
-            <div class="form-group">
-                <label for="date-time">Date and Time</label>
-                <input type="datetime-local" id="date-time" required>
-            </div>
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="Enter your name" required />
         </div>
-
-
-
-        <div class="seating-area footer-brand has-before has-after" style="margin-top: 50px;">
-            <p class="label-2 section-subtitle">Select Your Table</p>
-            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 60 30" fill="none">
-                <rect x="0" y="0" width="60" height="30" fill="#ffcc00" />
-                <ellipse cx="30" cy="5" rx="10" ry="3" fill="hsl(38, 42%, 39%)" />
-                <text x="30" y="20" text-anchor="middle" font-size="12" fill="black">Stage</text>
-            </svg>
-            <svg width="100%" height="300" viewBox="0 0 800 300">
-                <!-- Tables closer to the stage -->
-                <g class="table-group">
-                    <rect class="table" x="100" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="130" y="100" text-anchor="middle" fill="black">Table 1</text>
-                
-                    <rect class="table" x="170" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="200" y="100" text-anchor="middle" fill="black">Table 2</text>
-                
-                    <rect class="table" x="240" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="270" y="100" text-anchor="middle" fill="black">Table 3</text>
-                
-                    <rect class="table" x="310" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="340" y="100" text-anchor="middle" fill="black">Table 4</text>
-                
-                    <rect class="table" x="380" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="410" y="100" text-anchor="middle" fill="black">Table 5</text>
-                
-                    <rect class="table" x="450" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="480" y="100" text-anchor="middle" fill="black">Table 6</text>
-                
-                    <rect class="table" x="520" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="550" y="100" text-anchor="middle" fill="black">Table 7</text>
-                
-                    <rect class="table" x="590" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="620" y="100" text-anchor="middle" fill="black">Table 8</text>
-                
-                    <rect class="table" x="660" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="690" y="100" text-anchor="middle" fill="black">Table 9</text>
-                
-                    <rect class="table" x="730" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
-                    <text x="760" y="100" text-anchor="middle" fill="black">Table 10</text>
-                    
-                    <text x="820" y="100" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$400</text>
-                </g>
-                <!-- Tables farther from the stage -->
-                <g class="table-group">
-                    <rect class="table" x="100" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="130" y="180" text-anchor="middle" fill="black">Table 11</text>
-                
-                    <rect class="table" x="170" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="200" y="180" text-anchor="middle" fill="black">Table 12</text>
-                
-                    <rect class="table" x="240" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="270" y="180" text-anchor="middle" fill="black">Table 13</text>
-                
-                    <rect class="table" x="310" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="340" y="180" text-anchor="middle" fill="black">Table 14</text>
-                
-                    <rect class="table" x="380" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="410" y="180" text-anchor="middle" fill="black">Table 15</text>
-                
-                    <rect class="table" x="450" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="480" y="180" text-anchor="middle" fill="black">Table 16</text>
-                
-                    <rect class="table" x="520" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="550" y="180" text-anchor="middle" fill="black">Table 17</text>
-                
-                    <rect class="table" x="590" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="620" y="180" text-anchor="middle" fill="black">Table 18</text>
-                
-                    <rect class="table" x="660" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="690" y="180" text-anchor="middle" fill="black">Table 19</text>
-                
-                    <rect class="table" x="730" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
-                    <text x="760" y="180" text-anchor="middle" fill="black">Table 20</text>
-                    
-                    <text x="820" y="180" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$200</text>
-                </g>
-
-                <g class="table-group">
-                    <rect class="table" x="100" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="130" y="260" text-anchor="middle" fill="black">Table 21</text>
-                
-                    <rect class="table" x="170" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="200" y="260" text-anchor="middle" fill="black">Table 22</text>
-                
-                    <rect class="table" x="240" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="270" y="260" text-anchor="middle" fill="black">Table 23</text>
-                
-                    <rect class="table" x="310" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="340" y="260" text-anchor="middle" fill="black">Table 24</text>
-                
-                    <rect class="table" x="380" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="410" y="260" text-anchor="middle" fill="black">Table 25</text>
-                
-                    <rect class="table" x="450" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="480" y="260" text-anchor="middle" fill="black">Table 26</text>
-                
-                    <rect class="table" x="520" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="550" y="260" text-anchor="middle" fill="black">Table 27</text>
-                
-                    <rect class="table" x="590" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="620" y="260" text-anchor="middle" fill="black">Table 28</text>
-                
-                    <rect class="table" x="660" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="690" y="260" text-anchor="middle" fill="black">Table 29</text>
-                
-                    <rect class="table" x="730" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
-                    <text x="760" y="260" text-anchor="middle" fill="black">Table 30</text>
-                    
-                    <text x="820" y="260" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$100</text>
-                </g>
-
-
-                <g class="legend">
-                    <rect x="-70" y="80" width="20" height="20" fill="green" />
-                    <text x="-30" y="95" fill="hsl(38, 61%, 73%)">Selected</text>
-                
-                    <rect x="-70" y="160" width="20" height="20" fill="grey" />
-                    <text x="-30" y="175" fill="hsl(38, 61%, 73%)">Unavailable</text>
-                
-                    <rect x="-70" y="240" width="20" height="20" fill="hsl(38, 61%, 73%)" />
-                    <text x="-30" y="255" fill="hsl(38, 61%, 73%)">Available</text>
-                </g>
-            </svg>
+        <div class="form-group">
+          <label for="people">Number of People</label>
+          <input type="number" id="people" placeholder="Enter number of people" required />
         </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" placeholder="Enter your phone number" required />
+        </div>
+        <div class="form-group">
+          <label for="date-time">Date and Time</label>
+          <input type="datetime-local" id="date-time" required />
+        </div>
+      </div>
 
-        <div class="wrapper">
-            <div class="separator"></div>
-            <div class="separator"></div>
-            <div class="separator"></div>
-          </div>
+      <div class="seating-area footer-brand has-before has-after" style="margin-top: 50px">
+        <p class="label-2 section-subtitle">Select Your Table</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 60 30" fill="none">
+          <rect x="0" y="0" width="60" height="30" fill="#ffcc00" />
+          <ellipse cx="30" cy="5" rx="10" ry="3" fill="hsl(38, 42%, 39%)" />
+          <text x="30" y="20" text-anchor="middle" font-size="12" fill="black">Stage</text>
+        </svg>
+        <svg width="100%" height="300" viewBox="0 0 800 300">
+          <!-- Tables closer to the stage -->
+          <g class="table-group">
+            <rect class="table" x="100" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="130" y="100" text-anchor="middle" fill="black">Table 1</text>
 
-        <div class="total-price" id="total-price">Total: $0</div>
+            <rect class="table" x="170" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="200" y="100" text-anchor="middle" fill="black">Table 2</text>
 
-        
-        <button class="book-button" style="margin-bottom: 50px; color: black;" onclick="bookTable()">Book a Table</button>
+            <rect class="table" x="240" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="270" y="100" text-anchor="middle" fill="black">Table 3</text>
+
+            <rect class="table" x="310" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="340" y="100" text-anchor="middle" fill="black">Table 4</text>
+
+            <rect class="table" x="380" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="410" y="100" text-anchor="middle" fill="black">Table 5</text>
+
+            <rect class="table" x="450" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="480" y="100" text-anchor="middle" fill="black">Table 6</text>
+
+            <rect class="table" x="520" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="550" y="100" text-anchor="middle" fill="black">Table 7</text>
+
+            <rect class="table" x="590" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="620" y="100" text-anchor="middle" fill="black">Table 8</text>
+
+            <rect class="table" x="660" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="690" y="100" text-anchor="middle" fill="black">Table 9</text>
+
+            <rect class="table" x="730" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
+            <text x="760" y="100" text-anchor="middle" fill="black">Table 10</text>
+
+            <text x="820" y="100" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$400</text>
+          </g>
+          <!-- Tables farther from the stage -->
+          <g class="table-group">
+            <rect class="table" x="100" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="130" y="180" text-anchor="middle" fill="black">Table 11</text>
+
+            <rect class="table" x="170" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="200" y="180" text-anchor="middle" fill="black">Table 12</text>
+
+            <rect class="table" x="240" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="270" y="180" text-anchor="middle" fill="black">Table 13</text>
+
+            <rect class="table" x="310" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="340" y="180" text-anchor="middle" fill="black">Table 14</text>
+
+            <rect class="table" x="380" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="410" y="180" text-anchor="middle" fill="black">Table 15</text>
+
+            <rect class="table" x="450" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="480" y="180" text-anchor="middle" fill="black">Table 16</text>
+
+            <rect class="table" x="520" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="550" y="180" text-anchor="middle" fill="black">Table 17</text>
+
+            <rect class="table" x="590" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="620" y="180" text-anchor="middle" fill="black">Table 18</text>
+
+            <rect class="table" x="660" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="690" y="180" text-anchor="middle" fill="black">Table 19</text>
+
+            <rect class="table" x="730" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
+            <text x="760" y="180" text-anchor="middle" fill="black">Table 20</text>
+
+            <text x="820" y="180" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$200</text>
+          </g>
+
+          <g class="table-group">
+            <rect class="table" x="100" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="130" y="260" text-anchor="middle" fill="black">Table 21</text>
+
+            <rect class="table" x="170" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="200" y="260" text-anchor="middle" fill="black">Table 22</text>
+
+            <rect class="table" x="240" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="270" y="260" text-anchor="middle" fill="black">Table 23</text>
+
+            <rect class="table" x="310" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="340" y="260" text-anchor="middle" fill="black">Table 24</text>
+
+            <rect class="table" x="380" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="410" y="260" text-anchor="middle" fill="black">Table 25</text>
+
+            <rect class="table" x="450" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="480" y="260" text-anchor="middle" fill="black">Table 26</text>
+
+            <rect class="table" x="520" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="550" y="260" text-anchor="middle" fill="black">Table 27</text>
+
+            <rect class="table" x="590" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="620" y="260" text-anchor="middle" fill="black">Table 28</text>
+
+            <rect class="table" x="660" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="690" y="260" text-anchor="middle" fill="black">Table 29</text>
+
+            <rect class="table" x="730" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
+            <text x="760" y="260" text-anchor="middle" fill="black">Table 30</text>
+
+            <text x="820" y="260" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$100</text>
+          </g>
+
+          <g class="legend">
+            <rect x="-70" y="80" width="20" height="20" fill="green" />
+            <text x="-30" y="95" fill="hsl(38, 61%, 73%)">Selected</text>
+
+            <rect x="-70" y="160" width="20" height="20" fill="grey" />
+            <text x="-30" y="175" fill="hsl(38, 61%, 73%)">Unavailable</text>
+
+            <rect x="-70" y="240" width="20" height="20" fill="hsl(38, 61%, 73%)" />
+            <text x="-30" y="255" fill="hsl(38, 61%, 73%)">Available</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="wrapper">
+        <div class="separator"></div>
+        <div class="separator"></div>
+        <div class="separator"></div>
+      </div>
+
+      <div class="total-price" id="total-price">Total: $0</div>
+
+      <button class="book-button" style="margin-bottom: 50px; color: black" onclick="bookTable()">Book a Table</button>
     </div>
 
+    <footer
+      class="footer section has-bg-image text-center"
+      id="contact"
+      style="background-image: url('../src/images/footer-bg.jpg')">
+      <div class="container">
+        <div class="footer-top grid-list">
+          <div class="footer-brand has-before has-after">
+            <a href="#" class="logo">
+              <img src="..\src\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home" />
+            </a>
 
+            <address class="body-4">Restaurant St, Delicious City, Kowloon, HK</address>
 
-    <footer class="footer section has-bg-image text-center" id="contact"
-    style="background-image: url('./assets/images/footer-bg.jpg')">
-    <div class="container">
+            <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@ggala.com</a>
 
-      <div class="footer-top grid-list">
+            <a href="tel:+85287654321" class="body-4 contact-link">Booking Request : +852-87654321</a>
 
-        <div class="footer-brand has-before has-after">
+            <p class="body-4">Open : 10:00 am - 09:00 pm</p>
 
-          <a href="#" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="60" height="15" loading="lazy" alt="gala home">
-          </a>
-
-          <address class="body-4">
-            Restaurant St, Delicious City, Kowloon, HK
-          </address>
-
-          <a href="mailto:booking@grilli.com" class="body-4 contact-link">booking@ggala.com</a>
-
-          <a href="tel:+85287654321" class="body-4 contact-link">Booking Request : +852-87654321</a>
-
-          <p class="body-4">
-            Open : 10:00 am - 09:00 pm
-          </p>
-
-          <div class="wrapper">
-            <div class="separator"></div>
-            <div class="separator"></div>
-            <div class="separator"></div>
-          </div>
-
-          <p class="title-1">Get News & Offers</p>
-
-          <p class="label-1">
-            Subscribe us & Get <span class="span">25% Off.</span>
-          </p>
-
-          <form action="" class="input-wrapper">
-            <div class="icon-wrapper">
-              <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
-
-              <input type="email" name="email_address" placeholder="Your email" autocomplete="off" class="input-field">
+            <div class="wrapper">
+              <div class="separator"></div>
+              <div class="separator"></div>
+              <div class="separator"></div>
             </div>
 
-            <button type="submit" class="btn btn-secondary">
-              <span class="text text-1">Subscribe</span>
+            <p class="title-1">Get News & Offers</p>
 
-              <span class="text text-2" aria-hidden="true">Subscribe</span>
-            </button>
-          </form>
+            <p class="label-1">Subscribe us & Get <span class="span">25% Off.</span></p>
 
+            <form action="" class="input-wrapper">
+              <div class="icon-wrapper">
+                <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+
+                <input
+                  type="email"
+                  name="email_address"
+                  placeholder="Your email"
+                  autocomplete="off"
+                  class="input-field" />
+              </div>
+
+              <button type="submit" class="btn btn-secondary">
+                <span class="text text-1">Subscribe</span>
+
+                <span class="text text-2" aria-hidden="true">Subscribe</span>
+              </button>
+            </form>
+          </div>
         </div>
-    </div>
-  </footer>
+      </div>
+    </footer>
 
-
-  <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
-    <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
-  </a>
+    <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
+      <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+    </a>
 
     <script>
-        let lastScrollTop = 0;
-        const header = document.querySelector('.header');
+      let lastScrollTop = 0;
+      const header = document.querySelector('.header');
 
-        window.addEventListener('scroll', function () {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-            if (scrollTop > lastScrollTop) {
-                // Scrolling down
-                header.classList.add('hide');
-                header.classList.remove('show'); // Ensure the show class is removed
-            } else if (scrollTop == 0) {
-                // Scrolling up
-                header.classList.remove('hide');
-                header.classList.add('show'); // Add show class to make it visible
-            }
-            lastScrollTop = scrollTop;
-        });
-        
-
-
-
-
-
-        let total = 0;
-
-        function selectTable(table) {
-            const price = parseInt(table.getAttribute('data-price'));
-            if (table.style.fill === 'green') {
-                table.style.fill = table.getAttribute('data-price') === '400' ? 'hsl(38, 49%, 63%)' : 'hsl(38, 49%, 63%)'; // Reset to original
-                total -= price;
-            } else {
-                table.style.fill = 'green'; // Mark as selected
-                total += price;
-            }
-            document.getElementById('total-price').textContent = `Total: $${total}`;
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          header.classList.add('hide');
+          header.classList.remove('show'); // Ensure the show class is removed
+        } else if (scrollTop == 0) {
+          // Scrolling up
+          header.classList.remove('hide');
+          header.classList.add('show'); // Add show class to make it visible
         }
+        lastScrollTop = scrollTop;
+      });
 
-        function bookTable() {
-            // Here you can add more functionality to handle the booking.
-            window.location.href = 'payment.html';
+      let total = 0;
+
+      function selectTable(table) {
+        const price = parseInt(table.getAttribute('data-price'));
+        if (table.style.fill === 'green') {
+          table.style.fill = table.getAttribute('data-price') === '400' ? 'hsl(38, 49%, 63%)' : 'hsl(38, 49%, 63%)'; // Reset to original
+          total -= price;
+        } else {
+          table.style.fill = 'green'; // Mark as selected
+          total += price;
         }
+        document.getElementById('total-price').textContent = `Total: $${total}`;
+      }
+
+      function bookTable() {
+        // Here you can add more functionality to handle the booking.
+        window.location.href = 'payment.html';
+      }
     </script>
-    
-
-  
-  
-</body>
-
+  </body>
 </html>

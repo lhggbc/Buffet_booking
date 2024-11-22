@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Dashboard</title>
-  <link rel="icon" href=".\assets\images\features-icon-3.png" type="image/x-icon">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets\css\style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="../src\css\style.css" />
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  </head>
 
-<style>
+  <style>
     .container {
       font-family: 'Georgia', 'Times New Roman', serif;
       max-width: 1960px;
@@ -21,7 +22,7 @@
       background-color: #ffffff;
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
 
@@ -58,7 +59,7 @@
       color: #ffffff;
       border: none;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       padding: 30px;
     }
 
@@ -68,14 +69,16 @@
       border: none;
       border-radius: 8px;
       padding: 20px;
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition:
+        transform 0.3s,
+        box-shadow 0.3s;
       box-shadow: 0 1px 2px hsl(38, 58%, 50%);
       cursor: pointer;
     }
 
     .user-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       background-color: hsl(38, 61%, 73%);
     }
 
@@ -121,252 +124,246 @@
         height: 150px;
         width: 1700px;
         object-fit: cover;
-    }
-    .header {
-      visibility: visible;
-      transition: top 0.3s; /* Smooth transition for the header */
-      position: fixed; /* Keep header fixed at the top */
-      width: 100%;
-      z-index: 1000; /* Ensure it's above other content */
-      top: 0; /* Start at the top */
-    }
-    .header.hide {
-            transform: translateY(-100%);
-            transition-delay: 250ms;
-            visibility: hidden; /* Hide visibility when scrolling down */
-    }
+      }
+      .header {
+        visibility: visible;
+        transition: top 0.3s; /* Smooth transition for the header */
+        position: fixed; /* Keep header fixed at the top */
+        width: 100%;
+        z-index: 1000; /* Ensure it's above other content */
+        top: 0; /* Start at the top */
+      }
+      .header.hide {
+        transform: translateY(-100%);
+        transition-delay: 250ms;
+        visibility: hidden; /* Hide visibility when scrolling down */
+      }
 
-    .header.show {
-            visibility: visible; /* Ensure it's visible when shown */
-            transform: translateY(0); /* Reset translation */
-    }
-  
+      .header.show {
+        visibility: visible; /* Ensure it's visible when shown */
+        transform: translateY(0); /* Reset translation */
+      }
     }
   </style>
-      <header class="header" data-header>
-        <div class="container">
-    
-          <a href="index-admin.html" class="logo">
-            <img src=".\assets\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala">
-          </a>
+  <body>
+    <header class="header" data-header>
+      <div class="container">
+        <a href="index-admin.html" class="logo">
+          <img src="..\src\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
+        </a>
 
+        <div class="gourmet-gala">Gourmet Gala</div>
 
-          <div class="gourmet-gala">Gourmet Gala</div>
-    
-          <nav class="navbar" data-navbar style="display: flexbox; justify-content: center;">
-            
-    
-            <ul class="navbar-list">
-    
-              <li class="navbar-item">
-                <a href="index-admin.html" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Event Management</span>
-                </a>
-              </li>
+        <nav class="navbar" data-navbar style="display: flexbox; justify-content: center">
+          <ul class="navbar-list">
+            <li class="navbar-item">
+              <a href="admin-dashboard.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
+                <span class="span">Home</span>
+              </a>
+            </li>
+            <li class="navbar-item">
+              <a href="index-admin.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
-              <li class="navbar-item">
-                <a href="booking-admin.html" class="navbar-link hover-underline active">
-                  <div class="separator"></div>
-    
-                  <span class="span">Table Management</span>
-                </a>
-              </li>
+                <span class="span">Event Management</span>
+              </a>
+            </li>
 
-              <li class="navbar-item">
-                <a href="account-admin.html" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-              
-                  <span class="span">Account Management</span>
-                </a>
-              </li>
+            <li class="navbar-item">
+              <a href="booking-admin.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
 
-              <li class="navbar-item">
-                <a href="#contact" class="navbar-link hover-underline">
-                  <div class="separator"></div>
-    
-                  <span class="span">Contact</span>
-                </a>
-              </li>
+                <span class="span">Table Management</span>
+              </a>
+            </li>
 
-              
+            <li class="navbar-item">
+              <a href="user-management.html" class="navbar-link hover-underline active">
+                <div class="separator"></div>
 
-              <li class="navbar-item" style="margin-left: 150px;">
-                  <span class="span"></span>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-  
-  <div class="row mb-5">
-    <img src="assets/images/login-bg-1.jpg" class="w-100">
-  </div>
+                <span class="span">Account Management</span>
+              </a>
+            </li>
 
-  <div class="container">
-    <div class="row">
+            <li class="navbar-item" style="margin-left: 150px">
+              <span class="span"></span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="row mb-5">
+      <img src="../src/images/login-bg-1.jpg" class="w-100" />
+    </div>
+
+    <div class="container">
+      <div class="row">
         <div class="col-3 d-flex flex-column mt-5 pb-5 border-bottom">
-            <h1>Overview</h1>
+          <h1>Overview</h1>
         </div>
         <div class="col-1"></div>
         <div class="col-8 d-flex flex-column mt-5 pb-5 border-bottom">
-            <h1>User Accounts</h1>
+          <h1>User Accounts</h1>
         </div>
-    </div>
-    <div class="row">
-      <div class="col-3">
-        <div class="mt-4 pt-3">
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <div class="mt-4 pt-3">
             <div class="d-flex align-items-center mb-3">
-              <i class="bi bi-people-fill me-2" style="font-size: 2rem; color: #ffc107;"></i>
+              <i class="bi bi-people-fill me-2" style="font-size: 2rem; color: #ffc107"></i>
               <div>
                 <h5>Total Users</h5>
                 <p id="totalUsers">150</p>
               </div>
             </div>
             <div class="d-flex align-items-center mb-3">
-              <i class="bi bi-card-checklist me-2" style="font-size: 2rem; color: #0d6efd;"></i>
+              <i class="bi bi-card-checklist me-2" style="font-size: 2rem; color: #0d6efd"></i>
               <div>
                 <h5>Total Orders</h5>
                 <p id="totalOrders">320</p>
               </div>
             </div>
             <div class="d-flex align-items-center mb-3">
-              <i class="bi bi-briefcase-fill me-2" style="font-size: 2rem; color: #198754;"></i>
+              <i class="bi bi-briefcase-fill me-2" style="font-size: 2rem; color: #198754"></i>
               <div>
                 <h5>Total Events</h5>
                 <p id="totalEvents">45</p>
               </div>
             </div>
           </div>
-      </div>
-
-      <div class="col-1"></div>
-      <div class="col-8 card main-card mt-5">
-        <div class="card-header">
         </div>
-        <div class="card-body">
-          <!--Search Bar -->
-          <div class="search-bar">
-            <input type="text" id="searchInput" class="form-control input-field" placeholder="Search by Username...">
-          </div>
-          <!-- Info card-->
-          <div id="userList">
-            <div class="card user-card mb-5">
-              <div class="user-header">Username: johndoe
-                <span class="badge bg-info">Active</span>
-              </div>
-              <div class="user-info">
-                <div>
-                  <i class="bi bi-envelope-fill icon"></i>
-                  <span>Email:</span> johndoe@example.com
-                </div>
-                <div>
-                  <i class="bi bi-person-fill icon"></i>
-                  <span>Role:</span> User
-                </div>
-                <div>
-                  <i class="bi bi-calendar-check-fill icon"></i>
-                  <span>Joined:</span> 2023-01-15
-                </div>
-                <div>
-                  <i class="bi bi-telephone-fill icon"></i>
-                  <span>Phone:</span> (123) 456-7890
-                </div>
-              </div>
-            </div>
-            <div class="card user-card mb-5">
-              <div class="user-header">Username: janedoe
-                <span class="badge bg-info">Active</span>
-              </div>
-              <div class="user-info">
-                <div>
-                  <i class="bi bi-envelope-fill icon"></i>
-                  <span>Email:</span> janedoe@example.com
-                </div>
-                <div>
-                  <i class="bi bi-person-fill icon"></i>
-                  <span>Role:</span> Admin
-                </div>
-                <div>
-                  <i class="bi bi-calendar-check-fill icon"></i>
-                  <span>Joined:</span> 2022-11-20
-                </div>
-                <div>
-                  <i class="bi bi-telephone-fill icon"></i>
-                  <span>Phone:</span> (987) 654-3210
-                </div>
-              </div>
-            </div>
-            <div class="card user-card mb-5">
-              <div class="user-header">Username: mike123
-                <span class="badge bg-danger text-dark">Withdrawn</span>
-              </div>
-              <div class="user-info">
-                <div>
-                  <i class="bi bi-envelope-fill icon"></i>
-                  <span>Email:</span> mike123@example.com
-                </div>
-                <div>
-                  <i class="bi bi-person-fill icon"></i>
-                  <span>Role:</span> User
-                </div>
-                <div>
-                  <i class="bi bi-calendar-check-fill icon"></i>
-                  <span>Joined:</span> 2023-03-10
-                </div>
-                <div>
-                  <i class="bi bi-telephone-fill icon"></i>
-                  <span>Phone:</span> (555) 123-4567
-                </div>
-              </div>
-            </div>
 
-            <!-- More cards -->
+        <div class="col-1"></div>
+        <div class="col-8 card main-card mt-5">
+          <div class="card-header"></div>
+          <div class="card-body">
+            <!--Search Bar -->
+            <div class="search-bar">
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control input-field"
+                placeholder="Search by Username..." />
+            </div>
+            <!-- Info card-->
+            <div id="userList">
+              <div class="card user-card mb-5">
+                <div class="user-header">
+                  Username: johndoe
+                  <span class="badge bg-info">Active</span>
+                </div>
+                <div class="user-info">
+                  <div>
+                    <i class="bi bi-envelope-fill icon"></i>
+                    <span>Email:</span> johndoe@example.com
+                  </div>
+                  <div>
+                    <i class="bi bi-person-fill icon"></i>
+                    <span>Role:</span> User
+                  </div>
+                  <div>
+                    <i class="bi bi-calendar-check-fill icon"></i>
+                    <span>Joined:</span> 2023-01-15
+                  </div>
+                  <div>
+                    <i class="bi bi-telephone-fill icon"></i>
+                    <span>Phone:</span> (123) 456-7890
+                  </div>
+                </div>
+              </div>
+              <div class="card user-card mb-5">
+                <div class="user-header">
+                  Username: janedoe
+                  <span class="badge bg-info">Active</span>
+                </div>
+                <div class="user-info">
+                  <div>
+                    <i class="bi bi-envelope-fill icon"></i>
+                    <span>Email:</span> janedoe@example.com
+                  </div>
+                  <div>
+                    <i class="bi bi-person-fill icon"></i>
+                    <span>Role:</span> Admin
+                  </div>
+                  <div>
+                    <i class="bi bi-calendar-check-fill icon"></i>
+                    <span>Joined:</span> 2022-11-20
+                  </div>
+                  <div>
+                    <i class="bi bi-telephone-fill icon"></i>
+                    <span>Phone:</span> (987) 654-3210
+                  </div>
+                </div>
+              </div>
+              <div class="card user-card mb-5">
+                <div class="user-header">
+                  Username: mike123
+                  <span class="badge bg-danger text-dark">Withdrawn</span>
+                </div>
+                <div class="user-info">
+                  <div>
+                    <i class="bi bi-envelope-fill icon"></i>
+                    <span>Email:</span> mike123@example.com
+                  </div>
+                  <div>
+                    <i class="bi bi-person-fill icon"></i>
+                    <span>Role:</span> User
+                  </div>
+                  <div>
+                    <i class="bi bi-calendar-check-fill icon"></i>
+                    <span>Joined:</span> 2023-03-10
+                  </div>
+                  <div>
+                    <i class="bi bi-telephone-fill icon"></i>
+                    <span>Phone:</span> (555) 123-4567
+                  </div>
+                </div>
+              </div>
+
+              <!-- More cards -->
+            </div>
           </div>
         </div>
       </div>
-
-     
     </div>
-  </div>
-  <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
-    <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
-  </a>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const filter = this.value.toLowerCase();
-      const userCards = document.querySelectorAll('.user-card');
+    <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
+      <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
+    </a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.getElementById('searchInput').addEventListener('input', function () {
+        const filter = this.value.toLowerCase();
+        const userCards = document.querySelectorAll('.user-card');
 
-      userCards.forEach(card => {
-        const username = card.querySelector('.user-header').textContent.toLowerCase();
-        if (username.includes(filter)) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-    let lastScrollTop = 0;
-        const header = document.querySelector('.header');
-
-        window.addEventListener('scroll', function () {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > lastScrollTop) {
-                // Scrolling down
-                header.classList.add('hide');
-                header.classList.remove('show'); // Ensure the show class is removed
-            } else if (scrollTop == 0) {
-                // Scrolling up
-                header.classList.remove('hide');
-                header.classList.add('show'); // Add show class to make it visible
-            }
-            lastScrollTop = scrollTop;
+        userCards.forEach((card) => {
+          const username = card.querySelector('.user-header').textContent.toLowerCase();
+          if (username.includes(filter)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
         });
-  </script>
-  
-</body>
+      });
+      let lastScrollTop = 0;
+      const header = document.querySelector('.header');
+
+      window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+          // Scrolling down
+          header.classList.add('hide');
+          header.classList.remove('show'); // Ensure the show class is removed
+        } else if (scrollTop == 0) {
+          // Scrolling up
+          header.classList.remove('hide');
+          header.classList.add('show'); // Add show class to make it visible
+        }
+        lastScrollTop = scrollTop;
+      });
+    </script>
+  </body>
 </html>
