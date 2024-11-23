@@ -2,7 +2,7 @@ let events = []; // Global variable to store events
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('/auth/index');
+    const response = await fetch('/book/index');
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const eventSliderContainer = document.getElementById('event');
     eventSliderContainer.innerHTML = ''; // Clear existing content for slider
 
-    events.forEach((event, index) => {
+    events.events.forEach((event, index) => {
       const slide = document.createElement('div');
       slide.className = 'hero-slide';
       if (index === 0) {
