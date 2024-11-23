@@ -17,7 +17,7 @@
     "eventname": "Grand Buffet",
     "date": "Everyday except for sepcial events!",
     "venue": "Hotel de la Mer",
-    "ticketleft": 30,
+    "ticketleft": "Walk-in",
     "description": "Taste the magic on the tip of your tongue!"
   }
 ]
