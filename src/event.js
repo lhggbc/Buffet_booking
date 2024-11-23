@@ -1,9 +1,8 @@
 import express from 'express';
-fetch_event;
 import multer from 'multer';
 import { promises as fs } from 'fs';
 import { fetch_events, update_event, fetch_event, event_exist } from './eventdb.js';
-import { fetch_tables, update_table, fetch_table, table_exist, update_payment } from './tabledb.js';
+import { fetch_tables, update_table, fetch_table, table_exist, update_payment, fetch_payment } from './tabledb.js';
 import client from './dbclient.js';
 
 const form = multer();
@@ -183,6 +182,41 @@ route.post('/tables/save', async (req, res) => {
   } catch (error) {
     console.error('Error updating tables:', error);
     res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+route.get('/payment', async (req, res) => {
+  const { eventname } = req.query;
+  const userid = req.session.user.username;
+
+  try {
+    const payments = client.db('buffet_booking').collection('payments');
+    const payment = await payments.findOne({ userid, eventname });
+
+    if (payment) {
+      res.status(200).json(payment);
+    } else {
+      res.status(404).json({ error: 'Payment not found' });
+    }
+  } catch (err) {
+    console.error('Error fetching payment:', err);
+    res.status(500).json({ error: 'Unable to fetch payment details' });
+  }
+});
+
+route.get('/payments', async (req, res) => {
+  try {
+    const payments = client.db('buffet_booking').collection('payments');
+    const payment = await payments.find({});
+
+    if (payment) {
+      res.status(200).json(payment);
+    } else {
+      res.status(404).json({ error: 'Payment not found' });
+    }
+  } catch (err) {
+    console.error('Error fetching payment:', err);
+    res.status(500).json({ error: 'Unable to fetch payment details' });
   }
 });
 

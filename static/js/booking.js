@@ -209,7 +209,7 @@ async function bookTable() {
     if (!response.ok) throw new Error('Failed to complete the booking');
 
     alert('Your booking was successful! Redirecting to payment page...');
-    window.location.href = 'payment.html'; // Redirect to payment page
+    window.location.href = `payment.html?eventname=${encodeURIComponent(eventSelect.value)}`;
   } catch (error) {
     console.error('Error booking table:', error);
     alert('There was an error processing your booking. Please try again.');

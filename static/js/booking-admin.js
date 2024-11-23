@@ -1,3 +1,4 @@
+// Function to initialize the event selector
 async function initEventSelector() {
   try {
     const response = await fetch('/book/index');
@@ -20,24 +21,49 @@ async function initEventSelector() {
 // Call this function on page load
 document.addEventListener('DOMContentLoaded', initEventSelector);
 
+// Variable to hold total price
 let total = 0;
 const customerData = {}; // You will fetch this data from your users collection
 
-async function fetchCustomerData() {
+// Fetch customer data and payments for the selected event
+async function fetchCustomerData(eventname) {
   try {
-    const response = await fetch('/auth/users');
-    const data = await response.json();
-    data.forEach((customer) => {
-      customerData[`Table ${customer.tableId}`] = {
-        name: customer.name,
-        contact: customer.contact,
+    // Fetch users
+    const userResponse = await fetch('/auth/users');
+    const users = await userResponse.json();
+
+    // Fetch payments for the specified event
+    const paymentResponse = await fetch(`/book/payments/${eventname}`);
+    const payments = await paymentResponse.json();
+
+    // Clear existing customerData
+    Object.keys(customerData).forEach((key) => delete customerData[key]);
+
+    // Map users by their user IDs for quick access
+    const userMap = {};
+    users.forEach((user) => {
+      userMap[user.uid] = {
+        name: user.nickname,
+        contact: user.phonenum,
       };
+    });
+
+    // Iterate through payments and associate with corresponding users
+    payments.forEach((payment) => {
+      const userInfo = userMap[payment.userid];
+      if (userInfo) {
+        customerData[`Table ${payment.tableId}`] = {
+          name: userInfo.name,
+          contact: userInfo.contact,
+        };
+      }
     });
   } catch (error) {
     console.error('Error fetching customer data:', error);
   }
 }
 
+// Function to handle table selection
 function selectTable(table) {
   // Check current fill color to determine the state
   if (table.style.fill === 'grey') {
@@ -49,6 +75,7 @@ function selectTable(table) {
   }
 }
 
+// Function to show customer info for a selected table
 function showCustomerInfo(table) {
   const tableName = table.querySelector('text').textContent;
   if (customerData[tableName]) {
@@ -57,6 +84,7 @@ function showCustomerInfo(table) {
   }
 }
 
+// Function to edit price of a table
 function editPrice(priceTextElement) {
   const currentPrice = priceTextElement.textContent.replace('$', ''); // Get the current price
   const newPrice = prompt(`Enter new price for this row:`, currentPrice);
@@ -75,17 +103,25 @@ function editPrice(priceTextElement) {
   }
 }
 
+// Initialize event listeners and fetch data on page load
 document.addEventListener('DOMContentLoaded', async function () {
-  await fetchCustomerData(); // Fetch customer data on page load
-
   const priceTexts = document.querySelectorAll('.tableprice');
   priceTexts.forEach((priceText) => {
     priceText.addEventListener('click', function () {
       editPrice(priceText);
     });
   });
+
+  document.getElementById('event-select').addEventListener('change', async function () {
+    const eventname = this.value;
+    if (eventname) {
+      await initTables(eventname); // Call initTables with the selected event name
+      await fetchCustomerData(eventname);
+    }
+  });
 });
 
+// Function to save table data
 function save() {
   // Collect all table data to save
   const tables = document.querySelectorAll('.table');
@@ -119,18 +155,12 @@ function save() {
     });
 }
 
-// Initialize event listeners for all tables
-document.querySelectorAll('.table').forEach((table) => {
-  table.addEventListener('mouseover', () => showCustomerInfo(table));
-  table.addEventListener('click', () => selectTable(table));
-});
-
-// Call this function on page load to set up the SVG tables
-async function initTables() {
+// Function to initialize tables for the selected event
+async function initTables(eventname) {
   try {
-    const response = await fetch('/book/tables');
+    const response = await fetch(`/book/tables/${eventname}`); // Fetch tables based on the selected event
     const tables = await response.json();
-    populateTableOptions(tables);
+    populateTableOptions(tables); // Populate the table options based on the fetched data
   } catch (error) {
     console.error('Error initializing tables:', error);
   }
@@ -169,6 +199,7 @@ function populateTableOptions(tables) {
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
     tableElement.setAttribute('onclick', 'selectTable(this)');
+    tableElement.addEventListener('dblclick', () => showCustomerInfo(tableElement));
 
     // Set color based on availability
     if (!table.status) {
@@ -195,6 +226,3 @@ function populateTableOptions(tables) {
   x = 100;
   y = 70;
 }
-
-// Initialize tables on page load
-document.addEventListener('DOMContentLoaded', initTables);

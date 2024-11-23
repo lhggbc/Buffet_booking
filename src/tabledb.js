@@ -138,5 +138,18 @@ async function update_payment(
   }
 }
 
+async function fetch_payment(userid, eventname) {
+  try {
+    const payments = client.db('buffet_booking').collection('payments');
+
+    const payment = await payments.findOne({ userid, eventname });
+
+    return payment;
+  } catch (err) {
+    console.error('Unable to fetch from database!', err);
+    return null;
+  }
+}
+
 init_db().catch(console.dir);
-export { fetch_tables, update_table, fetch_table, table_exist, update_payment };
+export { fetch_tables, update_table, fetch_table, table_exist, update_payment, fetch_payment };
