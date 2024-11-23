@@ -339,6 +339,7 @@
     </header>
 
     <div class="hero-slider" id="event">
+      <!--
       <div class="hero-slide active" style="background-image: url('../src/images/hero-slider-1.jpg')">
         <div class="hero-slide-content">
           <h1>Christmas Buffet</h1>
@@ -359,6 +360,7 @@
           <a href="booking.html?event=2" class="find-table-btn">View Description</a>
         </div>
       </div>
+    -->
       <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
         <ion-icon name="chevron-back"></ion-icon>
       </button>
@@ -384,50 +386,24 @@
         </div>
 
         <div class="events-list">
-          <div class="event-card">
-            <div class="event-image" style="background-image: url('../src/images/hero-slider-1.jpg')">
-              <h3>Christmas Buffet</h3>
-              <p>Date: December 25, 2024</p>
-              <p>Venue: Grand Hall, Delicious City</p>
-              <p>Ticket left: 10</p>
-              <div class="button-group">
-                <a href="booking.html?event=1" class="edit-btn">Edit</a>
-                <button class="delete-btn" onclick="deleteEvent(this)">- Delete</button>
-              </div>
-            </div>
-          </div>
-          <div class="event-card">
-            <div class="event-image" style="background-image: url('../src/images/hero-slider-2.jpg')">
-              <h3>New Year's Eve Gala</h3>
-              <p>Date: January 1, 2025</p>
-              <p>Venue: Rooftop Lounge, Delicious City</p>
-              <p>Ticket left: 10</p>
-              <div class="button-group">
-                <a href="booking.html?event=2" class="edit-btn">Edit</a>
-                <button class="delete-btn" onclick="deleteEvent(this)">- Delete</button>
-              </div>
-            </div>
-          </div>
+          <!-- Event cards will be populated here dynamically -->
+        </div>
 
-          <div>
-            <!-- Add more event cards as needed -->
-          </div>
-
-          <div class="plus-card">
-            <div class="event-image" style="background-image: url('../src/images/hero-slider-3.jpg')">
-              <button class="add-event-btn" onclick="toggleEventForm()">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
+        <div class="plus-card">
+          <div class="event-image" style="background-image: url('../src/images/hero-slider-3.jpg')">
+            <button class="add-event-btn" onclick="toggleEventForm()">
+              <i class="fas fa-plus"></i>
+            </button>
           </div>
         </div>
 
         <!-- Event Form -->
         <div id="event-form" class="event-form" style="display: none">
-          <h3>Add New Event</h3>
+          <h3 id="form-title">Add New Event</h3>
           <input type="text" id="event-title" placeholder="Event Title" required />
           <input type="date" id="event-date" required />
           <input type="text" id="event-venue" placeholder="Event Venue" required />
+          <input type="number" id="event-tickets" placeholder="Tickets Left" required />
           <button onclick="addEvent()">Add Event</button>
           <button onclick="toggleEventForm()">Cancel</button>
         </div>
@@ -532,54 +508,6 @@
         lastScrollTop = scrollTop;
       });
 
-      //search events
-      const events = [
-        {
-          title: 'Christmas Buffet',
-          date: 'December 25, 2024',
-          venue: 'Grand Hall, Delicious City',
-          description: 'Celebrate the festive season with a feast!',
-        },
-        {
-          title: "New Year's Eve Gala",
-          date: 'January 1, 2025',
-          venue: 'Rooftop Lounge, Delicious City',
-          description: 'Ring in the new year with style and class!',
-        },
-        // Add more events as needed
-      ];
-
-      const searchInput = document.getElementById('event-search');
-      const suggestionsList = document.getElementById('suggestions');
-
-      searchInput.addEventListener('input', function () {
-        const query = this.value.toLowerCase();
-        suggestionsList.innerHTML = ''; // Clear previous suggestions
-
-        if (query) {
-          const filteredEvents = events.filter((event) => event.title.toLowerCase().includes(query));
-          filteredEvents.forEach((event) => {
-            const suggestionItem = document.createElement('div');
-            suggestionItem.className = 'suggestion-item';
-            suggestionItem.textContent = event.title;
-            suggestionItem.onclick = () => {
-              searchInput.value = event.title; // Fill input with selected event
-              suggestionsList.innerHTML = ''; // Clear suggestions
-            };
-            suggestionsList.appendChild(suggestionItem);
-          });
-          suggestionsList.classList.add('active'); // Show suggestions
-        } else {
-          suggestionsList.classList.remove('active'); // Hide suggestions if input is empty
-        }
-      });
-
-      document.addEventListener('click', function (e) {
-        if (!searchInput.contains(e.target)) {
-          suggestionsList.classList.remove('active'); // Hide suggestions if clicked outside
-        }
-      });
-
       //manage events
       function deleteEvent(button) {
         // Remove the event card from the DOM
@@ -629,5 +557,6 @@
         }
       }
     </script>
+    <script src="js/index-admin.js"></script>
   </body>
 </html>

@@ -10,10 +10,11 @@
     "lint": "eslint . --color --cache -f friendly --max-warnings 10"
   },
   "devDependencies": {
+    "@types/node": "^22.9.1",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-formatter-friendly": "^7.0.0",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.1.7",
     "prettier": "^3.0.0"
   },
   "dependencies": {
