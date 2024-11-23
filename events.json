@@ -1,0 +1,23 @@
+[
+  {
+    "eventname": "Christmas Buffet",
+    "date": "2024-12-25",
+    "venue": "Hotel de la Mer",
+    "ticketleft": 30,
+    "description": "Celebrate the festive season with a feast!"
+  },
+  {
+    "eventname": "New Year's Eve Gala",
+    "date": "2025-01-01",
+    "venue": "Tropical Island",
+    "ticketleft": 30,
+    "description": "Ring in the new year with style and class!"
+  },
+  {
+    "eventname": "Grand Buffet",
+    "date": "Everyday except for sepcial events!",
+    "venue": "Hotel de la Mer",
+    "ticketleft": 30,
+    "description": "Taste the magic on the tip of your tongue!"
+  }
+]
