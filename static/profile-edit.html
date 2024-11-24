@@ -13,10 +13,10 @@
 
   <style>
     .container {
+      /* font-family: 'Georgia', 'Times New Roman', serif; */
       max-width: 1960px;
       margin: auto;
       padding: 0px;
-      font-family: 'Georgia', 'Times New Roman', serif;
     }
     .profile-section {
       background-color: #ffffff;
@@ -44,16 +44,6 @@
       object-fit: cover;
     }
 
-    .profile-avatar #avatar-placeholder {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3rem;
-      color: #6c757d;
-      display: none;
-    }
-
     .main-card {
       background-color: #182024;
       color: #ffffff;
@@ -62,7 +52,6 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       padding: 30px;
     }
-
     .booking-card {
       background-color: #2c3034;
       color: #ffffff;
@@ -144,6 +133,13 @@
       visibility: visible; /* Ensure it's visible when shown */
       transform: translateY(0); /* Reset translation */
     }
+
+    .gourmet-gala {
+      font-size: 4rem; /* Large text size */
+      color: hsl(0, 0%, 100%); /* Dark gray color */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+      font-family: 'Georgia', serif;
+    }
   </style>
   <body>
     <header class="header" data-header>
@@ -180,9 +176,7 @@
         </a>
       </div>
     </header>
-    <div class="row mb-5">
-      <img src="./images/login-bg-1.jpg" />
-    </div>
+    <div style="margin-bottom: 100px"></div>
 
     <div class="container">
       <div class="row">
@@ -190,75 +184,85 @@
           <h1>User Profile</h1>
         </div>
         <div class="col-1"></div>
-        <div class="col-6 d-flex flex-column mt-5 pb-5 border-bottom">
-          <h1>Modify Your Account Info</h1>
+        <div class="col-8 d-flex flex-column mt-5 pb-5 border-bottom">
+          <h1>Edit Profile</h1>
         </div>
       </div>
       <div class="row">
-        <!-- Personal Info 4 cols -->
+        <!-- Profile 4cols -->
         <div class="col-md-3 d-flex flex-column mt-5">
           <div class="">
             <!-- Avatar -->
             <label for="avatar-upload" class="profile-avatar" id="avatar-display">
-              <span id="avatar-placeholder">+</span>
-              <input type="file" id="avatar-upload" accept="image/*" style="display: none" />
+              <!-- <input type="file" id="avatar-upload" accept="image/*" style="display: none" /> -->
+              <img id="avatar" src=".\images\default-avatar.jpg" alt="Avatar" />
             </label>
 
             <!-- User Info -->
             <div class="mt-4 pt-5 border-top">
-              <h3>John Doe</h3>
-              <p>@technicolor</p>
+              <h3 id="nickname"></h3>
+              <p id="uid"></p>
             </div>
 
             <div class="mt-4 pt-5 border-top">
-              <!-- Editing -->
-              <button class="btn mb-3" onclick="window.location.href='profile.html'">View Transactions</button>
+              <!-- Edit -->
+              <button class="btn" onclick="window.location.href='profile.html'">View Transactions</button>
             </div>
 
-            <!-- Other info -->
+            <!-- Other Info -->
             <div class="mt-4 pt-5 border-top">
               <h6>Email</h6>
-              <p>222222222d@connect.polyu.hk</p>
+              <p id="email"></p>
+              <h6>Phone</h6>
+              <p id="phonenum"></p>
               <h6>Gender</h6>
-              <p>Male</p>
+              <p id="gender"></p>
+              <h6>Birthday</h6>
+              <p id="birthdate"></p>
             </div>
           </div>
         </div>
         <div class="col-1"></div>
         <div class="col-6 d-flex flex-column mt-5 pb-5 border-bottom">
-          <form id="editProfileForm" class="mt-4">
+          <form id="editProfileForm" class="mt-4" enctype="multipart/form-data">
+            <!-- 头像上传和预览部分 -->
+            <label for="avatar-upload-form" class="profile-avatar" id="avatar-display-form">
+              <input type="file" id="avatar-upload-form" accept="image/*" style="display: none" />
+              <img id="avatar-form" src=".\images\default-avatar.jpg" alt="Avatar" />
+            </label>
+
             <div class="mb-5">
-              <label for="uid" class="form-label">User Name</label>
-              <input type="text" class="input-field" id="uid" required />
+              <label for="uid" class="form-label">User ID</label>
+              <input type="text" class="input-field" id="uid-form" />
             </div>
             <div class="mb-5">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="input-field" id="password" required />
+              <input type="password" class="input-field" id="password-form" />
             </div>
             <div class="mb-5">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="input-field" id="email" required />
+              <input type="email" class="input-field" id="email-form" />
             </div>
             <div class="mb-5">
+              <label for="phonenum" class="form-label">Phone Number</label>
+              <input type="text" class="input-field" id="phonenum-form" />
+            </div>
+            <!-- <div class="mb-5">
               <label class="form-label">Gender</label><br />
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Male" checked />
+                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" checked />
                 <label class="form-check-label" for="genderMale">Male</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Female" />
+                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" />
                 <label class="form-check-label" for="genderFemale">Female</label>
               </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderOther" value="Other" />
-                <label class="form-check-label" for="genderOther">Others</label>
-              </div>
-            </div>
+            </div> -->
             <div class="mb-5">
               <label for="nickname" class="form-label">Nickname</label>
-              <input type="text" class="input-field" id="nickname" required />
+              <input type="text" class="input-field" id="nickname-form" />
             </div>
-            <button type="submit" class="btn">Save</button>
+            <button type="submit" class="btn" id="updateButton">Save</button>
           </form>
         </div>
       </div>
@@ -269,27 +273,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-      const avatarUpload = document.getElementById('avatar-upload');
-      const avatarDisplay = document.getElementById('avatar-display');
-      const avatarPlaceholder = document.getElementById('avatar-placeholder');
-
-      avatarUpload.addEventListener('change', function () {
-        const file = avatarUpload.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            avatarDisplay.innerHTML = '';
-            avatarDisplay.appendChild(img);
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-
-      avatarDisplay.addEventListener('click', function () {
-        avatarUpload.click();
-      });
       let lastScrollTop = 0;
       const header = document.querySelector('.header');
 
@@ -309,20 +292,6 @@
       });
     </script>
 
-    <script>
-      document.getElementById('searchInput').addEventListener('input', function () {
-        const filter = this.value.toLowerCase();
-        const bookingCards = document.querySelectorAll('.booking-card');
-
-        bookingCards.forEach((card) => {
-          const eventName = card.querySelector('.booking-header').textContent.toLowerCase();
-          if (eventName.includes(filter)) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    </script>
+    <script src="js/profile-edit.js"></script>
   </body>
 </html>
