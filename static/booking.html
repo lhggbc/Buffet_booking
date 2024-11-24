@@ -174,12 +174,7 @@
         <h2>Online Reservation</h2>
         <div class="form-group">
           <label for="event-select">Select Event</label>
-          <select id="event-select" required>
-            <option value="">Select an event</option>
-            <option value="Gourmet Gala">Gourmet Gala</option>
-            <option value="Wine Tasting">Wine Tasting</option>
-            <option value="Live Music Night">Live Music Night</option>
-          </select>
+          <select id="event-select" required></select>
         </div>
         <div class="form-group">
           <label for="name">Your Name</label>
@@ -209,6 +204,7 @@
         <svg width="100%" height="300" viewBox="0 0 800 300">
           <!-- Tables closer to the stage -->
           <g class="table-group">
+            <!--
             <rect class="table" x="100" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
             <text x="130" y="100" text-anchor="middle" fill="black">Table 1</text>
 
@@ -239,10 +235,10 @@
             <rect class="table" x="730" y="70" width="60" height="60" data-price="400" onclick="selectTable(this)" />
             <text x="760" y="100" text-anchor="middle" fill="black">Table 10</text>
 
-            <text x="820" y="100" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$400</text>
-          </g>
-          <!-- Tables farther from the stage -->
-          <g class="table-group">
+            
+            -->
+            <!-- Tables farther from the stage -->
+            <!--
             <rect class="table" x="100" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
             <text x="130" y="180" text-anchor="middle" fill="black">Table 11</text>
 
@@ -273,10 +269,8 @@
             <rect class="table" x="730" y="150" width="60" height="60" data-price="200" onclick="selectTable(this)" />
             <text x="760" y="180" text-anchor="middle" fill="black">Table 20</text>
 
-            <text x="820" y="180" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$200</text>
-          </g>
+            
 
-          <g class="table-group">
             <rect class="table" x="100" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
             <text x="130" y="260" text-anchor="middle" fill="black">Table 21</text>
 
@@ -307,6 +301,10 @@
             <rect class="table" x="730" y="230" width="60" height="60" data-price="100" onclick="selectTable(this)" />
             <text x="760" y="260" text-anchor="middle" fill="black">Table 30</text>
 
+            
+            -->
+            <text x="820" y="100" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$400</text>
+            <text x="820" y="180" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$200</text>
             <text x="820" y="260" text-anchor="middle" fill="hsl(38, 61%, 73%)" class="tableprice">$100</text>
           </g>
 
@@ -408,25 +406,7 @@
         }
         lastScrollTop = scrollTop;
       });
-
-      let total = 0;
-
-      function selectTable(table) {
-        const price = parseInt(table.getAttribute('data-price'));
-        if (table.style.fill === 'green') {
-          table.style.fill = table.getAttribute('data-price') === '400' ? 'hsl(38, 49%, 63%)' : 'hsl(38, 49%, 63%)'; // Reset to original
-          total -= price;
-        } else {
-          table.style.fill = 'green'; // Mark as selected
-          total += price;
-        }
-        document.getElementById('total-price').textContent = `Total: $${total}`;
-      }
-
-      function bookTable() {
-        // Here you can add more functionality to handle the booking.
-        window.location.href = 'payment.html';
-      }
     </script>
+    <script src="js/booking.js"></script>
   </body>
 </html>

@@ -179,7 +179,7 @@
         <h1 style="margin-bottom: 20px">Booking Details</h1>
         <div id="booking-details" style="display: flex">
           <p>
-            Table number: <span id="seat-info" style="margin-left: 50px; font-size: 1.25em; font-weight: bold">25</span>
+            Table number: <span id="seat-info" style="margin-left: 50px; font-size: 1.25em; font-weight: bold"></span>
           </p>
         </div>
 
@@ -329,7 +329,7 @@
 
             <p>
               Total Cost:
-              <span id="total-cost" style="margin-left: 50px; font-size: 1.5em; font-weight: bold">$100</span>
+              <span id="total-cost" style="margin-left: 50px; font-size: 1.5em; font-weight: bold"></span>
             </p>
 
             <div class="wrapper" style="display: flex">
@@ -458,8 +458,8 @@
         <div id="tickets" class="hidden">
           <h2>Your Electronic Tickets</h2>
           <div class="ticket">
-            <p>Ticket for Seat / Parking Bay: <span id="ticket-seat-info">A1</span></p>
-            <p>Total Amount Paid: <span id="ticket-total-cost">$100</span></p>
+            <p>Ticket for Seat: <span id="ticket-seat-info"></span></p>
+            <p>Total Amount Paid: <span id="ticket-total-cost"></span></p>
             <svg id="barcode"></svg>
             <!-- Barcode will be rendered here -->
           </div>
@@ -548,7 +548,30 @@
         lastScrollTop = scrollTop;
       });
 
-      $(document).ready(function () {
+      function getQueryParams() {
+        const params = {};
+        const queryString = window.location.search.substring(1);
+        const regex = /([^&=]+)=([^&]*)/g;
+        let match;
+
+        while ((match = regex.exec(queryString))) {
+          params[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+        }
+
+        return params;
+      }
+
+      $(document).ready(async function () {
+        const params = getQueryParams();
+        const eventname = params.eventname;
+        const paymentDetails = await fetch_payment(eventname);
+
+        if (paymentDetails) {
+          // Populate the booking details with retrieved data
+          document.getElementById('seat-info').textContent = paymentDetails.tablesarray.join(', ');
+          document.getElementById('total-cost').textContent = `$${paymentDetails.totalprice}`;
+        }
+
         $('input[name="payment-method"]').change(function () {
           if ($(this).val() === 'alipay') {
             $('#credit-card-fields').hide();
@@ -564,7 +587,7 @@
 
       function generateQRCode() {
         clearQRCode(); // Clear any existing QR code
-        const qrCodeUrl = 'https://example.com/pay'; // Replace with actual payment URL
+        const qrCodeUrl = 'https://example.com/pay';
         const qrcode = new QRCode(document.getElementById('qrcode'), {
           text: qrCodeUrl,
           width: 128,
@@ -579,36 +602,124 @@
         document.getElementById('qrcode').innerHTML = ''; // Clear the QR code display
       }
 
-      function processPayment(event) {
-        event.preventDefault(); // Prevent default form submission
-        const statusMessage = document.getElementById('status-message');
-        const paymentStatusDiv = document.getElementById('payment-status');
-        const ticketsDiv = document.getElementById('tickets');
+      async function processPayment(event) {
+        const params = getQueryParams();
+        const eventname = params.eventname;
+        const paymentDetails = await fetch_payment(eventname);
 
-        const isPaymentSuccessful = Math.random() > 0.01; // Simulate payment success/failure
+        event.preventDefault(); // Prevent default form submission
+        var statusMessage = document.getElementById('status-message');
+        var paymentStatusDiv = document.getElementById('payment-status');
+        var ticketsDiv = document.getElementById('tickets');
+
+        var paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+        const totalCost = document.getElementById('total-cost').textContent.replace('$', '');
+        const eventName = eventname; // Replace with actual event name
+        const tablesArray = document
+          .getElementById('seat-info')
+          .textContent.split(',')
+          .map((table) => table.trim()); // Use the retrieved table number
+        const date = paymentDetails.date;
+        const timestamp = new Date().toISOString(); // Current date as ISO string
+
+        const isPaymentSuccessful = true;
 
         if (isPaymentSuccessful) {
+          // Update payment collection
+          await update_payment(eventName, tablesArray, totalCost, date, paymentMethod, true, timestamp);
+          const eventResponse = await fetch(`/events/${eventName}`);
+          const eventData = await eventResponse.json();
+          const newTicketLeft = eventData.event.ticketleft - tablesArray.length; // Calculate remaining tickets
+
+          // Update the event with the new number of tickets left
+          await fetch('/events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              eventname: eventName,
+              date: eventData.event.date,
+              venue: eventData.event.venue,
+              ticketleft: newTicketLeft,
+              description: eventData.event.description,
+            }),
+          });
+
           statusMessage.textContent = 'Payment successful! Thank you for your purchase.';
           paymentStatusDiv.classList.remove('hidden');
-          ticketsDiv.classList.remove('hidden');
+          // Show tickets before generating the barcode
+          ticketsDiv.classList.remove('hidden'); // Show tickets
 
           // Display electronic tickets
-          document.getElementById('ticket-seat-info').textContent = document.getElementById('seat-info').textContent;
-          document.getElementById('ticket-total-cost').textContent = document.getElementById('total-cost').textContent;
+          document.getElementById('ticket-seat-info').textContent = tablesArray.join(', '); // Show selected table number
+          document.getElementById('ticket-total-cost').textContent = `$${totalCost}`; // Display total cost with dollar sign
 
           // Generate barcode
-          const barcodeValue = '25-$100'; // Example value, could be order ID, seat info, etc.
-          JsBarcode('#barcode', barcodeValue, {
+          const barcodeValue = `${tablesArray.join(', ')}-$${totalCost}`; // Example value
+          generateBarcode(barcodeValue);
+        } else {
+          statusMessage.textContent = 'Payment failed. Please try again.';
+          paymentStatusDiv.classList.remove('hidden');
+        }
+      }
+
+      async function fetch_payment(eventname) {
+        try {
+          const response = await fetch(`/book/payment?eventname=${eventname}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch payment details');
+          }
+          return await response.json();
+        } catch (err) {
+          console.error('Unable to fetch from database!', err);
+          return null;
+        }
+      }
+
+      function generateBarcode(value) {
+        const barcodeElement = document.getElementById('barcode');
+        if (barcodeElement) {
+          JsBarcode(barcodeElement, value, {
             format: 'CODE128', // Barcode format
-            lineColor: 'rgba(0, 0, 0, 0.1)',
-            background: '#ffffff',
+            lineColor: 'black',
+            background: 'white',
             width: 2,
             height: 40,
             displayValue: true, // Show the value below the barcode
           });
         } else {
-          statusMessage.textContent = 'Payment failed. Please try again.';
-          paymentStatusDiv.classList.remove('hidden');
+          console.error('Barcode element not found');
+        }
+      }
+
+      async function update_payment(
+        eventname,
+        tablesarray,
+        totalprice,
+        date,
+        method = 'None',
+        status = false,
+        timestamp = new Date().toISOString()
+      ) {
+        try {
+          const response = await fetch('/book/payment', {
+            // Adjust the API endpoint as needed
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ eventname, tablesarray, totalprice, date, method, status, timestamp }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to update payment');
+          }
+
+          const result = await response.json();
+          console.log(result.message);
+        } catch (err) {
+          console.error('Unable to update the database!', err);
         }
       }
     </script>

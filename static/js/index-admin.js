@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function fetchEvents() {
   try {
-    const response = await fetch('/auth/index'); // Adjust the URL to your API endpoint
+    const response = await fetch('/book/index'); // Adjust the URL to your API endpoint
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -23,7 +23,7 @@ function populateSlider() {
   const eventSliderContainer = document.getElementById('event');
   eventSliderContainer.innerHTML = ''; // Clear existing content for slider
 
-  events.forEach((event, index) => {
+  events.events.forEach((event, index) => {
     const slide = document.createElement('div');
     slide.className = 'hero-slide';
     if (index === 0) {
@@ -52,7 +52,7 @@ function populateEventCards() {
   const eventsListContainer = document.querySelector('.events-list');
   eventsListContainer.innerHTML = ''; // Clear existing content for event cards
 
-  events.forEach((event, index) => {
+  events.events.forEach((event, index) => {
     const eventCard = document.createElement('div');
     eventCard.className = 'event-card';
     eventCard.innerHTML = `
@@ -73,7 +73,7 @@ function populateEventCards() {
 
 async function deleteEvent(eventname) {
   try {
-    const response = await fetch(`/auth/events/${eventname}`, {
+    const response = await fetch(`/book/events/${eventname}`, {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete event');
@@ -125,7 +125,7 @@ async function addEvent() {
     const eventData = { eventname: title, date, venue, ticketleft: ticketLeft };
 
     try {
-      const response = await fetch('/api/events', {
+      const response = await fetch('/book/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(eventData),

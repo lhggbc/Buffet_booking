@@ -1,6 +1,6 @@
 import express from 'express';
 import session from 'express-session';
-import login from './login.js';
+import index from './event.js';
 import bodyParser from 'body-parser';
 import mongostore from 'connect-mongo';
 import client from './dbclient.js';
@@ -15,7 +15,7 @@ app.use(
     store: mongostore.create({
       client,
       dbName: 'buffet_booking',
-      collectionName: 'event',
+      //collectionName: 'event',
     }),
     logged: false,
   })
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use('/auth', login);
+app.use('/book', index);
 app.use('/', express.static('static'));
 
 const PORT = 8080;
