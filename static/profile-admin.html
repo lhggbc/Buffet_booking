@@ -7,8 +7,8 @@
     <link rel="icon" href=".\images\features-icon-3.png" type="image/x-icon" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <link rel="stylesheet" href=".\css\style.css" />
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   </head>
 
   <style>
@@ -42,6 +42,16 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .profile-avatar #avatar-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: #6c757d;
+      display: none;
     }
 
     .main-card {
@@ -185,7 +195,7 @@
         </div>
         <div class="col-1"></div>
         <div class="col-8 d-flex flex-column mt-5 pb-5 border-bottom">
-          <h1>Edit Profile</h1>
+          <h1>Booking History</h1>
         </div>
       </div>
       <div class="row">
@@ -200,78 +210,162 @@
 
             <!-- User Info -->
             <div class="mt-4 pt-5 border-top">
-              <h3 id="nickname"></h3>
+              <h1 id="nickname">Hello Admin!</h1>
               <p id="uid"></p>
             </div>
 
-            <div class="mt-4 pt-5 border-top">
+            <div class="mt-4 pt-5">
               <!-- Edit -->
-              <button class="btn" onclick="window.location.href='profile.html'">View Transactions</button>
+              <button class="btn" onclick="window.location.href='profile-edit-admin.html'">Edit Profile</button>
             </div>
 
             <!-- Other Info -->
             <div class="mt-4 pt-5 border-top">
-              <h6>Email</h6>
+              <!-- <h6>Email</h6>
               <p id="email"></p>
               <h6>Phone</h6>
               <p id="phonenum"></p>
               <h6>Gender</h6>
               <p id="gender"></p>
               <h6>Birthday</h6>
-              <p id="birthdate"></p>
+              <p id="birthdate"></p> -->
             </div>
           </div>
         </div>
-        <div class="col-1"></div>
-        <div class="col-6 d-flex flex-column mt-5 pb-5 border-bottom">
-          <form id="editProfileForm" class="mt-4" enctype="multipart/form-data">
-            <!-- 头像上传和预览部分 -->
-            <label for="avatar-upload-form" class="profile-avatar" id="avatar-display-form">
-              <input type="file" id="avatar-upload-form" accept="image/*" style="display: none" />
-              <img id="avatar-form" src=".\images\default-avatar.jpg" alt="Avatar" />
-            </label>
 
-            <div class="mb-5">
-              <label for="uid" class="form-label">User ID</label>
-              <input type="text" class="input-field" id="uid-form" readonly />
+        <div class="col-1"></div>
+        <div class="col-8 card main-card mt-5">
+          <div class="card-header"></div>
+          <div class="card-body">
+            <!-- Search Bar -->
+            <div class="search-bar">
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control input-field"
+                placeholder="Search by Event Name..." />
             </div>
-            <div class="mb-5">
-              <label for="password" class="form-label">Password</label>
-              <input type="text" class="input-field" id="password-form" />
-            </div>
-            <div class="mb-5">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="input-field" id="email-form" />
-            </div>
-            <div class="mb-5">
-              <label for="phonenum" class="form-label">Phone Number</label>
-              <input type="text" class="input-field" id="phonenum-form" />
-            </div>
-            <!-- <div class="mb-5">
-              <label class="form-label">Gender</label><br />
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" checked />
-                <label class="form-check-label" for="genderMale">Male</label>
+            <div id="bookingList">
+              <div class="card booking-card mb-5">
+                <div class="booking-header">
+                  Buffet Event - New York Gourmet Gala
+                  <span class="badge bg-warning">In Progress</span>
+                </div>
+                <div class="booking-info">
+                  <div>
+                    <i class="bi bi-calendar icon"></i>
+                    <span>Date:</span> 2023-10-15
+                  </div>
+                  <div>
+                    <i class="bi bi-geo-alt icon"></i>
+                    <span>Location:</span> Manhattan
+                  </div>
+                  <div>
+                    <i class="bi bi-people icon"></i>
+                    <span>Guests:</span> 2
+                  </div>
+                  <div>
+                    <i class="bi bi-cash icon"></i>
+                    <span>Price:</span> $120
+                  </div>
+                  <div>
+                    <i class="bi bi-table icon"></i>
+                    <span>Table No:</span> 12
+                  </div>
+                </div>
               </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" />
-                <label class="form-check-label" for="genderFemale">Female</label>
+
+              <div class="card booking-card mb-5">
+                <div class="booking-header">
+                  Buffet Event - Tokyo Sushi Feast
+                  <span class="badge bg-success">Success</span>
+                </div>
+                <div class="booking-info">
+                  <div>
+                    <i class="bi bi-calendar icon"></i>
+                    <span>Date:</span> 2024-02-10
+                  </div>
+                  <div>
+                    <i class="bi bi-geo-alt icon"></i>
+                    <span>Location:</span> Ginza District
+                  </div>
+                  <div>
+                    <i class="bi bi-people icon"></i>
+                    <span>Guests:</span> 4
+                  </div>
+                  <div>
+                    <i class="bi bi-cash icon"></i>
+                    <span>Price:</span> $200
+                  </div>
+                  <div>
+                    <i class="bi bi-table icon"></i>
+                    <span>Table No:</span> 7
+                  </div>
+                </div>
               </div>
-            </div> -->
-            <div class="mb-5">
-              <label for="nickname" class="form-label">Nickname</label>
-              <input type="text" class="input-field" id="nickname-form" />
+
+              <div class="card booking-card mb-5">
+                <div class="booking-header">
+                  Buffet Event - Los Angeles Sunset Dinner
+                  <span class="badge bg-danger">Failed</span>
+                </div>
+                <div class="booking-info">
+                  <div>
+                    <i class="bi bi-calendar icon"></i>
+                    <span>Date:</span> 2024-03-05
+                  </div>
+                  <div>
+                    <i class="bi bi-geo-alt icon"></i>
+                    <span>Location:</span> Santa Monica
+                  </div>
+                  <div>
+                    <i class="bi bi-people icon"></i>
+                    <span>Guests:</span> 3
+                  </div>
+                  <div>
+                    <i class="bi bi-cash icon"></i>
+                    <span>Price:</span> $150
+                  </div>
+                  <div>
+                    <i class="bi bi-table icon"></i>
+                    <span>Table No:</span> 5
+                  </div>
+                </div>
+              </div>
             </div>
-            <button type="submit" class="btn" id="updateButton">Save</button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
     <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
       <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
     </a>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const avatarUpload = document.getElementById('avatar-upload');
+      const avatarDisplay = document.getElementById('avatar-display');
+      const avatarPlaceholder = document.getElementById('avatar-placeholder');
+
+      avatarUpload.addEventListener('change', function () {
+        const file = avatarUpload.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            avatarDisplay.innerHTML = '';
+            avatarDisplay.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      avatarDisplay.addEventListener('click', function () {
+        avatarUpload.click();
+      });
+    </script>
+
     <script>
       let lastScrollTop = 0;
       const header = document.querySelector('.header');
@@ -291,7 +385,6 @@
         lastScrollTop = scrollTop;
       });
     </script>
-
-    <script src="js/profile-edit.js"></script>
+    <script src=".\js\profile.js"></script>
   </body>
 </html>

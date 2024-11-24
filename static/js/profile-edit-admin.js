@@ -1,19 +1,20 @@
 let result;
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const response = await fetch('/auth/me');
+  const response = await fetch('/admin/me');
   result = await response.json();
   if (response.ok && result.status === 'success') {
-    const gender = result.user.gender;
-    const prefix = gender === 'male' ? 'Mr.' : 'Ms.';
-    document.getElementById('uid').textContent = '@' + result.user.uid;
+    // const gender = result.user.gender;
+    // const prefix = gender === 'male' ? 'Mr.' : 'Ms.';
+    // document.getElementById('uid').textContent = '@' + result.user.uid;
     document.getElementById('uid-form').value = result.user.uid;
-    document.getElementById('nickname').textContent = 'Hello! ' + prefix + result.user.nickname;
-    document.getElementById('email').textContent = result.user.email;
-    document.getElementById('phonenum').textContent = result.user.phonenum;
-    document.getElementById('birthdate').textContent = result.user.birthdate;
-    document.getElementById('gender').textContent = result.user.gender;
-    document.getElementById('avatar').setAttribute('src', result.user.avatar);
+    document.getElementById('nickname-form').value = result.user.nickname;
+    document.getElementById('email-form').value = result.user.email;
+    document.getElementById('phonenum-form').value = result.user.phonenum;
+    document.getElementById('birthdate-form').value = result.user.birthdate;
+    document.getElementById('password-form').value = result.user.password;
+    // document.getElementById('gender').textContent = result.user.gender;
+    // document.getElementById('avatar').setAttribute('src', result.user.avatar);
     document.getElementById('avatar-form').setAttribute('src', result.user.avatar);
   } else {
     alert('Please login first.');
@@ -93,7 +94,7 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
     const result = await response.json();
     if (response.ok && result.status === 'success') {
       alert('Profile updated successfully.');
-      window.location.href = '/profile.html'; // 根据实际情况调整重定向页面
+      window.location.href = '/user-management.html'; // 根据实际情况调整重定向页面
     } else if (result.status === 'failed') {
       alert(result.message);
     } else {
@@ -104,31 +105,3 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
     alert('Failed to update profile. Please check your connection and try again.');
   }
 });
-
-// 获取文件输入框和头像预览的 img 标签
-const avatarInput = document.getElementById('avatar-upload-form');
-const avatarPreview = document.getElementById('avatar-form');
-
-// 监听文件输入框的变化事件
-avatarInput.addEventListener('change', (event) => {
-  const file = event.target.files[0]; // 获取用户选择的文件
-
-  if (file) {
-    // 创建文件的 URL 预览
-    const fileURL = URL.createObjectURL(file);
-
-    // 将 img 的 src 设置为文件预览 URL
-    avatarPreview.src = fileURL;
-
-    // 释放之前的 URL 对象（优化内存）
-    avatarPreview.onload = () => {
-      URL.revokeObjectURL(fileURL);
-    };
-  }
-});
-
-// 点击头像时触发文件选择框
-// const avatarLabel = document.getElementById('avatar-display-form');
-// avatarLabel.addEventListener('click', () => {
-//   avatarInput.click();
-// });

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('gender').textContent = result.user.gender;
     document.getElementById('avatar').setAttribute('src', result.user.avatar);
   } else {
+    alert(response.error);
     alert('Please login first.');
     window.location.href = '/login.html';
   }

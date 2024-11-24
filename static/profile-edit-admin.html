@@ -200,25 +200,25 @@
 
             <!-- User Info -->
             <div class="mt-4 pt-5 border-top">
-              <h3 id="nickname"></h3>
+              <h1 id="nickname">Hello Admin!</h1>
               <p id="uid"></p>
             </div>
 
-            <div class="mt-4 pt-5 border-top">
+            <div class="mt-4 pt-5">
               <!-- Edit -->
-              <button class="btn" onclick="window.location.href='profile.html'">View Transactions</button>
+              <button class="btn" onclick="window.location.href='profile-admin.html'">View Transactions</button>
             </div>
 
             <!-- Other Info -->
             <div class="mt-4 pt-5 border-top">
-              <h6>Email</h6>
+              <!-- <h6>Email</h6>
               <p id="email"></p>
               <h6>Phone</h6>
               <p id="phonenum"></p>
               <h6>Gender</h6>
               <p id="gender"></p>
               <h6>Birthday</h6>
-              <p id="birthdate"></p>
+              <p id="birthdate"></p> -->
             </div>
           </div>
         </div>
@@ -232,36 +232,39 @@
             </label>
 
             <div class="mb-5">
-              <label for="uid" class="form-label">User ID</label>
-              <input type="text" class="input-field" id="uid-form" readonly />
+              <label for="uid-form" class="form-label">User ID</label>
+              <input type="text" class="input-field" id="uid-form" value="test" readonly />
             </div>
             <div class="mb-5">
-              <label for="password" class="form-label">Password</label>
+              <label for="password-form" class="form-label">Password</label>
               <input type="text" class="input-field" id="password-form" />
             </div>
             <div class="mb-5">
-              <label for="email" class="form-label">Email</label>
+              <label for="email-form" class="form-label">Email</label>
               <input type="email" class="input-field" id="email-form" />
             </div>
             <div class="mb-5">
-              <label for="phonenum" class="form-label">Phone Number</label>
+              <label for="phonenum-form" class="form-label">Phone Number</label>
               <input type="text" class="input-field" id="phonenum-form" />
             </div>
-            <!-- <div class="mb-5">
-              <label class="form-label">Gender</label><br />
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" checked />
-                <label class="form-check-label" for="genderMale">Male</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" />
-                <label class="form-check-label" for="genderFemale">Female</label>
-              </div>
-            </div> -->
             <div class="mb-5">
-              <label for="nickname" class="form-label">Nickname</label>
+              <label for="birthdate-form" class="form-label">Birthday</label>
+              <input type="text" class="input-field" id="birthdate-form" />
+            </div>
+            <div class="mb-5">
+              <label for="nickname-form" class="form-label">Nickname</label>
               <input type="text" class="input-field" id="nickname-form" />
             </div>
+            <label class="form-label">Gender</label><br />
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" checked />
+              <label class="form-check-label" for="genderMale">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" />
+              <label class="form-check-label" for="genderFemale">Female</label>
+            </div>
+            <br />
             <button type="submit" class="btn" id="updateButton">Save</button>
           </form>
         </div>
@@ -292,6 +295,6 @@
       });
     </script>
 
-    <script src="js/profile-edit.js"></script>
+    <script src="js/profile-edit-admin.js"></script>
   </body>
 </html>

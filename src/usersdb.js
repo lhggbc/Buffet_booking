@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import client from './dbclient.js';
+import { register } from 'module';
 
 async function init_userdb() {
   // const hktDate = new Date().toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' });
@@ -65,6 +66,7 @@ async function update_user(uid, nickname, email, phonenum, password, gender, bir
       avatar: avatarPath,
       enabled: true, // 默认启用用户
       role: 'user', // 默认角色为用户
+      register_date: new Date().toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' }),
     };
 
     // 使用 MongoDB 的 updateOne 方法进行更新或插入
@@ -115,6 +117,16 @@ async function uid_exist(uid) {
   }
 }
 
+async function fetch_all_users() {
+  try {
+    const users = client.db('buffet_booking').collection('users');
+    const allUsers = await users.find({}).toArray();
+    return allUsers;
+  } catch (err) {
+    console.error('Unable to fetch from database!', err);
+  }
+}
+
 init_userdb().catch(console.dir);
 // validate_user('alice', 'ecila').then((res) => console.log(res));
 // update_user('22103456D', '22103456D', 'user', false).then((res) => console.log(res));
@@ -122,4 +134,4 @@ init_userdb().catch(console.dir);
 // username_exist('test').then((res) => console.log(res));
 // update_user('bob', 'bob4321', 'student', true).then((res) => console.log(res));
 
-export { validate_user, update_user, fetch_user, uid_exist, init_userdb };
+export { validate_user, update_user, fetch_user, uid_exist, init_userdb, fetch_all_users };
