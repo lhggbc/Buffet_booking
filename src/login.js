@@ -3,6 +3,7 @@ import multer from 'multer';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fetch_user, update_user, uid_exist, init_userdb, validate_user } from './usersdb.js';
+import bcrypt from 'bcrypt';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -115,67 +116,6 @@ const upload = multer({
 //   await init_userdb();
 //   return users.has(uid);
 // }
-
-async function validate_input(uid, nickname, email, phonenum, password, gender, birthdate) {
-  if (uid.length < 3) {
-    return {
-      status: 'failed',
-      message: 'User ID must be at least 3 characters long.',
-    };
-  }
-
-  if (await uid_exist(uid)) {
-    return {
-      status: 'failed',
-      message: `User ID ${uid} already exists.`,
-    };
-  }
-
-  if (nickname.length < 3) {
-    return {
-      status: 'failed',
-      message: 'Nickname must be at least 3 characters long.',
-    };
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return {
-      status: 'failed',
-      message: 'Invalid email format.',
-    };
-  }
-
-  const phoneRegex = /^[0-9]{10,15}$/;
-  if (!phoneRegex.test(phonenum)) {
-    return {
-      status: 'failed',
-      message: 'Invalid phone number. It must be 10-15 digits long.',
-    };
-  }
-
-  if (password.length < 8) {
-    return {
-      status: 'failed',
-      message: 'Password must be at least 8 characters long.',
-    };
-  }
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  if (!passwordRegex.test(password)) {
-    return {
-      status: 'failed',
-      message: 'Password must contain at least one letter and one number.',
-    };
-  }
-
-  if (gender !== 'male' && gender !== 'female') {
-    return {
-      status: 'failed',
-      message: 'Gender must be either `male` or `female`.',
-    };
-  }
-  return { status: 'success' };
-}
 
 const login = express.Router();
 const form = multer();
@@ -309,14 +249,13 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
       message: 'Password must be at least 8 characters long.',
     });
   }
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
   if (!passwordRegex.test(password)) {
     return res.status(400).json({
       status: 'failed',
-      message: 'Password must contain at least one letter and one number.',
+      message: 'Password must be at least 8 characters long and contain at least one letter.',
     });
   }
-
   if (gender !== 'male' && gender !== 'female') {
     return res.status(400).json({
       status: 'failed',
@@ -374,7 +313,7 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
 });
 
 login.get('/me', async (req, res) => {
-  console.log('Fetching user profile');
+  console.log('Fetching user profile in /me');
   if (req.session.logged === true) {
     const user = await fetch_user(req.session.uid);
     if (user) {
@@ -471,11 +410,11 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
       message: 'Password must be at least 8 characters long.',
     });
   }
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
   if (!passwordRegex.test(password)) {
     return res.status(400).json({
       status: 'failed',
-      message: 'Password must contain at least one letter and one number.',
+      message: 'Password must be at least 8 characters long and contain at least one letter.',
     });
   }
 
