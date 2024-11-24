@@ -4,31 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register Page</title>
-    <link rel="icon" href="..\src\images\features-icon-3.png" type="image/x-icon" />
-    <link rel="stylesheet" href="../src\css\style-login.css" />
+    <link rel="icon" href=".\images\features-icon-3.png" type="image/x-icon" />
+    <link rel="stylesheet" href=".\css\style-login.css" />
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   </head>
   <body>
     <div class="form-container register-container">
       <h2>Register</h2>
-      <form action="/register" method="POST">
-        <input type="text" name="user_id" placeholder="User ID" required />
-        <input type="text" name="nickname" placeholder="Nickname" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Password" required />
-        <input type="password" name="confirm_password" placeholder="Confirm Password" required />
+      <form id="registerForm" enctype="multipart/form-data">
+        <input type="text" id="uid" name="uid" placeholder="User ID" required />
+        <input type="text" id="nickname" name="nickname" placeholder="Nickname" required />
+        <input type="email" id="email" name="email" placeholder="Email" required />
+        <input type="text" id="phonenum" name="phonenum" placeholder="Phone Number" required />
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <input type="password" id="password-repeat" name="passwordConfirm" placeholder="Confirm Password" required />
 
-        <select name="gender" required>
-          <option value="" disabled selected>Select Gender</option>
+        <select id="gender" name="gender" required>
+          <option value="" disabled>Select Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
-          <option value="other">Other</option>
-          <option value="prefer_not_to_say">Prefer not to say</option>
         </select>
 
-        <input type="date" name="birthdate" required />
+        <input type="date" id="birthdate" name="birthdate" required />
 
-        <input type="submit" value="Register" />
+        <!-- 将标签与隐藏的文件输入关联 -->
+        <div class="file-input">
+          <label for="avatar" class="avatar-label">
+            <img id="avatarPreview" src=".\images\default-avatar.jpg" alt="Avatar Preview" />
+          </label>
+          <input type="file" id="avatar" name="avatar" accept="image/*" required />
+        </div>
+
+        <input type="button" id="registerButton" value="Register" />
       </form>
 
       <div class="option">
@@ -38,5 +45,6 @@
     <a href="#top" class="back-top-btn active" aria-label="back to top" data-back-top-btn>
       <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
     </a>
+    <script src=".\js\register.js"></script>
   </body>
 </html>

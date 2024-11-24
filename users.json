@@ -1,0 +1,26 @@
+[
+  {
+    "uid": "admin",
+    "nickname": "admin",
+    "email": "admin@gmail.com",
+    "phonenum": "1234567890",
+    "password": "admin123",
+    "gender": "male",
+    "birthdate": "2024-11-01",
+    "enabled": true,
+    "role": "admin",
+    "avatar": ""
+  },
+  {
+    "uid": "admin1",
+    "nickname": "admin1",
+    "email": "guobeichen0228@163.com",
+    "phonenum": "12345678990",
+    "password": "admin1admin1",
+    "gender": "male",
+    "birthdate": "2024-11-01",
+    "avatar": "uploads\\avatars\\avatar-1732391366147-463200443.png",
+    "enabled": true,
+    "role": "user"
+  }
+]
