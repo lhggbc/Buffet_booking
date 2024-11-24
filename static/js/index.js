@@ -30,19 +30,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p>Time: ${event.time || 'TBD'}</p>
                         <p>Venue: ${event.venue}</p>
                         <p>Tickets left: ${event.ticketleft}</p>
-                        <button class="find-table-btn" )">View Description</button>
+                       <button class="find-table-btn">${event.description}</button>
                     </div>
                 `;
 
       eventSliderContainer.appendChild(slide);
-      const viewDescriptionButtons = eventSliderContainer.querySelectorAll('.find-table-btn');
-      viewDescriptionButtons.forEach((button) => {
-        button.addEventListener('click', function () {
-          // Get description from data attribute
-          const description = event.description;
-          viewDescription(description); // Call the function to show the description
-        });
-      });
     });
 
     // Add navigation buttons
@@ -53,7 +45,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     </button>
     <button class="slider-btn next" aria-label="slide to next" data-next-btn>
       <ion-icon name="chevron-forward"></ion-icon>
-    </button>`;
+    </button><a href="booking.html" class="hero-btn has-after">
+        <img src="./images/hero-icon.png" width="48" height="48" alt="booking icon" />
+
+        <span class="label-2 text-center span">Book A Table</span>
+      </a>`;
     eventSliderContainer.appendChild(slidebutton);
 
     // Attach event listeners after slider is populated
@@ -86,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p class="event-date">Date: ${event.date}</p>
                         <p class="event-venue">Venue: ${event.venue}</p>
                         <p class="event-tickets-left">Tickets left: ${event.ticketleft}</p>
-                        <a href="booking.html?event=${index + 1}" class="view-description-btn">View Description</a>
+                        <button class="find-table-btn">${event.description}</button>
                     </div>
                 `;
 
@@ -153,27 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Error fetching events:', error);
   }
 });
-
-function viewDescription(description) {
-  const modal = document.getElementById('description-modal');
-  const modalDescription = document.getElementById('modal-description');
-
-  modalDescription.textContent = description; // Set the description text
-  modal.style.display = 'block'; // Show the modal
-}
-
-function closeModal() {
-  const modal = document.getElementById('description-modal');
-  modal.style.display = 'none'; // Hide the modal
-}
-
-// Close modal when clicking outside of the modal content
-window.onclick = function (event) {
-  const modal = document.getElementById('description-modal');
-  if (event.target === modal) {
-    modal.style.display = 'none';
-  }
-};
 
 var heroSlides = document.querySelectorAll('.hero-slide');
 const prevBtn = document.querySelector('.slider-btn.prev');

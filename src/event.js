@@ -96,6 +96,7 @@ route.delete('/events/:eventname', async (req, res) => {
     const result = await events.deleteOne({ eventname });
 
     if (result.deletedCount > 0) {
+      console.log('Event deleted successfully.');
       return res.status(200).json({ message: 'Event deleted successfully.' });
     } else {
       return res.status(404).json({ message: 'Event not found.' });
