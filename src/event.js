@@ -112,20 +112,30 @@ route.get('/tables/:eventname', async (req, res) => {
   const { eventname } = req.params; // Extract eventname from request parameters
   try {
     var tables = await fetch_tables(eventname);
-    if (tables) {
+
+    if (tables && tables.length > 0) {
+      // Check if tables exist and the array is not empty
       res.status(200).json(tables);
     } else {
-      for (var i = 1; i <= 30; i++) {
-        var price = 400;
-        if (i < 11) {
+      // Initialize 30 tables for the event
+      const totalTables = 30;
+      const initializedTables = [];
+
+      for (let i = 1; i <= totalTables; i++) {
+        // Use 'let' instead of 'var' for block scoping
+        let price;
+        if (i <= 10) {
           price = 400;
-        } else if (i < 21) {
+        } else if (i <= 20) {
           price = 200;
         } else {
           price = 100;
         }
-        await update_table(i, eventname, price, true);
+
+        const table = await update_table(i, eventname, price, true);
+        initializedTables.push(table); // Collect initialized tables for response
       }
+
       tables = await fetch_tables(eventname);
       res.status(200).json(tables);
     }
@@ -157,32 +167,59 @@ route.post('/payment', async (req, res) => {
 route.post('/tables/save', async (req, res) => {
   const tableData = req.body; // Get the table data from the request body
 
+  // Validate that tableData is an array
   if (!Array.isArray(tableData)) {
-    return res.status(400).json({ message: 'Invalid table data format' });
+    return res.status(400).json({ message: 'Invalid table data format. Expected an array.' });
   }
 
   try {
-    const tables = client.db('buffet_booking').collection('tables');
+    const tablesCollection = client.db('buffet_booking').collection('tables');
 
-    // Iterate over the table data and update each table
-    for (const table of tableData) {
-      const { tableid, eventname, price, status } = table;
-      const result = await tables.updateOne(
-        { tableid, eventname },
-        {
-          $set: {
-            price,
-            status,
-          },
-        },
-        { upsert: true }
-      );
+    // Prepare bulk operations for efficiency
+    const bulkOps = tableData
+      .map((table) => {
+        const { tableid, eventname, price, status } = table;
+
+        // Validate table fields
+        if (
+          typeof tableid !== 'number' ||
+          typeof eventname !== 'string' ||
+          typeof price !== 'number' ||
+          typeof status !== 'boolean'
+        ) {
+          return {
+            updateOne: {
+              filter: { tableid: table.tableid, eventname: table.eventname },
+              update: {
+                $set: {
+                  price: table.price,
+                  status: table.status,
+                },
+              },
+              upsert: true,
+            },
+          };
+        } else {
+          // Alternatively, skip invalid entries or handle them as needed
+          console.warn(`Invalid table data encountered: ${JSON.stringify(table)}`);
+          return null;
+        }
+      })
+      .filter((op) => op !== null); // Remove null operations
+
+    if (bulkOps.length === 0) {
+      return res.status(400).json({ message: 'No valid table data to update.' });
     }
 
-    res.status(200).json({ message: 'Tables updated successfully' });
+    // Execute bulk operations
+    const bulkWriteResult = await tablesCollection.bulkWrite(bulkOps);
+
+    console.log(`Bulk write operation successful:`, bulkWriteResult);
+
+    return res.status(200).json({ message: 'Tables updated successfully.' });
   } catch (error) {
     console.error('Error updating tables:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error while updating tables.' });
   }
 });
 

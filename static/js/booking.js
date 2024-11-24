@@ -1,12 +1,18 @@
 async function initEventSelector() {
   try {
     const response = await fetch('/book/index');
-    const events = await response.json();
+    const data = await response.json(); // { status: 'success', events: [...] }
+
+    if (data.status !== 'success') {
+      throw new Error(data.message || 'Failed to fetch events.');
+    }
+
+    const eventsArray = data.events; // Access the 'events' array
 
     const eventSelect = document.getElementById('event-select');
     eventSelect.innerHTML = '<option value="">Select an event</option>'; // Reset options
 
-    events.forEach((event) => {
+    eventsArray.forEach((event) => {
       const option = document.createElement('option');
       option.value = event.eventname;
       option.textContent = event.eventname;

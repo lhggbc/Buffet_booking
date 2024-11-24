@@ -1,13 +1,37 @@
+// Initialize event listeners and fetch data on page load
+document.addEventListener('DOMContentLoaded', async function () {
+  const priceTexts = document.querySelectorAll('.tableprice');
+  priceTexts.forEach((priceText) => {
+    priceText.addEventListener('click', function () {
+      editPrice(priceText);
+    });
+  });
+
+  document.getElementById('event-select').addEventListener('change', async function () {
+    const eventname = this.value;
+    if (eventname) {
+      await initTables(eventname); // Call initTables with the selected event name
+      await fetchCustomerData(eventname);
+    }
+  });
+});
+
 // Function to initialize the event selector
 async function initEventSelector() {
   try {
     const response = await fetch('/book/index');
-    const events = await response.json();
+    const data = await response.json(); // { status: 'success', events: [...] }
+
+    if (data.status !== 'success') {
+      throw new Error(data.message || 'Failed to fetch events.');
+    }
+
+    const eventsArray = data.events; // Access the 'events' array
 
     const eventSelect = document.getElementById('event-select');
     eventSelect.innerHTML = '<option value="">Select an event</option>'; // Reset options
 
-    events.forEach((event) => {
+    eventsArray.forEach((event) => {
       const option = document.createElement('option');
       option.value = event.eventname;
       option.textContent = event.eventname;
@@ -90,52 +114,65 @@ function editPrice(priceTextElement) {
   const newPrice = prompt(`Enter new price for this row:`, currentPrice);
 
   if (newPrice) {
+    if (isNaN(newPrice) || parseFloat(newPrice) < 0) {
+      alert('Please enter a valid non-negative number for the price.');
+      return;
+    }
+
     // Update the price in the text element
-    priceTextElement.textContent = `$${newPrice}`;
+    priceTextElement.textContent = `$${parseFloat(newPrice).toFixed(2)}`;
 
     // Update all tables in the same row
     const rowNumber = priceTextElement.getAttribute('data-row'); // Get the row number from data attribute
     const tables = document.querySelectorAll(`.table-group[data-row="${rowNumber}"] .table`);
 
     tables.forEach((table) => {
-      table.setAttribute('data-price', newPrice);
+      table.setAttribute('data-price', parseFloat(newPrice));
     });
   }
 }
 
-// Initialize event listeners and fetch data on page load
-document.addEventListener('DOMContentLoaded', async function () {
-  const priceTexts = document.querySelectorAll('.tableprice');
-  priceTexts.forEach((priceText) => {
-    priceText.addEventListener('click', function () {
-      editPrice(priceText);
-    });
-  });
-
-  document.getElementById('event-select').addEventListener('change', async function () {
-    const eventname = this.value;
-    if (eventname) {
-      await initTables(eventname); // Call initTables with the selected event name
-      await fetchCustomerData(eventname);
-    }
-  });
-});
-
-// Function to save table data
 function save() {
   // Collect all table data to save
   const tables = document.querySelectorAll('.table');
   const eventSelect = document.getElementById('event-select');
-  const selectedEvent = eventSelect.value; // Get the selected event name
+  const selectedEvent = eventSelect.value.trim(); // Trim whitespace
   const tableData = [];
 
   tables.forEach((table) => {
-    const tableName = table.querySelector('text').textContent;
-    const price = table.getAttribute('data-price');
+    const tableText = table.querySelector('text');
+    const tableName = tableText ? tableText.textContent.trim() : '';
+    const priceAttr = table.getAttribute('data-price');
+    const price = priceAttr ? parseFloat(priceAttr) : 0; // Ensure price is a number
     const status = table.style.fill !== 'grey'; // true if available, false if unavailable
-    const tableId = parseInt(tableName.split(' ')[1]); // Assuming table names are like "Table 1", "Table 2", and so on
-    tableData.push({ tableId, eventname: selectedEvent, price, status });
+
+    // Extract table ID safely using regex
+    const tableIdMatch = tableName.match(/Table\s+(\d+)/i);
+    const tableId = tableIdMatch ? parseInt(tableIdMatch[1], 10) : null;
+
+    if (tableId !== null && selectedEvent) {
+      // Ensure tableId extraction succeeded and event is selected
+      tableData.push({
+        tableid: tableId,
+        eventname: selectedEvent,
+        price: price,
+        status: status,
+      });
+    } else {
+      console.warn(`Skipping table due to invalid data. Table Name: "${tableName}", Event: "${selectedEvent}"`);
+    }
   });
+
+  // Validate selected event
+  if (!selectedEvent) {
+    alert('Please select an event before saving table data.');
+    return;
+  }
+
+  if (tableData.length === 0) {
+    alert('No valid table data to save.');
+    return;
+  }
 
   // Send table data to the server
   fetch('/book/tables/save', {
@@ -144,85 +181,104 @@ function save() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(tableData),
+    credentials: 'include', // Include cookies for session-based auth if required
   })
-    .then((response) => {
-      if (!response.ok) throw new Error('Failed to save changes');
-      alert('Changes saved successfully!');
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok) {
+        const errorMessage = data.message || 'Failed to save changes.';
+        throw new Error(errorMessage);
+      }
+      return data;
+    })
+    .then((data) => {
+      alert(data.message || 'Changes saved successfully!');
+      // Optionally, re-fetch tables or update the UI as needed
     })
     .catch((error) => {
       console.error('Error saving changes:', error);
-      alert('There was an error saving the changes. Please try again.');
+      alert(`Error: ${error.message || 'There was an error saving the changes. Please try again.'}`);
     });
 }
 
 // Function to initialize tables for the selected event
 async function initTables(eventname) {
   try {
-    const response = await fetch(`/book/tables/${eventname}`); // Fetch tables based on the selected event
+    if (!eventname) {
+      throw new Error('No event name provided.');
+    }
+
+    const response = await fetch(`/book/tables/${encodeURIComponent(eventname)}`, {
+      method: 'GET',
+      credentials: 'include', // Include credentials for session-based auth
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching tables: ${response.status} ${response.statusText}`);
+    }
+
     const tables = await response.json();
+
+    if (!Array.isArray(tables)) {
+      throw new Error('Invalid table data format received from the server.');
+    }
+
     populateTableOptions(tables); // Populate the table options based on the fetched data
   } catch (error) {
     console.error('Error initializing tables:', error);
+    alert('Failed to load tables. Please try again later.');
   }
 }
 
 function populateTableOptions(tables) {
-  var seatingArea = document.querySelector('.table-group');
-  seatingArea.innerHTML = ''; // Clear existing tables
-  let x = 100;
-  let y = 70;
-
-  // Group tables by row
-  let currentRow = 1;
-  let tableCount = 0;
-
+  // Assuming each row has its own group with data-row attribute
   tables.forEach((table, index) => {
-    // Create a new row if we have reached 10 tables
-    if (tableCount >= 10) {
-      currentRow++;
-      tableCount = 0;
-      x = 100; // Reset x for new row
-      y += 80; // Move down to the next row
-    }
-    if (currentRow === 1) {
-      seatingArea = document.querySelector('.table-group[data-row="1"]');
-    } else if (currentRow === 2) {
-      seatingArea = document.querySelector('.table-group[data-row="2"]');
-    } else {
-      seatingArea = document.querySelector('.table-group[data-row="3"]');
-    }
-    const tableElement = document.createElement('rect');
-    tableElement.className = 'table';
+    // Determine row based on tableId
+    const rowNumber = determineRowNumber(index + 1); // Implement this based on your logic
+    const seatingArea = document.querySelector(`.table-group[data-row="${rowNumber}"]`);
+
+    if (!seatingArea) return; // Skip if the group doesn't exist
+
+    // Create table rectangle
+    const tableElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    tableElement.classList.add('table');
     tableElement.setAttribute('data-price', table.price);
-    tableElement.setAttribute('x', x);
-    tableElement.setAttribute('y', y);
+    tableElement.setAttribute('x', calculateX(index)); // Implement calculateX
+    tableElement.setAttribute('y', calculateY(rowNumber)); // Implement calculateY
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
     tableElement.setAttribute('onclick', 'selectTable(this)');
     tableElement.addEventListener('dblclick', () => showCustomerInfo(tableElement));
 
     // Set color based on availability
-    if (!table.status) {
-      tableElement.setAttribute('fill', 'grey'); // Unavailable
-      tableElement.style.cursor = 'not-allowed';
-    } else {
-      tableElement.setAttribute('fill', 'hsl(38, 61%, 73%)'); // Available
-    }
+    tableElement.setAttribute('fill', table.status ? 'hsl(38, 61%, 73%)' : 'grey');
+    tableElement.style.cursor = table.status ? 'pointer' : 'not-allowed';
 
     seatingArea.appendChild(tableElement);
 
-    const tableLabel = document.createElement('text');
-    tableLabel.setAttribute('x', x + 30);
-    tableLabel.setAttribute('y', y + 30);
+    // Create table label
+    const tableLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    tableLabel.setAttribute('x', calculateX(index) + 30); // Center the text
+    tableLabel.setAttribute('y', calculateY(rowNumber) + 30); // Vertically center
     tableLabel.setAttribute('text-anchor', 'middle');
     tableLabel.setAttribute('fill', 'black');
     tableLabel.textContent = `Table ${index + 1}`;
     seatingArea.appendChild(tableLabel);
-
-    // Increment positions and counts
-    x += 70; // Move to the next table position
-    tableCount++; // Increment table count
   });
-  x = 100;
-  y = 70;
+}
+
+function determineRowNumber(tableId) {
+  if (tableId <= 10) return 1;
+  if (tableId <= 20) return 2;
+  return 3;
+}
+
+function calculateX(index) {
+  // Example: Start at 100, spacing 70 between tables
+  return 100 + (index % 10) * 70;
+}
+
+function calculateY(rowNumber) {
+  // Example: Row 1 at y=50, Row 2 at y=150, Row 3 at y=250
+  return 70 + (rowNumber - 1) * 80;
 }
