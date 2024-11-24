@@ -13,7 +13,7 @@
 
   <style>
     .container {
-      font-family: 'Georgia', 'Times New Roman', serif;
+      /* font-family: 'Georgia', 'Times New Roman', serif; */
       max-width: 1960px;
       margin: auto;
       padding: 0px;
@@ -143,6 +143,13 @@
       visibility: visible; /* Ensure it's visible when shown */
       transform: translateY(0); /* Reset translation */
     }
+
+    .gourmet-gala {
+      font-size: 4rem; /* Large text size */
+      color: hsl(0, 0%, 100%); /* Dark gray color */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+      font-family: 'Georgia', serif;
+    }
   </style>
   <body>
     <header class="header" data-header>
@@ -179,9 +186,7 @@
         </a>
       </div>
     </header>
-    <div class="row mb-5">
-      <img src="./images/login-bg-1.jpg" />
-    </div>
+    <div style="margin-bottom: 100px"></div>
 
     <div class="container">
       <div class="row">
@@ -199,14 +204,14 @@
           <div class="">
             <!-- Avatar -->
             <label for="avatar-upload" class="profile-avatar" id="avatar-display">
-              <span id="avatar-placeholder">+</span>
-              <input type="file" id="avatar-upload" accept="image/*" style="display: none" />
+              <!-- <input type="file" id="avatar-upload" accept="image/*" style="display: none" /> -->
+              <img id="avatar" src=".\images\default-avatar.jpg" alt="Avatar" />
             </label>
 
             <!-- User Info -->
             <div class="mt-4 pt-5 border-top">
-              <h3>John Doe</h3>
-              <p>@technicolor</p>
+              <h3 id="nickname"></h3>
+              <p id="uid"></p>
             </div>
 
             <div class="mt-4 pt-5 border-top">
@@ -217,9 +222,13 @@
             <!-- Other Info -->
             <div class="mt-4 pt-5 border-top">
               <h6>Email</h6>
-              <p>222222222d@connect.polyu.hk</p>
+              <p id="email"></p>
+              <h6>Phone</h6>
+              <p id="phonenum"></p>
               <h6>Gender</h6>
-              <p>Male</p>
+              <p id="gender"></p>
+              <h6>Birthday</h6>
+              <p id="birthdate"></p>
             </div>
           </div>
         </div>
@@ -358,19 +367,6 @@
     </script>
 
     <script>
-      document.getElementById('searchInput').addEventListener('input', function () {
-        const filter = this.value.toLowerCase();
-        const bookingCards = document.querySelectorAll('.booking-card');
-
-        bookingCards.forEach((card) => {
-          const eventName = card.querySelector('.booking-header').textContent.toLowerCase();
-          if (eventName.includes(filter)) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
       let lastScrollTop = 0;
       const header = document.querySelector('.header');
 
@@ -389,5 +385,6 @@
         lastScrollTop = scrollTop;
       });
     </script>
+    <script src=".\js\profile.js"></script>
   </body>
 </html>
