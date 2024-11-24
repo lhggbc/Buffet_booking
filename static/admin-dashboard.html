@@ -13,7 +13,7 @@
 
   <style>
     .container {
-      font-family: 'Georgia', 'Times New Roman', serif;
+      /* font-family: 'Georgia', 'Times New Roman', serif; */
       max-width: 1960px;
       margin: auto;
       padding: 20px;
@@ -48,6 +48,11 @@
       font-size: 3rem;
       margin-bottom: 15px;
     }
+    @media (max-width: 768px) {
+      .user-info div {
+        width: 100%;
+      }
+    }
     .headimg {
       height: 150px;
       width: 1700px;
@@ -70,6 +75,13 @@
     .header.show {
       visibility: visible; /* Ensure it's visible when shown */
       transform: translateY(0); /* Reset translation */
+    }
+
+    .gourmet-gala {
+      font-size: 4rem; /* Large text size */
+      color: hsl(0, 0%, 100%); /* Dark gray color */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+      font-family: 'Georgia', serif;
     }
   </style>
   <body>
@@ -104,22 +116,6 @@
                 <div class="separator"></div>
 
                 <span class="span">Account Management</span>
-              </a>
-            </li>
-
-            <li class="navbar-item">
-              <a href="#contact" class="navbar-link hover-underline">
-                <div class="separator"></div>
-
-                <span class="span">Contact</span>
-              </a>
-            </li>
-
-            <li class="navbar-item">
-              <a href="profile.html" class="navbar-link hover-underline">
-                <div class="separator"></div>
-
-                <span class="span">Account</span>
               </a>
             </li>
           </ul>

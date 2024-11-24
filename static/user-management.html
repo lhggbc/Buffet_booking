@@ -13,7 +13,7 @@
 
   <style>
     .container {
-      font-family: 'Georgia', 'Times New Roman', serif;
+      /* font-family: 'Georgia', 'Times New Roman', serif; */
       max-width: 1960px;
       margin: auto;
       padding: 0px;
@@ -120,29 +120,36 @@
       .user-info div {
         width: 100%;
       }
-      .headimg {
-        height: 150px;
-        width: 1700px;
-        object-fit: cover;
-      }
-      .header {
-        visibility: visible;
-        transition: top 0.3s; /* Smooth transition for the header */
-        position: fixed; /* Keep header fixed at the top */
-        width: 100%;
-        z-index: 1000; /* Ensure it's above other content */
-        top: 0; /* Start at the top */
-      }
-      .header.hide {
-        transform: translateY(-100%);
-        transition-delay: 250ms;
-        visibility: hidden; /* Hide visibility when scrolling down */
-      }
+    }
+    .headimg {
+      height: 150px;
+      width: 1700px;
+      object-fit: cover;
+    }
+    .header {
+      visibility: visible;
+      transition: top 0.3s; /* Smooth transition for the header */
+      position: fixed; /* Keep header fixed at the top */
+      width: 100%;
+      z-index: 1000; /* Ensure it's above other content */
+      top: 0; /* Start at the top */
+    }
+    .header.hide {
+      transform: translateY(-100%);
+      transition-delay: 250ms;
+      visibility: hidden; /* Hide visibility when scrolling down */
+    }
 
-      .header.show {
-        visibility: visible; /* Ensure it's visible when shown */
-        transform: translateY(0); /* Reset translation */
-      }
+    .header.show {
+      visibility: visible; /* Ensure it's visible when shown */
+      transform: translateY(0); /* Reset translation */
+    }
+
+    .gourmet-gala {
+      font-size: 4rem; /* Large text size */
+      color: hsl(0, 0%, 100%); /* Dark gray color */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+      font-family: 'Georgia', serif;
     }
   </style>
   <body>
@@ -151,7 +158,6 @@
         <a href="index-admin.html" class="logo">
           <img src=".\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
         </a>
-
         <div class="gourmet-gala">Gourmet Gala</div>
 
         <nav class="navbar" data-navbar style="display: flexbox; justify-content: center">
@@ -195,9 +201,7 @@
       </div>
     </header>
 
-    <div class="row mb-5">
-      <img src="./images/login-bg-1.jpg" class="w-100" />
-    </div>
+    <div style="margin-bottom: 100px"></div>
 
     <div class="container">
       <div class="row">
@@ -219,7 +223,7 @@
                 <p id="totalUsers">150</p>
               </div>
             </div>
-            <div class="d-flex align-items-center mb-3">
+            <!-- <div class="d-flex align-items-center mb-3">
               <i class="bi bi-card-checklist me-2" style="font-size: 2rem; color: #0d6efd"></i>
               <div>
                 <h5>Total Orders</h5>
@@ -232,7 +236,7 @@
                 <h5>Total Events</h5>
                 <p id="totalEvents">45</p>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -246,79 +250,6 @@
             </div>
             <!-- Info card-->
             <div id="userList">
-              <div class="card user-card mb-5">
-                <div class="user-header">
-                  uid: johndoe
-                  <span class="badge bg-info">Active</span>
-                </div>
-                <div class="user-info">
-                  <div>
-                    <i class="bi bi-envelope-fill icon"></i>
-                    <span>Email:</span> johndoe@example.com
-                  </div>
-                  <div>
-                    <i class="bi bi-person-fill icon"></i>
-                    <span>Role:</span> User
-                  </div>
-                  <div>
-                    <i class="bi bi-calendar-check-fill icon"></i>
-                    <span>Joined:</span> 2023-01-15
-                  </div>
-                  <div>
-                    <i class="bi bi-telephone-fill icon"></i>
-                    <span>Phone:</span> (123) 456-7890
-                  </div>
-                </div>
-              </div>
-              <div class="card user-card mb-5">
-                <div class="user-header">
-                  uid: janedoe
-                  <span class="badge bg-info">Active</span>
-                </div>
-                <div class="user-info">
-                  <div>
-                    <i class="bi bi-envelope-fill icon"></i>
-                    <span>Email:</span> janedoe@example.com
-                  </div>
-                  <div>
-                    <i class="bi bi-person-fill icon"></i>
-                    <span>Role:</span> Admin
-                  </div>
-                  <div>
-                    <i class="bi bi-calendar-check-fill icon"></i>
-                    <span>Joined:</span> 2022-11-20
-                  </div>
-                  <div>
-                    <i class="bi bi-telephone-fill icon"></i>
-                    <span>Phone:</span> (987) 654-3210
-                  </div>
-                </div>
-              </div>
-              <div class="card user-card mb-5">
-                <div class="user-header">
-                  uid: mike123
-                  <span class="badge bg-danger text-dark">Withdrawn</span>
-                </div>
-                <div class="user-info">
-                  <div>
-                    <i class="bi bi-envelope-fill icon"></i>
-                    <span>Email:</span> mike123@example.com
-                  </div>
-                  <div>
-                    <i class="bi bi-person-fill icon"></i>
-                    <span>Role:</span> User
-                  </div>
-                  <div>
-                    <i class="bi bi-calendar-check-fill icon"></i>
-                    <span>Joined:</span> 2023-03-10
-                  </div>
-                  <div>
-                    <i class="bi bi-telephone-fill icon"></i>
-                    <span>Phone:</span> (555) 123-4567
-                  </div>
-                </div>
-              </div>
-
               <!-- More cards -->
             </div>
           </div>
@@ -330,19 +261,6 @@
     </a>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-      document.getElementById('searchInput').addEventListener('input', function () {
-        const filter = this.value.toLowerCase();
-        const userCards = document.querySelectorAll('.user-card');
-
-        userCards.forEach((card) => {
-          const uid = card.querySelector('.user-header').textContent.toLowerCase();
-          if (uid.includes(filter)) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
       let lastScrollTop = 0;
       const header = document.querySelector('.header');
 
@@ -361,5 +279,6 @@
         lastScrollTop = scrollTop;
       });
     </script>
+    <script src="js/user-management.js"></script>
   </body>
 </html>
