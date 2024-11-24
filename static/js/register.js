@@ -41,9 +41,9 @@ document.getElementById('registerButton').addEventListener('click', async functi
     return;
   }
 
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
   if (!passwordRegex.test(password.value)) {
-    alert('Password must be at least 8 characters long and contain both letters and numbers.');
+    alert('Password must be at least 8 characters long and contain at least one letter.');
     return;
   }
   if (gender.value !== 'male' && gender.value !== 'female') {
