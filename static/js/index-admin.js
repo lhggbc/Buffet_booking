@@ -13,13 +13,13 @@ async function fetchEvents() {
     }
     events = await response.json(); // Store events globally
 
-    populateSlider();
-    populateEventCards(); // Populate the event cards
+    populateSlider(events);
+    populateEventCards(events); // Populate the event cards
   } catch (error) {
     console.error('Error fetching events:', error);
   }
 }
-function populateSlider() {
+function populateSlider(events) {
   const eventSliderContainer = document.getElementById('event');
   eventSliderContainer.innerHTML = ''; // Clear existing content for slider
 
@@ -30,25 +30,80 @@ function populateSlider() {
       slide.classList.add('active'); // Set active class only for the first slide
     }
 
-    // Alternate between hero-slider-1 and hero-slider-2
     const imageIndex = index % 2 === 0 ? 1 : 2;
     slide.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
 
     slide.innerHTML = `
-            <div class="hero-slide-content">
-                <h1>${event.eventname}</h1>
-                <p>Date: ${event.date}</p>
-                <p>Time: ${event.time || 'TBD'}</p>
-                <p>Venue: ${event.venue}</p>
-                <p>Tickets left: ${event.ticketleft}</p>
-                <a href="booking.html?event=${index + 1}" class="find-table-btn">View Description</a>
-            </div>
-        `;
+      <div class="hero-slide-content">
+        <h1>${event.eventname}</h1>
+        <p>Date: ${event.date}</p>
+        <p>Venue: ${event.venue}</p>
+        <p>Tickets left: ${event.ticketleft}</p>
+        <button class="find-table-btn" )">View Description</button>
+      </div>
+    `;
 
     eventSliderContainer.appendChild(slide); // Append the slide to the slider container
+
+    const viewDescriptionButtons = eventSliderContainer.querySelectorAll('.find-table-btn');
+    viewDescriptionButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        // Get description from data attribute
+        const description = event.description;
+        viewDescription(description); // Call the function to show the description
+      });
+    });
   });
+
+  // Add navigation buttons
+  const slidebutton = document.createElement('div');
+  slidebutton.innerHTML = `
+    <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
+      <ion-icon name="chevron-back"></ion-icon>
+    </button>
+    <button class="slider-btn next" aria-label="slide to next" data-next-btn>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </button>`;
+  eventSliderContainer.appendChild(slidebutton);
+
+  // Attach event listeners after slider is populated
+  const prevBtn = document.querySelector('.slider-btn.prev');
+  const nextBtn = document.querySelector('.slider-btn.next');
+
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  // Update heroSlides variable after adding slides
+  heroSlides = document.querySelectorAll('.hero-slide');
+  currentSlide = 0; // Reset current slide index
+  showSlide(currentSlide); // Show the first slide
+
+  // Start automatic sliding
+  setInterval(nextSlide, 5000);
 }
-function populateEventCards() {
+
+function viewDescription(description) {
+  const modal = document.getElementById('description-modal');
+  const modalDescription = document.getElementById('modal-description');
+
+  modalDescription.textContent = description; // Set the description text
+  modal.style.display = 'block'; // Show the modal
+}
+
+function closeModal() {
+  const modal = document.getElementById('description-modal');
+  modal.style.display = 'none'; // Hide the modal
+}
+
+// Close modal when clicking outside of the modal content
+window.onclick = function (event) {
+  const modal = document.getElementById('description-modal');
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+};
+
+function populateEventCards(events) {
   const eventsListContainer = document.querySelector('.events-list');
   eventsListContainer.innerHTML = ''; // Clear existing content for event cards
 
@@ -152,3 +207,42 @@ async function addEvent() {
     alert('Please fill out all fields.');
   }
 }
+
+var heroSlides = document.querySelectorAll('.hero-slide');
+const prevBtn = document.querySelector('.slider-btn.prev');
+const nextBtn = document.querySelector('.slider-btn.next');
+let currentSlide = 0;
+
+function showSlide(n) {
+  heroSlides[currentSlide].classList.remove('active');
+  currentSlide = (n + heroSlides.length) % heroSlides.length;
+  heroSlides[currentSlide].classList.add('active');
+}
+
+function prevSlide() {
+  showSlide(currentSlide - 1);
+}
+
+function nextSlide() {
+  showSlide(currentSlide + 1);
+}
+
+setInterval(nextSlide, 5000);
+
+let lastScrollTop = 0;
+const header = document.querySelector('.header');
+
+window.addEventListener('scroll', function () {
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+  if (scrollTop > lastScrollTop) {
+    // Scrolling down
+    header.classList.add('hide');
+    header.classList.remove('show'); // Ensure the show class is removed
+  } else if (scrollTop == 0) {
+    // Scrolling up
+    header.classList.remove('hide');
+    header.classList.add('show'); // Add show class to make it visible
+  }
+  lastScrollTop = scrollTop;
+});
