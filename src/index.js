@@ -1,6 +1,7 @@
 import express from 'express';
 import session from 'express-session';
 import index from './event.js';
+import login from './login.js';
 import bodyParser from 'body-parser';
 import mongostore from 'connect-mongo';
 import client from './dbclient.js';
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/book', index);
+app.use('/auth', login);
 app.use('/', express.static('static'));
 
 const PORT = 8080;
