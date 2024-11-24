@@ -130,9 +130,10 @@ login.post('/login', form.none(), async (req, res) => {
   console.log(req.body);
 
   const { uid, password } = req.body;
-  const user = await validate_user(uid, password);
+  const user = await fetch_user(uid);
+  const passwordMatch = await bcrypt.compare(password, user.password);
 
-  if (user) {
+  if (passwordMatch) {
     if (!user.enabled) {
       return res.status(401).json({
         status: 'failed',
@@ -275,7 +276,17 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
   const avatarPath = path.join('uploads', 'avatars', avatarFile.filename);
 
   try {
-    const userCreated = await update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userCreated = await update_user(
+      uid,
+      nickname,
+      email,
+      phonenum,
+      hashedPassword,
+      gender,
+      birthdate,
+      avatarPath
+    );
 
     if (userCreated) {
       return res.status(201).json({
@@ -349,12 +360,13 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
   console.log('Success to get body');
   const avatarFile = req.file;
   console.log('Success to get file');
+  const hashedPassword = await bcrypt.hash(password, 10);
   console.log({
     uid,
     nickname,
     email,
     phonenum,
-    password,
+    hashedPassword,
     gender,
     birthdate,
     avatar: avatarFile ? avatarFile.filename : avatar,
@@ -442,7 +454,16 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
   console.log('Avatar path:', avatarPath);
 
   try {
-    const userCreated = await update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath);
+    const userCreated = await update_user(
+      uid,
+      nickname,
+      email,
+      phonenum,
+      hashedPassword,
+      gender,
+      birthdate,
+      avatarPath
+    );
     if (userCreated) {
       return res.status(201).json({
         status: 'success',
@@ -454,7 +475,7 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
           gender: gender,
           birthdate: birthdate,
           avatar: avatarPath, // 返回头像路径
-          password: password,
+          password: hashedPassword,
         },
       });
     } else {
