@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { fetch_user, update_user, uid_exist, init_userdb, validate_user } from './usersdb.js';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -36,92 +37,153 @@ const upload = multer({
   // limits: { fileSize: 5 * 1024 * 1024 }, // 限制文件大小为5MB
 });
 
-const users = new Map();
+// const users = new Map();
 
-async function init_userdb() {
-  try {
-    await fs.access('./users.json');
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('users.json not found, creating a new one');
-      await fs.writeFile('./users.json', JSON.stringify([]));
-    } else {
-      console.error('Cannot access users.json:', err);
-      throw err;
-    }
-  }
-  try {
-    const data = await fs.readFile('./users.json', 'utf-8');
-    const jsonData = JSON.parse(data);
+// async function init_userdb() {
+//   try {
+//     await fs.access('./users.json');
+//   } catch (err) {
+//     if (err.code === 'ENOENT') {
+//       console.log('users.json not found, creating a new one');
+//       await fs.writeFile('./users.json', JSON.stringify([]));
+//     } else {
+//       console.error('Cannot access users.json:', err);
+//       throw err;
+//     }
+//   }
+//   try {
+//     const data = await fs.readFile('./users.json', 'utf-8');
+//     const jsonData = JSON.parse(data);
 
-    jsonData.forEach((user) => {
-      users.set(user.uid, user);
-    });
+//     jsonData.forEach((user) => {
+//       users.set(user.uid, user);
+//     });
 
-    console.log('users.json loaded:', users);
-  } catch (err) {
-    console.error('Error detected when reading users.json', err);
-  }
-}
+//     console.log('users.json loaded:', users);
+//   } catch (err) {
+//     console.error('Error detected when reading users.json', err);
+//   }
+// }
 
-async function validate_user(uid, password) {
-  await init_userdb();
-  const user = users.get(uid);
-  if (!user || user.password !== password) {
-    return false;
-  }
-  return {
-    uid: user.uid,
-    role: user.role,
-    enabled: user.enabled,
-  };
-}
+// async function validate_user(uid, password) {
+//   await init_userdb();
+//   const user = users.get(uid);
+//   if (!user || user.password !== password) {
+//     return false;
+//   }
+//   return {
+//     uid: user.uid,
+//     role: user.role,
+//     enabled: user.enabled,
+//   };
+// }
 
-async function update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath) {
-  try {
-    if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate || !avatarPath) {
-      throw new Error('Invalid input: All fields are required.');
-    }
+// async function update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath) {
+//   try {
+//     if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate || !avatarPath) {
+//       throw new Error('Invalid input: All fields are required.');
+//     }
 
-    const user = {
-      uid: uid.trim(),
-      nickname: nickname.trim(),
-      email: email.trim(),
-      phonenum: phonenum.trim(),
-      password: password.trim(),
-      gender: gender,
-      birthdate: birthdate,
-      avatar: avatarPath,
-      enabled: true,
-      role: 'user',
+//     const user = {
+//       uid: uid.trim(),
+//       nickname: nickname.trim(),
+//       email: email.trim(),
+//       phonenum: phonenum.trim(),
+//       password: password.trim(),
+//       gender: gender,
+//       birthdate: birthdate,
+//       avatar: avatarPath,
+//       enabled: true,
+//       role: 'user',
+//     };
+
+//     users.set(uid, user);
+
+//     const userjson = Array.from(users.values());
+
+//     await fs.writeFile('./users.json', JSON.stringify(userjson, null, 2));
+
+//     console.log(`User ${uid} saved successfully.`);
+//     return true;
+//   } catch (err) {
+//     console.error('Error updating user:', err);
+//     return false;
+//   }
+// }
+
+// async function uid_exist(uid) {
+//   await init_userdb();
+//   return users.has(uid);
+// }
+
+async function validate_input(uid, nickname, email, phonenum, password, gender, birthdate) {
+  if (uid.length < 3) {
+    return {
+      status: 'failed',
+      message: 'User ID must be at least 3 characters long.',
     };
-
-    users.set(uid, user);
-
-    const userjson = Array.from(users.values());
-
-    await fs.writeFile('./users.json', JSON.stringify(userjson, null, 2));
-
-    console.log(`User ${uid} saved successfully.`);
-    return true;
-  } catch (err) {
-    console.error('Error updating user:', err);
-    return false;
   }
-}
 
-async function uid_exist(uid) {
-  await init_userdb();
-  return users.has(uid);
+  if (await uid_exist(uid)) {
+    return {
+      status: 'failed',
+      message: `User ID ${uid} already exists.`,
+    };
+  }
+
+  if (nickname.length < 3) {
+    return {
+      status: 'failed',
+      message: 'Nickname must be at least 3 characters long.',
+    };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return {
+      status: 'failed',
+      message: 'Invalid email format.',
+    };
+  }
+
+  const phoneRegex = /^[0-9]{10,15}$/;
+  if (!phoneRegex.test(phonenum)) {
+    return {
+      status: 'failed',
+      message: 'Invalid phone number. It must be 10-15 digits long.',
+    };
+  }
+
+  if (password.length < 8) {
+    return {
+      status: 'failed',
+      message: 'Password must be at least 8 characters long.',
+    };
+  }
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return {
+      status: 'failed',
+      message: 'Password must contain at least one letter and one number.',
+    };
+  }
+
+  if (gender !== 'male' && gender !== 'female') {
+    return {
+      status: 'failed',
+      message: 'Gender must be either `male` or `female`.',
+    };
+  }
+  return { status: 'success' };
 }
 
 const login = express.Router();
 const form = multer();
 
 login.post('/login', form.none(), async (req, res) => {
-  if (users.size === 0) {
-    await init_userdb();
-  }
+  // if (users.size === 0) {
+  //   await init_userdb();
+  // }
   if (req.session.logged === true) {
     req.session.logged = false;
   }
@@ -179,9 +241,9 @@ login.post('/logout', (req, res) => {
 
 login.post('/register', upload.single('avatar'), async (req, res) => {
   console.log('Registering new user');
-  if (users.size === 0) {
-    await init_userdb();
-  }
+  // if (users.size === 0) {
+  //   await init_userdb();
+  // }
   const { uid, nickname, email, phonenum, password, gender, birthdate } = req.body;
   console.log('Success to get body');
   const avatarFile = req.file;
@@ -292,7 +354,7 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
       });
     } else {
       // 如果用户创建失败，删除已上传的头像文件以避免冗余文件
-      fs.unlinkSync(path.join(__dirname, '..', 'public', avatarPath));
+      fs.unlinkSync(avatarPath);
       return res.status(500).json({
         status: 'failed',
         message: 'Account was created but could not be saved to the database.',
@@ -302,7 +364,7 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
     console.error('Error during user creation:', err);
     // 如果发生错误，删除已上传的头像文件以避免冗余文件
     if (avatarFile) {
-      fs.unlinkSync(path.join(__dirname, '..', 'public', avatarPath));
+      fs.unlinkSync(avatarPath);
     }
     return res.status(500).json({
       status: 'failed',
@@ -310,4 +372,171 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
     });
   }
 });
+
+login.get('/me', async (req, res) => {
+  console.log('Fetching user profile');
+  if (req.session.logged === true) {
+    const user = await fetch_user(req.session.uid);
+    if (user) {
+      console.log('User found:', user);
+      return res.json({
+        status: 'success',
+        user: {
+          uid: user.uid,
+          nickname: user.nickname,
+          email: user.email,
+          phonenum: user.phonenum,
+          gender: user.gender,
+          birthdate: user.birthdate,
+          avatar: user.avatar,
+          password: user.password,
+        },
+      });
+    } else {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+  }
+});
+
+login.post('/edit', upload.single('avatar'), async (req, res) => {
+  console.log('Editing new user');
+  // if (users.size === 0) {
+  //   await init_userdb();
+  // }
+  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar } = req.body;
+  console.log('Success to get body');
+  const avatarFile = req.file;
+  console.log('Success to get file');
+  console.log({
+    uid,
+    nickname,
+    email,
+    phonenum,
+    password,
+    gender,
+    birthdate,
+    avatar: avatarFile ? avatarFile.filename : avatar,
+  });
+
+  if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Missing fields or avatar. Please fill in all the details and upload an avatar.',
+    });
+  }
+
+  if (uid.length < 3) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'User ID must be at least 3 characters long.',
+    });
+  }
+
+  if (await uid_exist(uid)) {
+    return res.status(400).json({
+      status: 'failed',
+      message: `User ID ${uid} already exists.`,
+    });
+  }
+
+  if (nickname.length < 3) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Nickname must be at least 3 characters long.',
+    });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Invalid email format.',
+    });
+  }
+
+  const phoneRegex = /^[0-9]{10,15}$/;
+  if (!phoneRegex.test(phonenum)) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Invalid phone number. It must be 10-15 digits long.',
+    });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Password must be at least 8 characters long.',
+    });
+  }
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Password must contain at least one letter and one number.',
+    });
+  }
+
+  if (gender !== 'male' && gender !== 'female') {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Gender must be either `male` or `female`.',
+    });
+  }
+
+  const today = new Date();
+  const birthDate = new Date(birthdate);
+  if (isNaN(birthDate.getTime()) || birthDate >= today) {
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Invalid birthdate',
+    });
+  }
+  console.log('Avatar:', avatar);
+
+  const avatarPath = avatarFile
+    ? path.join('uploads', 'avatars', avatarFile.filename) // 新上传头像
+    : avatar; // 使用旧路径
+
+  console.log('Avatar path:', avatarPath);
+
+  try {
+    const userCreated = await update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath);
+    if (userCreated) {
+      return res.status(201).json({
+        status: 'success',
+        user: {
+          uid: uid,
+          nickname: nickname,
+          email: email,
+          phonenum: phonenum,
+          gender: gender,
+          birthdate: birthdate,
+          avatar: avatarPath, // 返回头像路径
+          password: password,
+        },
+      });
+    } else {
+      // 如果用户创建失败，删除已上传的头像文件以避免冗余文件
+      fs.unlinkSync(avatarPath);
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Account was created but could not be saved to the database.',
+      });
+    }
+  } catch (err) {
+    console.error('Error during user creation:', err);
+    // 如果发生错误，删除已上传的头像文件以避免冗余文件
+    if (avatarFile) {
+      fs.unlinkSync(avatarPath);
+    }
+    return res.status(500).json({
+      status: 'failed',
+      message: 'An unexpected error occurred. Please try again later.',
+    });
+  }
+});
+
 export default login;
