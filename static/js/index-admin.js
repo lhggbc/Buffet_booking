@@ -32,7 +32,7 @@ function populateSlider() {
 
     // Alternate between hero-slider-1 and hero-slider-2
     const imageIndex = index % 2 === 0 ? 1 : 2;
-    slide.style.backgroundImage = `url('../src/images/hero-slider-${imageIndex}.jpg')`;
+    slide.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
 
     slide.innerHTML = `
             <div class="hero-slide-content">
@@ -56,7 +56,7 @@ function populateEventCards() {
     const eventCard = document.createElement('div');
     eventCard.className = 'event-card';
     eventCard.innerHTML = `
-                <div class="event-image" style="background-image: url('../src/images/default-event.jpg');"> 
+                <div class="event-image" style="background-image: url('./images/default-event.jpg');"> 
                     <h3>${event.eventname}</h3>
                     <p>Date: ${event.date}</p>
                     <p>Venue: ${event.venue}</p>

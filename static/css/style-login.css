@@ -18,7 +18,7 @@ html {
 
 /* 背景图片样式 */
 body {
-  background-image: url('../.../src/images/hero-slider-2.jpg');
+  background-image: url('../images/hero-slider-2.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -65,7 +65,7 @@ body {
   color: #888;
 }
 
-.form-container input[type='submit'] {
+.form-container input[type='button'] {
   width: 100%;
   padding: 15px;
   background-color: var(--gold-crayola);
@@ -77,7 +77,7 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.form-container input[type='submit']:hover {
+.form-container input[type='button']:hover {
   background-color: hsl(38, 61%, 66%);
 }
 
@@ -110,4 +110,45 @@ body {
 /* 容器的底部链接 */
 .option {
   margin-top: 20px;
+}
+.avatar-preview {
+  text-align: center; /* 图片居中 */
+  margin-top: 10px; /* 调整顶部间距 */
+}
+
+#avatarPreview {
+  width: 100px; /* 限制图片宽度 */
+  height: 100px; /* 限制图片高度 */
+  object-fit: cover; /* 确保图片内容适配宽高 */
+  border-radius: 50%; /* 圆形头像 */
+  border: 2px solid #ccc; /* 可选，图片边框 */
+}
+
+/* 隐藏文件输入 */
+.file-input input[type='file'] {
+  display: none;
+}
+
+/* 头像预览容器 */
+.file-input .avatar-label {
+  display: block;
+  width: 100px; /* 根据需求调整大小 */
+  height: 100px; /* 根据需求调整大小 */
+  margin: 0 auto 20px auto; /* 居中并添加下边距 */
+  cursor: pointer; /* 指针光标，表示可点击 */
+}
+
+/* 头像图片样式 */
+.file-input .avatar-label img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%; /* 圆形 */
+  border: 2px solid #ccc; /* 可选：边框 */
+  transition: border-color 0.3s;
+}
+
+/* 鼠标悬停时改变边框颜色 */
+.file-input .avatar-label:hover img {
+  border-color: #666;
 }

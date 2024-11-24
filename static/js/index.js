@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Alternate between hero-slider-1 and hero-slider-2
       const imageIndex = index % 2 === 0 ? 1 : 2;
-      slide.style.backgroundImage = `url('../src/images/hero-slider-${imageIndex}.jpg')`;
+      slide.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
 
       slide.innerHTML = `
                     <div class="hero-slide-content">
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const eventImageIndex = index % 2 === 0 ? 1 : 2; // Alternating images for cards
       eventCard.innerHTML = `
-                    <div class="event-image" style="background-image: url('../src/images/hero-slider-${eventImageIndex}.jpg')">
+                    <div class="event-image" style="background-image: url('./images/hero-slider-${eventImageIndex}.jpg')">
                         <h3 class="event-name">${event.eventname}</h3>
                         <p class="event-date">Date: ${event.date}</p>
                         <p class="event-venue">Venue: ${event.venue}</p>
