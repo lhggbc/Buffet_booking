@@ -2,7 +2,15 @@ import express from 'express';
 import multer from 'multer';
 import { promises as fs } from 'fs';
 import { fetch_events, update_event, fetch_event, event_exist } from './eventdb.js';
-import { fetch_tables, update_table, fetch_table, table_exist, update_payment, fetch_payment } from './tabledb.js';
+import {
+  fetch_tables,
+  update_table,
+  fetch_table,
+  table_exist,
+  update_payment,
+  fetch_payment,
+  update_tablestatus,
+} from './tabledb.js';
 import client from './dbclient.js';
 
 const form = multer();
@@ -146,12 +154,58 @@ route.get('/tables/:eventname', async (req, res) => {
 });
 
 route.post('/payment', async (req, res) => {
-  const { eventname, tablesarray, totalprice, date, method = 'None', status = false } = req.body; // Destructure the request body
-  const userid = req.session.user.username;
+  console.log('Session Data:', req.session);
+
+  const {
+    eventname,
+    tablesarray,
+    totalprice,
+    datetime,
+    name,
+    phone,
+    people,
+    method = 'None',
+    status = false,
+  } = req.body; // Destructure the request body
+  const userid = req.session?.uid;
+
+  // Validate required fields
+  if (!userid || !eventname || !tablesarray || !totalprice || !datetime || !name || !phone || !people) {
+    console.error('Missing required fields:', {
+      userid,
+      eventname,
+      tablesarray,
+      totalprice,
+      datetime,
+      name,
+      phone,
+      people,
+    });
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
 
   try {
+    for (const tableid of tablesarray) {
+      const updateSuccess = await update_tablestatus(tableid, eventname, false);
+
+      if (!updateSuccess) {
+        console.error(`Failed to update table ${tableid} for event ${eventname}`);
+        return res.status(500).json({ message: `Failed to update table ${tableid}. Please try again.` });
+      }
+    }
     // Call the update_payment function
-    const success = await update_payment(userid, eventname, tablesarray, totalprice, date, method, status);
+    const success = await update_payment(
+      userid,
+      eventname,
+      tablesarray,
+      totalprice,
+      datetime,
+      name,
+      phone,
+      people,
+      method,
+      status
+    );
 
     if (success) {
       res.status(200).json({ message: 'Payment updated successfully' });
