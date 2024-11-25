@@ -144,33 +144,48 @@
   <body>
     <header class="header" data-header>
       <div class="container">
-        <a href="#event" class="logo">
+        <a href="index-admin.html" class="logo">
           <img src=".\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
         </a>
 
         <div class="gourmet-gala">Gourmet Gala</div>
 
-        <nav class="navbar" data-navbar>
+        <nav class="navbar" data-navbar style="display: flexbox; justify-content: center">
           <ul class="navbar-list">
             <li class="navbar-item">
-              <a href="index.html" class="navbar-link hover-underline">
+              <a href="admin-dashboard.html" class="navbar-link hover-underline">
                 <div class="separator"></div>
 
                 <span class="span">Home</span>
               </a>
             </li>
-
             <li class="navbar-item">
-              <a href="profile.html" class="navbar-link hover-underline active">
+              <a href="index-admin.html" class="navbar-link hover-underline">
                 <div class="separator"></div>
 
-                <span class="span">Account</span>
+                <span class="span">Event Management</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="booking-admin.html" class="navbar-link hover-underline active">
+                <div class="separator"></div>
+
+                <span class="span">Table Management</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="user-management.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Account Management</span>
               </a>
             </li>
           </ul>
         </nav>
 
-        <a href="logout.html" class="btn btn-secondary" style="margin-left: 100px">
+        <a class="btn btn-secondary" id="logoutButton" style="margin-left: 100px">
           <span class="text text-1">Log out</span>
           <span class="text text-2" aria-hidden="true">Log out</span>
         </a>
@@ -237,7 +252,7 @@
             </div>
             <div class="mb-5">
               <label for="password-form" class="form-label">Password</label>
-              <input type="text" class="input-field" id="password-form" />
+              <input type="password" class="input-field" id="password-form" />
             </div>
             <div class="mb-5">
               <label for="email-form" class="form-label">Email</label>
@@ -255,7 +270,7 @@
               <label for="nickname-form" class="form-label">Nickname</label>
               <input type="text" class="input-field" id="nickname-form" />
             </div>
-            <label class="form-label">Gender</label><br />
+            <label class="form-label mb-2">Gender</label><br />
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="gender" id="genderMale" value="male" checked />
               <label class="form-check-label" for="genderMale">Male</label>
@@ -264,9 +279,26 @@
               <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="female" />
               <label class="form-check-label" for="genderFemale">Female</label>
             </div>
-            <br />
+            <div class="mb-5">
+              <label class="form-label mb-2">User Status</label><br />
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="userStatus"
+                  id="statusEnabled"
+                  value="true"
+                  checked />
+                <label class="form-check-label" for="statusEnabled">Enabled</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="userStatus" id="statusDisabled" value="false" />
+                <label class="form-check-label" for="statusDisabled">Disabled</label>
+              </div>
+            </div>
             <button type="submit" class="btn" id="updateButton">Save</button>
           </form>
+          <button type="button" class="btn" id="deleteButton">Delete</button>
         </div>
       </div>
     </div>

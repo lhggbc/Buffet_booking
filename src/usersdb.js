@@ -44,7 +44,7 @@ async function validate_user(uid, password) {
   }
 }
 
-async function update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath) {
+async function update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath, enabled) {
   try {
     // 校验输入，确保所有字段都存在
     if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate || !avatarPath) {
@@ -64,7 +64,7 @@ async function update_user(uid, nickname, email, phonenum, password, gender, bir
       gender: gender,
       birthdate: birthdate,
       avatar: avatarPath,
-      enabled: true, // 默认启用用户
+      enabled: enabled, // 默认启用用户
       role: 'user', // 默认角色为用户
       register_date: new Date().toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' }),
     };
@@ -127,6 +127,16 @@ async function fetch_all_users() {
   }
 }
 
+async function delete_user(uid) {
+  try {
+    const users = client.db('buffet_booking').collection('users');
+    const user = await users.deleteOne({ uid: uid });
+    return user;
+  } catch (err) {
+    console.error('Unable to fetch from database!', err);
+  }
+}
+
 init_userdb().catch(console.dir);
 // validate_user('alice', 'ecila').then((res) => console.log(res));
 // update_user('22103456D', '22103456D', 'user', false).then((res) => console.log(res));
@@ -134,4 +144,4 @@ init_userdb().catch(console.dir);
 // username_exist('test').then((res) => console.log(res));
 // update_user('bob', 'bob4321', 'student', true).then((res) => console.log(res));
 
-export { validate_user, update_user, fetch_user, uid_exist, init_userdb, fetch_all_users };
+export { validate_user, update_user, fetch_user, uid_exist, init_userdb, fetch_all_users, delete_user };

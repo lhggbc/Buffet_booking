@@ -178,7 +178,7 @@
             </li>
 
             <li class="navbar-item">
-              <a href="booking-admin.html" class="navbar-link hover-underline">
+              <a href="booking-admin.html" class="navbar-link hover-underline active">
                 <div class="separator"></div>
 
                 <span class="span">Table Management</span>
@@ -186,18 +186,19 @@
             </li>
 
             <li class="navbar-item">
-              <a href="user-management.html" class="navbar-link hover-underline active">
+              <a href="user-management.html" class="navbar-link hover-underline">
                 <div class="separator"></div>
 
                 <span class="span">Account Management</span>
               </a>
             </li>
-
-            <li class="navbar-item" style="margin-left: 150px">
-              <span class="span"></span>
-            </li>
           </ul>
         </nav>
+
+        <a class="btn btn-secondary" id="logoutButton" style="margin-left: 100px">
+          <span class="text text-1">Log out</span>
+          <span class="text text-2" aria-hidden="true">Log out</span>
+        </a>
       </div>
     </header>
 
@@ -208,6 +209,7 @@
         <div class="col-3 d-flex flex-column mt-5 pb-5 border-bottom">
           <h1>Overview</h1>
         </div>
+
         <div class="col-1"></div>
         <div class="col-8 d-flex flex-column mt-5 pb-5 border-bottom">
           <h1>User Accounts</h1>
@@ -223,6 +225,10 @@
                 <p id="totalUsers">150</p>
               </div>
             </div>
+            <br />
+            <button type="button" class="btn" id="addUser" onclick="window.location.href='register.html'">
+              Add User
+            </button>
             <!-- <div class="d-flex align-items-center mb-3">
               <i class="bi bi-card-checklist me-2" style="font-size: 2rem; color: #0d6efd"></i>
               <div>

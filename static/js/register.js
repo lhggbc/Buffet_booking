@@ -77,7 +77,11 @@ document.getElementById('registerButton').addEventListener('click', async functi
 
     if (response.ok && result.status === 'success') {
       alert(`Welcome, ${nickname.value}!\nYou can login with your account now!`);
-      window.location.href = '/login.html';
+      if (result.role === 'admin') {
+        window.location.href = '/user-management.html';
+      } else {
+        window.location.href = '/login.html';
+      }
     } else if (result.status === 'failed') {
       alert(result.message);
     } else {

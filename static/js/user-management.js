@@ -14,6 +14,9 @@ async function loadUsers() {
     userList.innerHTML = ''; // Clear any existing content
 
     users.forEach((user) => {
+      if (user.uid === 'admin') {
+        return; // Skip rendering the admin user
+      }
       // Create user card container
       const userCard = document.createElement('div');
       userCard.className = 'card user-card mb-5';
@@ -50,7 +53,7 @@ async function loadUsers() {
           </div>
           <div class="user-info">
           <div class="mb-2">
-            ${user.enabled === true ? '<span class="badge bg-info">Active</span>' : '<span class="badge bg-danger text-dark">Withdrawn</span>'}
+            ${user.enabled === 'true' ? '<span class="badge bg-info">Active</span>' : '<span class="badge bg-danger text-dark">Disabled</span>'}
           </div>
           <div></div>
             

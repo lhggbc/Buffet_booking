@@ -16,6 +16,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     // document.getElementById('gender').textContent = result.user.gender;
     // document.getElementById('avatar').setAttribute('src', result.user.avatar);
     document.getElementById('avatar-form').setAttribute('src', result.user.avatar);
+    if (result.user.gender === 'male') {
+      document.getElementById('genderMale').checked = true;
+    } else if (result.user.gender === 'female') {
+      document.getElementById('genderFemale').checked = true;
+    }
+    if (result.user.enabled === 'true') {
+      document.getElementById('statusEnabled').checked = true;
+    } else if (result.user.enabled === 'false') {
+      document.getElementById('statusDisabled').checked = true;
+    }
   } else {
     alert('Please login first.');
     window.location.href = '/login.html';
@@ -23,7 +33,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 document.getElementById('editProfileForm').addEventListener('submit', async function (event) {
-  const isConfirmed = confirm('Are you sure you want to update your profile?');
+  const isConfirmed = confirm(
+    `Are you sure you want to update the user ${document.getElementById('uid-form').value} profile?`
+  );
   if (!isConfirmed) {
     return;
   }
@@ -45,14 +57,15 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   const nickname = getValueOrDefault('nickname-form', result.user.nickname);
   const email = getValueOrDefault('email-form', result.user.email);
   const phonenum = getValueOrDefault('phonenum-form', result.user.phonenum);
-  const password = getValueOrDefault('password-form', result.user.password);
+  let password = getValueOrDefault('password-form', result.user.password);
 
   // 处理文件上传
   const avatarInput = document.getElementById('avatar-upload-form');
   const avatar = avatarInput && avatarInput.files.length > 0 ? avatarInput.files[0] : result.user.avatar;
 
   // 直接使用已有值
-  const gender = result.user.gender;
+  const gender = document.querySelector('input[name="gender"]:checked').value;
+  const enabled = document.querySelector('input[name="userStatus"]:checked').value;
   const birthdate = result.user.birthdate;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
@@ -71,6 +84,12 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
     alert('Password must be at least 8 characters long and contain at least one letter.');
     return;
   }
+
+  let passwordChangeFlag = false;
+  if (!password === result.user.password) {
+    passwordChangeFlag = true;
+  }
+
   if (gender !== 'male' && gender !== 'female') {
     alert('Invalid gender.');
     return;
@@ -84,6 +103,8 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   formData.append('gender', gender);
   formData.append('birthdate', birthdate);
   formData.append('avatar', avatar);
+  formData.append('enabled', enabled);
+  formData.append('passwordChangeFlag', passwordChangeFlag);
 
   try {
     const response = await fetch('/auth/edit', {
@@ -103,5 +124,28 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   } catch (error) {
     console.error('Error during profile update:', error);
     alert('Failed to update profile. Please check your connection and try again.');
+  }
+});
+
+document.getElementById('deleteButton').addEventListener('click', async function () {
+  const isConfirmed = confirm(`Are you sure you want to delete the user ${document.getElementById('uid-form').value}?`);
+  if (!isConfirmed) {
+    return;
+  }
+  const response = await fetch('/auth/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ uid: document.getElementById('uid-form').value }),
+  });
+  const result = await response.json();
+  if (response.ok && result.status === 'success') {
+    alert('User deleted successfully.');
+    window.location.href = '/user-management.html';
+  } else if (result.status === 'failed') {
+    alert(result.message);
+  } else {
+    alert('An unknown error occurred. Please try again later.');
   }
 });

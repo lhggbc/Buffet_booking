@@ -93,7 +93,7 @@ router.get('/me', async (req, res) => {
 });
 
 router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => {
-  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar } = req.body;
+  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar, enabled } = req.body;
   const avatarFile = req.file;
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log({
@@ -105,6 +105,7 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
     gender,
     birthdate,
     avatar: avatarFile ? avatarFile.filename : avatar,
+    enabled,
   });
   if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate) {
     return res.status(400).json({
@@ -193,7 +194,8 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
       hashedPassword,
       gender,
       birthdate,
-      avatarPath
+      avatarPath,
+      enabled
     );
     if (userCreated) {
       return res.status(201).json({
@@ -207,6 +209,7 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
           birthdate: birthdate,
           avatar: avatarPath, // 返回头像路径
           password: hashedPassword,
+          enabled: enabled,
         },
       });
     } else {
