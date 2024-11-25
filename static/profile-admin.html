@@ -154,33 +154,48 @@
   <body>
     <header class="header" data-header>
       <div class="container">
-        <a href="#event" class="logo">
+        <a href="index-admin.html" class="logo">
           <img src=".\images\features-icon-3.png" width="80" height="25" alt="Gourmet Gala" />
         </a>
 
         <div class="gourmet-gala">Gourmet Gala</div>
 
-        <nav class="navbar" data-navbar>
+        <nav class="navbar" data-navbar style="display: flexbox; justify-content: center">
           <ul class="navbar-list">
             <li class="navbar-item">
-              <a href="index.html" class="navbar-link hover-underline">
+              <a href="admin-dashboard.html" class="navbar-link hover-underline">
                 <div class="separator"></div>
 
                 <span class="span">Home</span>
               </a>
             </li>
-
             <li class="navbar-item">
-              <a href="profile.html" class="navbar-link hover-underline active">
+              <a href="index-admin.html" class="navbar-link hover-underline">
                 <div class="separator"></div>
 
-                <span class="span">Account</span>
+                <span class="span">Event Management</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="booking-admin.html" class="navbar-link hover-underline active">
+                <div class="separator"></div>
+
+                <span class="span">Table Management</span>
+              </a>
+            </li>
+
+            <li class="navbar-item">
+              <a href="user-management.html" class="navbar-link hover-underline">
+                <div class="separator"></div>
+
+                <span class="span">Account Management</span>
               </a>
             </li>
           </ul>
         </nav>
 
-        <a href="logout.html" class="btn btn-secondary" style="margin-left: 100px">
+        <a class="btn btn-secondary" id="logoutButton" style="margin-left: 100px">
           <span class="text text-1">Log out</span>
           <span class="text text-2" aria-hidden="true">Log out</span>
         </a>
@@ -385,6 +400,6 @@
         lastScrollTop = scrollTop;
       });
     </script>
-    <script src=".\js\profile.js"></script>
+    <!-- <script src=".\js\profile.js"></script> -->
   </body>
 </html>
