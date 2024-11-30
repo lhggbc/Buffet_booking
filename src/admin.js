@@ -3,6 +3,7 @@ import multer from 'multer';
 import { promises as fs } from 'fs';
 import { fetch_all_users, fetch_user, uid_exist, update_user } from './usersdb.js';
 import path from 'path';
+import bcrypt from 'bcrypt';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -92,8 +93,9 @@ router.get('/me', async (req, res) => {
 });
 
 router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => {
-  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar } = req.body;
+  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar, enabled } = req.body;
   const avatarFile = req.file;
+  const hashedPassword = await bcrypt.hash(password, 10);
   console.log({
     uid,
     nickname,
@@ -103,6 +105,7 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
     gender,
     birthdate,
     avatar: avatarFile ? avatarFile.filename : avatar,
+    enabled,
   });
   if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate) {
     return res.status(400).json({
@@ -183,7 +186,17 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
   console.log('Avatar path:', avatarPath);
 
   try {
-    const userCreated = await update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath);
+    const userCreated = await update_user(
+      uid,
+      nickname,
+      email,
+      phonenum,
+      hashedPassword,
+      gender,
+      birthdate,
+      avatarPath,
+      enabled
+    );
     if (userCreated) {
       return res.status(201).json({
         status: 'success',
@@ -195,7 +208,8 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
           gender: gender,
           birthdate: birthdate,
           avatar: avatarPath, // 返回头像路径
-          password: password,
+          password: hashedPassword,
+          enabled: enabled,
         },
       });
     } else {

@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { fetch_user, update_user, uid_exist, init_userdb, validate_user } from './usersdb.js';
+import { fetch_user, update_user, uid_exist, init_userdb, validate_user, delete_user } from './usersdb.js';
 import bcrypt from 'bcrypt';
 
 const storage = multer.diskStorage({
@@ -130,9 +130,10 @@ login.post('/login', form.none(), async (req, res) => {
   console.log(req.body);
 
   const { uid, password } = req.body;
-  const user = await validate_user(uid, password);
+  const user = await fetch_user(uid);
+  const passwordMatch = await bcrypt.compare(password, user.password);
 
-  if (user) {
+  if (passwordMatch) {
     if (!user.enabled) {
       return res.status(401).json({
         status: 'failed',
@@ -275,7 +276,18 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
   const avatarPath = path.join('uploads', 'avatars', avatarFile.filename);
 
   try {
-    const userCreated = await update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userCreated = await update_user(
+      uid,
+      nickname,
+      email,
+      phonenum,
+      hashedPassword,
+      gender,
+      birthdate,
+      avatarPath,
+      'true'
+    );
 
     if (userCreated) {
       return res.status(201).json({
@@ -289,7 +301,9 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
           gender: gender,
           birthdate: birthdate,
           avatar: avatarPath, // 返回头像路径
+          enabled: 'true',
         },
+        role: req.session.role,
       });
     } else {
       // 如果用户创建失败，删除已上传的头像文件以避免冗余文件
@@ -345,19 +359,32 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
   // if (users.size === 0) {
   //   await init_userdb();
   // }
-  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar } = req.body;
+  const { uid, nickname, email, phonenum, password, gender, birthdate, avatar, enabled, passwordChangeFlag } = req.body;
   console.log('Success to get body');
   const avatarFile = req.file;
   console.log('Success to get file');
+  let hashedPassword = password;
+  if (passwordChangeFlag === 'true') {
+    if (!password) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Password must be provided if password change is required',
+      });
+    }
+    hashedPassword = await bcrypt.hash(password, 10);
+  }
+
   console.log({
     uid,
     nickname,
     email,
     phonenum,
-    password,
+    hashedPassword,
     gender,
     birthdate,
     avatar: avatarFile ? avatarFile.filename : avatar,
+    enabled,
+    passwordChangeFlag,
   });
 
   if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate) {
@@ -442,7 +469,17 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
   console.log('Avatar path:', avatarPath);
 
   try {
-    const userCreated = await update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath);
+    const userCreated = await update_user(
+      uid,
+      nickname,
+      email,
+      phonenum,
+      hashedPassword,
+      gender,
+      birthdate,
+      avatarPath,
+      enabled
+    );
     if (userCreated) {
       return res.status(201).json({
         status: 'success',
@@ -454,7 +491,8 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
           gender: gender,
           birthdate: birthdate,
           avatar: avatarPath, // 返回头像路径
-          password: password,
+          enabled: enabled,
+          password: hashedPassword,
         },
       });
     } else {
@@ -475,6 +513,33 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
       status: 'failed',
       message: 'An unexpected error occurred. Please try again later.',
     });
+  }
+});
+
+login.post('/delete', async (req, res) => {
+  console.log('Deleting user:', req.body.uid);
+  if (req.session.logged === true) {
+    if (req.session.uid === req.body.uid) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'You cannot delete your own account',
+      });
+    }
+    const user = await fetch_user(req.body.uid);
+    if (user) {
+      const userDeleted = await delete_user(req.body.uid);
+      if (userDeleted.acknowledged && userDeleted.deletedCount > 0) {
+        return res.json({
+          status: 'success',
+          message: 'User deleted successfully.',
+        });
+      } else {
+        return res.status(500).json({
+          status: 'failed',
+          message: 'Failed to delete user',
+        });
+      }
+    }
   }
 });
 

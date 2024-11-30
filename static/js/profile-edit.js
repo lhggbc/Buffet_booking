@@ -65,6 +65,11 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
     return;
   }
 
+  let passwordChangeFlag = false;
+  if (!password === result.user.password) {
+    passwordChangeFlag = true;
+  }
+
   const passwordRegex = /^(?=.*[A-Za-z]).{8,}$/;
   if (!passwordRegex.test(password.value)) {
     alert('Password must be at least 8 characters long and contain at least one letter.');
@@ -83,6 +88,8 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   formData.append('gender', gender);
   formData.append('birthdate', birthdate);
   formData.append('avatar', avatar);
+  formData.append('enabled', 'true');
+  formData.append('passwordChangeFlag', passwordChangeFlag);
 
   try {
     const response = await fetch('/auth/edit', {
