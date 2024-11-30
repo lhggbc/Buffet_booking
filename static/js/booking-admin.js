@@ -79,6 +79,7 @@ async function fetchCustomerData(eventname) {
   try {
     const userResponse = await fetch('/admin/account-management');
     const users = await userResponse.json();
+    console.log('users', users.length);
 
     if (!users.length) {
       console.warn('No users found.');
@@ -95,17 +96,20 @@ async function fetchCustomerData(eventname) {
       map[user.uid] = { name: user.nickname, contact: user.phonenum };
       return map;
     }, {});
+    console.log(userMap);
 
     payments.forEach((payment) => {
       const userInfo = userMap[payment.userid];
       if (userInfo && Array.isArray(payment.tablesarray)) {
         payment.tablesarray.forEach((tableId) => {
-          customerData[`Table ${tableId}`] = {
+          customerData[tableId] = {
             uid: payment.userid,
             name: userInfo.name,
             contact: userInfo.contact,
+            payment: payment.method,
           };
         });
+        console.log('logged', customerData);
       }
     });
   } catch (error) {
@@ -131,7 +135,9 @@ function showCustomerInfo(table) {
 
   if (customerData[tableId]) {
     const info = customerData[tableId];
-    alert(`UserID: ${info.uid}\nCustomer Name: ${info.name}\nContact: ${info.contact}`);
+    alert(
+      `UserID: ${info.uid}\nCustomer Name: ${info.name}\nContact: ${info.contact}\nMethod of Payment: ${info.payment}`
+    );
   } else {
     alert(`No customer info available for Table ${tableId}.`);
   }
@@ -223,7 +229,10 @@ function save() {
       return data;
     })
     .then((data) => {
-      alert(data.message || 'Changes saved successfully!');
+      alert(
+        data.message ||
+          'Changes saved successfully!\nIf tables are made available pls check corresponding payment database!'
+      );
       // Optionally, re-fetch tables or update the UI as needed
       updateTicketLeft(eventSelect, availableTablesCount);
     })
@@ -281,7 +290,7 @@ function populateTableOptions(tables) {
     tableElement.setAttribute('y', calculateY(rowNumber)); // Implement calculateY
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
-    tableElement.setAttribute('onclick', 'selectTable(this)');
+    //tableElement.setAttribute('onclick', 'selectTable(this)');
     //tableElement.addEventListener('dblclick', () => showCustomerInfo(tableElement));
 
     // Set color based on availability
@@ -337,7 +346,6 @@ function updateTicketLeft(eventname, availableTablesCount) {
         const errorMessage = data.message || 'Failed to update ticket count.';
         throw new Error(errorMessage);
       }
-      alert(data.message || 'Ticket count updated successfully!');
     })
     .catch((error) => {
       console.error('Error updating ticket count:', error);
