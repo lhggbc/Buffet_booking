@@ -272,7 +272,7 @@ async function bookTable() {
     }
 
     alert('Your booking was successful! Redirecting to payment page...');
-    window.location.href = `payment.html`;
+    window.location.href = `payment.html?eventname=${encodeURIComponent(eventSelect.value)}`;
   } catch (error) {
     console.error('Error booking table:', error.message || error);
     alert('Failed to process your booking. Please try again.');
@@ -291,7 +291,7 @@ async function verifyTableStatus(eventname, tablesArray) {
     // Check if any of the selected tables have been booked
     const unavailableTables = tablesArray.filter((tableNumber) => {
       const table = tables.find(
-        (t, index) => index + 1 === tableNumber && !t.status // Match by table number and check status
+        (t, index) => t.tableid === tableNumber && !t.status // Match by table number and check status
       );
       return table !== undefined; // Return unavailable tables
     });

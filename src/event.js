@@ -40,6 +40,31 @@ route.get('/index', async (req, res) => {
 
 route.get('/event/:eventname', async (req, res) => {
   const { eventname } = req.params;
+  console.log(eventname);
+  if (req.session.logged) {
+    const event = await fetch_event(eventname); // Fetch event asynchronously
+    if (event) {
+      return res.json({
+        status: 'success',
+        event: event, // Include fetched events in the response
+      });
+    } else {
+      return res.status(500).json({
+        status: 'failed',
+        message: 'Error fetching events',
+      });
+    }
+  } else {
+    return res.status(401).json({
+      status: 'failed',
+      message: 'Unauthorized',
+    });
+  }
+});
+
+route.get('/eventforpayment/:eventname', async (req, res) => {
+  const { eventname } = req.params;
+  console.log(eventname);
   if (req.session.logged) {
     const event = await fetch_event(eventname); // Fetch event asynchronously
     if (event) {
@@ -85,6 +110,7 @@ route.post('/events', async (req, res) => {
     );
 
     if (result.modifiedCount > 0 || result.upsertedCount > 0) {
+      console.log(eventname, 'updated');
       return res.status(200).json({ message: 'Event updated or added successfully.' });
     } else {
       return res.status(400).json({ message: 'No changes made.' });
@@ -180,6 +206,8 @@ route.post('/payment', async (req, res) => {
       name,
       phone,
       people,
+      method,
+      status,
     });
     return res.status(400).json({ message: 'Missing required fields' });
   }
@@ -279,11 +307,14 @@ route.post('/tables/save', async (req, res) => {
 
 route.get('/payment', async (req, res) => {
   const { eventname } = req.query;
-  const userid = req.session.user.username;
+  const userid = req.session?.uid;
 
   try {
+    console.log('Fetching payment for user:', userid, 'and event:', eventname);
     const payments = client.db('buffet_booking').collection('payments');
     const payment = await payments.findOne({ userid, eventname });
+
+    console.log('Payment Found:', payment);
 
     if (payment) {
       res.status(200).json(payment);
