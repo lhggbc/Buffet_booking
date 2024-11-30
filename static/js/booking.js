@@ -65,6 +65,22 @@ document.getElementById('event-select').addEventListener('change', async functio
   }
 });
 
+function determineRowNumber(tableId) {
+  if (tableId <= 10) return 1;
+  if (tableId <= 20) return 2;
+  return 3;
+}
+
+function calculateX(tableid) {
+  // Calculate the column based on the tableId position in its row
+  return 100 + ((tableid - 1) % 10) * 70; // Start at 100, spacing 70 between tables
+}
+
+function calculateY(rowNumber) {
+  // Calculate the row position (1-based row number determines Y)
+  return 70 + (rowNumber - 1) * 80; // Row 1 at y=70, Row 2 at y=150, Row 3 at y=230
+}
+
 function populateTableOptions(tables) {
   const seatingArea = document.querySelector('.table-group');
 
@@ -80,6 +96,9 @@ function populateTableOptions(tables) {
 
   // Loop through tables and create SVG elements
   tables.forEach((table, index) => {
+    const rowNumber = determineRowNumber(table.tableid); // Get the row number
+    const x = calculateX(table.tableid); // Calculate X position
+    const y = calculateY(rowNumber); // Calculate Y position
     // Create table rectangle
     const tableElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     tableElement.classList.add('table');
@@ -90,6 +109,7 @@ function populateTableOptions(tables) {
     tableElement.setAttribute('height', 60);
 
     // Set table status (available/unavailable)
+    console.log('tablestatus   ', table.tableid, '   ', table.status);
     if (!table.status) {
       tableElement.setAttribute('fill', 'grey'); // Unavailable
       tableElement.style.cursor = 'not-allowed';
@@ -108,18 +128,10 @@ function populateTableOptions(tables) {
     tableLabel.setAttribute('y', y + 35); // Position label slightly below the rectangle center
     tableLabel.setAttribute('text-anchor', 'middle'); // Center the text
     tableLabel.setAttribute('fill', 'black'); // Text color
-    tableLabel.textContent = `Table ${index + 1}`; // Label content
+    tableLabel.textContent = `Table ${table.tableid}`; // Label content
 
     // Append table label to the seating area
     seatingArea.appendChild(tableLabel);
-
-    // Update position for the next table
-    x += 70; // Move to the right
-    if ((index + 1) % 10 === 0) {
-      // Break to new row after 10 tables
-      x = 100; // Reset X to initial position
-      y += 80; // Move down for the next row
-    }
   });
 }
 
