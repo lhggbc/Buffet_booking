@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="hero-slide-content">
                         <h1>${event.eventname}</h1>
                         <p>Date: ${event.date}</p>
-                        <p>Time: ${event.time || 'TBD'}</p>
                         <p>Venue: ${event.venue}</p>
                         <p>Tickets left: ${event.ticketleft}</p>
                        <button class="find-table-btn">${event.description}</button>
@@ -85,7 +84,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         eventCard.innerHTML = `
       <div class="event-image" style="background-image: url('./images/hero-slider-${eventImageIndex}.jpg')">
         <h3 class="event-name">${event.eventname || 'Untitled Event'}</h3>
-        <p class="event-date">Date: ${event.date || 'TBD'}</p>
         <p class="event-venue">Venue: ${event.venue || 'Unknown'}</p>
         <p class="event-tickets-left">Tickets left: ${event.ticketleft || 'N/A'}</p>
         <button class="find-table-btn small-btn">${event.description || 'View More'}</button>
