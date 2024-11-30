@@ -1,17 +1,39 @@
-// Initialize event listeners and fetch data on page load
 document.addEventListener('DOMContentLoaded', async function () {
-  const priceTexts = document.querySelectorAll('.tableprice');
-  priceTexts.forEach((priceText) => {
-    priceText.addEventListener('click', function () {
-      editPrice(priceText);
-    });
+  // Initialize event selector
+  await initEventSelector();
+
+  // Handle event selector change
+  document.getElementById('event-select').addEventListener('change', async function () {
+    const eventname = this.value.trim(); // Get the selected event name
+    if (eventname) {
+      await initTables(eventname); // Initialize tables for the selected event
+      await fetchCustomerData(eventname); // Fetch customer data for the event
+    }
   });
 
-  document.getElementById('event-select').addEventListener('change', async function () {
-    const eventname = this.value;
-    if (eventname) {
-      await initTables(eventname); // Call initTables with the selected event name
-      await fetchCustomerData(eventname);
+  // Delegate `.tableprice` clicks for editing price
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('tableprice')) {
+      editPrice(event.target);
+    }
+  });
+
+  let clickTimeout; // Timeout to differentiate between single and double clicks
+
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('table')) {
+      clearTimeout(clickTimeout); // Clear any pending click timeouts
+      clickTimeout = setTimeout(() => {
+        // Only execute if it's not a double-click
+        selectTable(event.target);
+      }, 250); // Delay to detect double-click
+    }
+  });
+
+  document.addEventListener('dblclick', function (event) {
+    if (event.target.classList.contains('table')) {
+      clearTimeout(clickTimeout); // Clear click timeout to prevent single-click logic
+      showCustomerInfo(event.target);
     }
   });
 });
@@ -32,10 +54,13 @@ async function initEventSelector() {
     eventSelect.innerHTML = '<option value="">Select an event</option>'; // Reset options
 
     eventsArray.forEach((event) => {
-      const option = document.createElement('option');
-      option.value = event.eventname;
-      option.textContent = event.eventname;
-      eventSelect.appendChild(option);
+      if (event.eventname !== 'Grand Buffet') {
+        // Check if the event name is not "Grand Buffet"
+        const option = document.createElement('option');
+        option.value = event.eventname;
+        option.textContent = event.eventname;
+        eventSelect.appendChild(option);
+      }
     });
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -52,34 +77,35 @@ const customerData = {}; // You will fetch this data from your users collection
 // Fetch customer data and payments for the selected event
 async function fetchCustomerData(eventname) {
   try {
-    // Fetch users
-    const userResponse = await fetch('/auth/users');
+    const userResponse = await fetch('/admin/account-management');
     const users = await userResponse.json();
 
-    // Fetch payments for the specified event
+    if (!users.length) {
+      console.warn('No users found.');
+    }
+
     const paymentResponse = await fetch(`/book/payments/${eventname}`);
     const payments = await paymentResponse.json();
 
-    // Clear existing customerData
-    Object.keys(customerData).forEach((key) => delete customerData[key]);
+    if (!payments.length) {
+      console.warn('No payments found for the event:', eventname);
+    }
 
-    // Map users by their user IDs for quick access
-    const userMap = {};
-    users.forEach((user) => {
-      userMap[user.uid] = {
-        name: user.nickname,
-        contact: user.phonenum,
-      };
-    });
+    const userMap = users.reduce((map, user) => {
+      map[user.uid] = { name: user.nickname, contact: user.phonenum };
+      return map;
+    }, {});
 
-    // Iterate through payments and associate with corresponding users
     payments.forEach((payment) => {
       const userInfo = userMap[payment.userid];
-      if (userInfo) {
-        customerData[`Table ${payment.tableId}`] = {
-          name: userInfo.name,
-          contact: userInfo.contact,
-        };
+      if (userInfo && Array.isArray(payment.tablesarray)) {
+        payment.tablesarray.forEach((tableId) => {
+          customerData[`Table ${tableId}`] = {
+            uid: payment.userid,
+            name: userInfo.name,
+            contact: userInfo.contact,
+          };
+        });
       }
     });
   } catch (error) {
@@ -101,10 +127,13 @@ function selectTable(table) {
 
 // Function to show customer info for a selected table
 function showCustomerInfo(table) {
-  const tableName = table.querySelector('text').textContent;
-  if (customerData[tableName]) {
-    const info = customerData[tableName];
-    alert(`Customer Name: ${info.name}\nContact: ${info.contact}`);
+  const tableId = table.getAttribute('data-tableid');
+
+  if (customerData[tableId]) {
+    const info = customerData[tableId];
+    alert(`UserID: ${info.uid}\nCustomer Name: ${info.name}\nContact: ${info.contact}`);
+  } else {
+    alert(`No customer info available for Table ${tableId}.`);
   }
 }
 
@@ -113,12 +142,16 @@ function editPrice(priceTextElement) {
   const currentPrice = priceTextElement.textContent.replace('$', ''); // Get the current price
   const newPrice = prompt(`Enter new price for this row:`, currentPrice);
 
-  if (newPrice) {
-    if (isNaN(newPrice) || parseFloat(newPrice) < 0) {
-      alert('Please enter a valid non-negative number for the price.');
-      return;
-    }
+  if (newPrice === null) {
+    return; // User canceled the prompt
+  }
 
+  if (isNaN(newPrice) || parseFloat(newPrice) < 0) {
+    alert('Please enter a valid non-negative number for the price.');
+    return;
+  }
+
+  if (newPrice) {
     // Update the price in the text element
     priceTextElement.textContent = `$${parseFloat(newPrice).toFixed(2)}`;
 
@@ -133,38 +166,36 @@ function editPrice(priceTextElement) {
 }
 
 function save() {
+  let availableTablesCount = 0; // Count tables with status true
   // Collect all table data to save
   const tables = document.querySelectorAll('.table');
-  const eventSelect = document.getElementById('event-select');
-  const selectedEvent = eventSelect.value.trim(); // Trim whitespace
+  const eventSelect = document.getElementById('event-select').value;
   const tableData = [];
 
   tables.forEach((table) => {
-    const tableText = table.querySelector('text');
-    const tableName = tableText ? tableText.textContent.trim() : '';
+    const tableId = parseInt(table.getAttribute('data-tableid'), 10);
     const priceAttr = table.getAttribute('data-price');
-    const price = priceAttr ? parseFloat(priceAttr) : 0; // Ensure price is a number
+    const price = priceAttr ? parseInt(priceAttr) : 0; // Ensure price is a number
     const status = table.style.fill !== 'grey'; // true if available, false if unavailable
+    if (status) {
+      availableTablesCount++; // Increment count of tables with status true
+    }
 
-    // Extract table ID safely using regex
-    const tableIdMatch = tableName.match(/Table\s+(\d+)/i);
-    const tableId = tableIdMatch ? parseInt(tableIdMatch[1], 10) : null;
-
-    if (tableId !== null && selectedEvent) {
+    if (tableId !== null && eventSelect) {
       // Ensure tableId extraction succeeded and event is selected
       tableData.push({
         tableid: tableId,
-        eventname: selectedEvent,
+        eventname: eventSelect,
         price: price,
         status: status,
       });
     } else {
-      console.warn(`Skipping table due to invalid data. Table Name: "${tableName}", Event: "${selectedEvent}"`);
+      console.warn(`Skipping table due to invalid data. Table Name: "${tableId}", Event: "${eventSelect}"`);
     }
   });
 
   // Validate selected event
-  if (!selectedEvent) {
+  if (!eventSelect) {
     alert('Please select an event before saving table data.');
     return;
   }
@@ -194,6 +225,7 @@ function save() {
     .then((data) => {
       alert(data.message || 'Changes saved successfully!');
       // Optionally, re-fetch tables or update the UI as needed
+      updateTicketLeft(eventSelect, availableTablesCount);
     })
     .catch((error) => {
       console.error('Error saving changes:', error);
@@ -244,12 +276,13 @@ function populateTableOptions(tables) {
     const tableElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     tableElement.classList.add('table');
     tableElement.setAttribute('data-price', table.price);
+    tableElement.setAttribute('data-tableid', table.tableid);
     tableElement.setAttribute('x', calculateX(table.tableid - 1)); // Implement calculateX
     tableElement.setAttribute('y', calculateY(rowNumber)); // Implement calculateY
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
     tableElement.setAttribute('onclick', 'selectTable(this)');
-    tableElement.addEventListener('dblclick', () => showCustomerInfo(tableElement));
+    //tableElement.addEventListener('dblclick', () => showCustomerInfo(tableElement));
 
     // Set color based on availability
     tableElement.setAttribute('fill', table.status ? 'hsl(38, 61%, 73%)' : 'grey');
@@ -262,6 +295,7 @@ function populateTableOptions(tables) {
     tableLabel.setAttribute('x', calculateX(table.tableid - 1) + 30); // Center the text
     tableLabel.setAttribute('y', calculateY(rowNumber) + 30); // Vertically center
     tableLabel.setAttribute('text-anchor', 'middle');
+    tableLabel.classList.add('tablename');
     tableLabel.setAttribute('fill', 'black');
     tableLabel.textContent = `Table ${table.tableid}`;
     seatingArea.appendChild(tableLabel);
@@ -282,4 +316,31 @@ function calculateX(index) {
 function calculateY(rowNumber) {
   // Example: Row 1 at y=50, Row 2 at y=150, Row 3 at y=250
   return 70 + (rowNumber - 1) * 80;
+}
+
+// Function to update ticketleft for the selected event
+function updateTicketLeft(eventname, availableTablesCount) {
+  fetch('/book/eventtickets', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      eventname: eventname,
+      ticketleft: availableTablesCount, // Update with the counted tables
+    }),
+    credentials: 'include',
+  })
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok) {
+        const errorMessage = data.message || 'Failed to update ticket count.';
+        throw new Error(errorMessage);
+      }
+      alert(data.message || 'Ticket count updated successfully!');
+    })
+    .catch((error) => {
+      console.error('Error updating ticket count:', error);
+      alert(`Error: ${error.message || 'There was an error updating the ticket count.'}`);
+    });
 }
