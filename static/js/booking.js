@@ -16,10 +16,13 @@ async function initEventSelector() {
     // Populate event dropdown
     eventSelect.innerHTML = '<option value="">Select an event</option>';
     eventsArray.forEach((event) => {
-      const option = document.createElement('option');
-      option.value = event.eventname;
-      option.textContent = event.eventname;
-      eventSelect.appendChild(option);
+      if (event.eventname !== 'Grand Buffet') {
+        // Check if the event name is not "Grand Buffet"
+        const option = document.createElement('option');
+        option.value = event.eventname;
+        option.textContent = event.eventname;
+        eventSelect.appendChild(option);
+      }
     });
   } catch (error) {
     console.error('Error fetching events:', error);

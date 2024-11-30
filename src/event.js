@@ -121,6 +121,39 @@ route.post('/events', async (req, res) => {
   }
 });
 
+route.post('/eventtickets', async (req, res) => {
+  const { eventname, ticketleft } = req.body;
+
+  // Validate input
+  if (!eventname || ticketleft === undefined) {
+    return res.status(400).json({ error: 'Event name and ticket left count are required.' });
+  }
+
+  try {
+    const events = client.db('buffet_booking').collection('events');
+
+    // Update the ticketleft field of the specified event
+    const result = await events.updateOne(
+      { eventname }, // Query to match the event by name
+      {
+        $set: {
+          ticketleft: ticketleft, // Update the ticketleft count
+        },
+      }
+    );
+
+    if (result.matchedCount > 0) {
+      console.log(`Event "${eventname}" updated with ticketleft: ${ticketleft}`);
+      return res.status(200).json({ message: 'Ticket count updated successfully!' });
+    } else {
+      return res.status(404).json({ error: 'Event not found.' });
+    }
+  } catch (err) {
+    console.error('Unable to update ticket count in the database!', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Route to handle deleting events
 route.delete('/events/:eventname', async (req, res) => {
   const { eventname } = req.params;
@@ -262,32 +295,25 @@ route.post('/tables/save', async (req, res) => {
       .map((table) => {
         const { tableid, eventname, price, status } = table;
 
-        // Validate table fields
         if (
-          typeof tableid !== 'number' ||
-          typeof eventname !== 'string' ||
-          typeof price !== 'number' ||
-          typeof status !== 'boolean'
+          typeof tableid === 'number' &&
+          typeof eventname === 'string' &&
+          typeof price === 'number' &&
+          typeof status === 'boolean'
         ) {
           return {
             updateOne: {
-              filter: { tableid: table.tableid, eventname: table.eventname },
-              update: {
-                $set: {
-                  price: table.price,
-                  status: table.status,
-                },
-              },
+              filter: { tableid, eventname },
+              update: { $set: { price, status } },
               upsert: true,
             },
           };
         } else {
-          // Alternatively, skip invalid entries or handle them as needed
           console.warn(`Invalid table data encountered: ${JSON.stringify(table)}`);
           return null;
         }
       })
-      .filter((op) => op !== null); // Remove null operations
+      .filter((op) => op !== null);
 
     if (bulkOps.length === 0) {
       return res.status(400).json({ message: 'No valid table data to update.' });
@@ -327,10 +353,12 @@ route.get('/payment', async (req, res) => {
   }
 });
 
-route.get('/payments', async (req, res) => {
+route.get('/payments/:eventname', async (req, res) => {
   try {
+    const { eventname } = req.params;
+    console.log(eventname);
     const payments = client.db('buffet_booking').collection('payments');
-    const payment = await payments.find({});
+    const payment = await payments.find({ eventname: eventname }).toArray();
 
     if (payment) {
       res.status(200).json(payment);
@@ -342,5 +370,4 @@ route.get('/payments', async (req, res) => {
     res.status(500).json({ error: 'Unable to fetch payment details' });
   }
 });
-
 export default route;
