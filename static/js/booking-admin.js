@@ -233,8 +233,9 @@ async function initTables(eventname) {
 function populateTableOptions(tables) {
   // Assuming each row has its own group with data-row attribute
   tables.forEach((table, index) => {
+    console.log('tablestatus   ', table.tableid, '   ', table.status);
     // Determine row based on tableId
-    const rowNumber = determineRowNumber(index + 1); // Implement this based on your logic
+    const rowNumber = determineRowNumber(table.tableid); // Implement this based on your logic
     const seatingArea = document.querySelector(`.table-group[data-row="${rowNumber}"]`);
 
     if (!seatingArea) return; // Skip if the group doesn't exist
@@ -243,7 +244,7 @@ function populateTableOptions(tables) {
     const tableElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     tableElement.classList.add('table');
     tableElement.setAttribute('data-price', table.price);
-    tableElement.setAttribute('x', calculateX(index)); // Implement calculateX
+    tableElement.setAttribute('x', calculateX(table.tableid - 1)); // Implement calculateX
     tableElement.setAttribute('y', calculateY(rowNumber)); // Implement calculateY
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
@@ -252,17 +253,17 @@ function populateTableOptions(tables) {
 
     // Set color based on availability
     tableElement.setAttribute('fill', table.status ? 'hsl(38, 61%, 73%)' : 'grey');
-    tableElement.style.cursor = table.status ? 'pointer' : 'not-allowed';
+    //tableElement.style.cursor = table.status ? 'pointer' : 'not-allowed';
 
     seatingArea.appendChild(tableElement);
 
     // Create table label
     const tableLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    tableLabel.setAttribute('x', calculateX(index) + 30); // Center the text
+    tableLabel.setAttribute('x', calculateX(table.tableid - 1) + 30); // Center the text
     tableLabel.setAttribute('y', calculateY(rowNumber) + 30); // Vertically center
     tableLabel.setAttribute('text-anchor', 'middle');
     tableLabel.setAttribute('fill', 'black');
-    tableLabel.textContent = `Table ${index + 1}`;
+    tableLabel.textContent = `Table ${table.tableid}`;
     seatingArea.appendChild(tableLabel);
   });
 }
