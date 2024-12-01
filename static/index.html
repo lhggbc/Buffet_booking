@@ -1,3 +1,4 @@
+GUO Beichen 22103456D, Li Haige 22101812D
 <!doctype html>
 <html lang="en">
   <head>
@@ -513,4 +514,21 @@
     <script src="js/index.js"></script>
     <script src="js/logout.js"></script>
   </body>
+  <footer class="bg-dark text-white text-center py-3 fixed-bottom">
+    © 22103456D GUO Beichen 22101812D Li Haige - EIE4432 Group Project
+    <div id="systemDateTime"></div>
+  </footer>
+
+  <script>
+    function formatDateTime() {
+      const now = new Date();
+      return now.toLocaleString();
+    }
+
+    document.getElementById('systemDateTime').textContent = formatDateTime();
+
+    setInterval(() => {
+      document.getElementById('systemDateTime').textContent = formatDateTime();
+    }, 1000);
+  </script>
 </html>

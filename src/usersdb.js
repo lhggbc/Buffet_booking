@@ -111,7 +111,7 @@ async function fetch_user(uid) {
 
 async function uid_exist(uid) {
   try {
-    const users = client.db('lab5db').collection('users');
+    const users = client.db('buffet_booking').collection('users');
     const user = await users.findOne({ uid: uid });
     if (user === null) {
       return false;
