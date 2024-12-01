@@ -1,3 +1,4 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 document.getElementById('logoutButton').addEventListener('click', async function (event) {
   event.preventDefault();
 

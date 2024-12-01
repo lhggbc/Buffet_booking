@@ -1,6 +1,9 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 import express from 'express';
 import multer from 'multer';
 import { promises as fs } from 'fs';
+import nodemailer from 'nodemailer';
+
 import { fetch_events, update_event, fetch_event, event_exist } from './eventdb.js';
 import {
   fetch_tables,
@@ -15,6 +18,35 @@ import client from './dbclient.js';
 import path from 'path';
 
 const route = express.Router();
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Or another email provider
+  auth: {
+    user: 'chrishg0923@gmail.com', // Replace with your email
+    pass: 'syrd hrmq hjav zrlm', // Replace with your password or app-specific password
+  },
+});
+
+route.post('/send-email', async (req, res) => {
+  const { to, subject, htmlContent } = req.body;
+
+  // Email options
+  const mailOptions = {
+    from: 'chrishg0923@gmail.com', // Replace with your email
+    to, // Recipient email
+    subject, // Email subject
+    html: htmlContent, // HTML content of the email
+  };
+
+  try {
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+    res.status(200).json({ message: 'Email sent successfully!' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send email.' });
+  }
+});
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

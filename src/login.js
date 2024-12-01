@@ -1,3 +1,4 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 import express from 'express';
 import multer from 'multer';
 import { promises as fs } from 'fs';
@@ -36,7 +37,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   // fileFilter: fileFilter,
-  // limits: { fileSize: 5 * 1024 * 1024 }, // 限制文件大小为5MB
+  // limits: { fileSize: 5 * 1024 * 1024 },
 });
 
 // const users = new Map();
@@ -309,13 +310,12 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
           phonenum: phonenum,
           gender: gender,
           birthdate: birthdate,
-          avatar: avatarPath, // 返回头像路径
+          avatar: avatarPath,
           enabled: 'true',
         },
         role: req.session.role,
       });
     } else {
-      // 如果用户创建失败，删除已上传的头像文件以避免冗余文件
       fs.unlinkSync(avatarPath);
       return res.status(500).json({
         status: 'failed',
@@ -324,7 +324,7 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
     }
   } catch (err) {
     console.error('Error during user creation:', err);
-    // 如果发生错误，删除已上传的头像文件以避免冗余文件
+
     if (avatarFile) {
       fs.unlinkSync(avatarPath);
     }
@@ -471,9 +471,7 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
   }
   console.log('Avatar:', avatar);
 
-  const avatarPath = avatarFile
-    ? path.join('uploads', 'avatars', avatarFile.filename) // 新上传头像
-    : avatar; // 使用旧路径
+  const avatarPath = avatarFile ? path.join('uploads', 'avatars', avatarFile.filename) : avatar;
 
   console.log('Avatar path:', avatarPath);
 
@@ -499,13 +497,12 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
           phonenum: phonenum,
           gender: gender,
           birthdate: birthdate,
-          avatar: avatarPath, // 返回头像路径
+          avatar: avatarPath,
           enabled: enabled,
           password: hashedPassword,
         },
       });
     } else {
-      // 如果用户创建失败，删除已上传的头像文件以避免冗余文件
       fs.unlinkSync(avatarPath);
       return res.status(500).json({
         status: 'failed',
@@ -514,7 +511,7 @@ login.post('/edit', upload.single('avatar'), async (req, res) => {
     }
   } catch (err) {
     console.error('Error during user creation:', err);
-    // 如果发生错误，删除已上传的头像文件以避免冗余文件
+
     if (avatarFile) {
       fs.unlinkSync(avatarPath);
     }
@@ -555,7 +552,7 @@ login.post('/delete', async (req, res) => {
 login.get('/payments', async (req, res) => {
   const userid = req.session.uid;
   if (!userid) {
-    return res.status(400).json({ error: 'Missing uid in request body' }); // 用户 ID 缺失
+    return res.status(400).json({ error: 'Missing uid in request body' });
   }
 
   try {
