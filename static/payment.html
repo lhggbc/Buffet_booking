@@ -646,6 +646,11 @@
           .map((table) => table.trim());
 
         try {
+          const email = await fetchUserEmail();
+          if (!email) {
+            throw new Error('Unable to retrieve user email');
+          }
+
           let isPaymentSuccessful = false;
 
           // Process payment based on the selected method
@@ -668,6 +673,7 @@
               phone,
               people,
               paymentMethod,
+              email, // Include email here
               true
             );
             tablesArray = tablesArray.map((num) => parseInt(num, 10));
@@ -692,6 +698,41 @@
                 description: eventData.event.description,
               }),
             });
+
+            // Generate email content
+            const emailContent = `
+                            <h1>Thank You for Your Booking!</h1>
+                            <p>Here are your booking details:</p>
+                            <ul>
+                              <li><strong>Event:</strong> ${eventname}</li>
+                              <li><strong>Date and Time:</strong> ${datetime}</li>
+                              <li><strong>Seats:</strong> ${tablesArray.join(', ')}</li>
+                              <li><strong>Total Cost:</strong> $${totalCost}</li>
+                              <li><strong>Number of People:</strong> ${people}</li>
+                              <li><strong>Phone:</strong> ${phone}</li>
+                            </ul>
+                            <p>We look forward to seeing you at the event!</p>
+                            <p>Best regards,<br>Your Booking Team</p>
+                          `;
+
+            // Send the email
+            const emailResponse = await fetch('/book/send-email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                to: email, // User's email address
+                subject: `Booking Confirmation for ${eventname}`, // Subject line
+                htmlContent: emailContent, // Email content
+              }),
+            });
+
+            if (emailResponse.ok) {
+              console.log('Confirmation email sent successfully');
+            } else {
+              console.error('Failed to send confirmation email');
+            }
 
             statusMessage.textContent = 'Payment successful! Thank you for your purchase.';
             paymentStatusDiv.classList.remove('hidden');
@@ -826,6 +867,34 @@
           console.log('Payment updated:', result.message);
         } catch (err) {
           console.error('Unable to update the database!', err);
+        }
+      }
+
+      async function fetchUserEmail() {
+        try {
+          const userResponse = await fetch('/admin/account-management', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!userResponse.ok) {
+            throw new Error('Failed to fetch user email');
+          }
+
+          const users = await userResponse.json(); // Assuming this returns an array of user objects
+          // Assuming there's a way to identify the current user (e.g., by user ID or session):
+          console.log('users', users);
+          const currentUser = users.find((user) => user.uid === paymentDetails.userid); // Adjust this logic as per your authentication system
+          if (currentUser && currentUser.email) {
+            return currentUser.email;
+          } else {
+            throw new Error('No email found for the logged-in user');
+          }
+        } catch (error) {
+          console.error('Error fetching user email:', error);
+          return null;
         }
       }
     </script>
