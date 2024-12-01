@@ -203,13 +203,29 @@ function selectTable(table) {
   // Update displayed total price
   document.getElementById('total-price').textContent = `Total: $${total}`;
 }
-
+async function fetch_payment(eventname) {
+  try {
+    const response = await fetch(`/book/payment?eventname=${encodeURIComponent(eventname)}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch payment details');
+    }
+    return await response.json();
+  } catch (err) {
+    console.error('Unable to fetch from database!', err);
+    return null;
+  }
+}
 async function bookTable() {
   const eventSelect = document.getElementById('event-select');
   const name = document.getElementById('name').value.trim();
   const people = document.getElementById('people').value;
   const phone = document.getElementById('phone').value.trim();
   const datetime = document.getElementById('date-time').value;
+  const payment = await fetch_payment(eventSelect.value);
+  if (payment) {
+    alert('You have already booked for this event!');
+    return;
+  }
 
   // Validate inputs
   if (!eventSelect.value) {
