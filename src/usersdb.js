@@ -47,15 +47,12 @@ async function validate_user(uid, password) {
 
 async function update_user(uid, nickname, email, phonenum, password, gender, birthdate, avatarPath, enabled) {
   try {
-    // 校验输入，确保所有字段都存在
     if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate || !avatarPath) {
       throw new Error('Invalid input: All fields are required.');
     }
 
-    // 获取 MongoDB 集合
     const users = client.db('buffet_booking').collection('users');
 
-    // 组织用户数据
     const user = {
       uid: uid.trim(),
       nickname: nickname.trim(),
@@ -65,20 +62,17 @@ async function update_user(uid, nickname, email, phonenum, password, gender, bir
       gender: gender,
       birthdate: birthdate,
       avatar: avatarPath,
-      enabled: enabled, // 默认启用用户
-      role: 'user', // 默认角色为用户
+      enabled: enabled,
+      role: 'user',
       register_date: new Date().toLocaleString('en-US', { timeZone: 'Asia/Hong_Kong' }),
     };
 
-    // 使用 MongoDB 的 updateOne 方法进行更新或插入
-    const filter = { uid: uid.trim() }; // 查找条件：uid
-    const update = { $set: user }; // 要更新的数据
-    const options = { upsert: true }; // 如果没有匹配记录则插入
+    const filter = { uid: uid.trim() };
+    const update = { $set: user };
+    const options = { upsert: true };
 
-    // 执行更新操作
     const result = await users.updateOne(filter, update, options);
 
-    // 根据结果输出日志
     if (result.matchedCount > 0 && result.modifiedCount > 0) {
       console.log(`User ${uid} updated successfully.`);
     } else if (result.upsertedCount > 0) {
