@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fetch_user, update_user, uid_exist, init_userdb, validate_user, delete_user } from './usersdb.js';
 import bcrypt from 'bcrypt';
+import { getAllPayments } from './tabledb.js';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -131,6 +132,12 @@ login.post('/login', form.none(), async (req, res) => {
 
   const { uid, password } = req.body;
   const user = await fetch_user(uid);
+  if (user === null) {
+    return res.status(401).json({
+      status: 'failed',
+      message: `User \`${uid}\` does not exist`,
+    });
+  }
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (passwordMatch) {
@@ -540,6 +547,23 @@ login.post('/delete', async (req, res) => {
         });
       }
     }
+  }
+});
+
+login.get('/payments', async (req, res) => {
+  const userid = req.session.uid;
+  if (!userid) {
+    return res.status(400).json({ error: 'Missing uid in request body' }); // 用户 ID 缺失
+  }
+
+  try {
+    const payments = await getAllPayments(userid);
+    console.log('userid:', userid);
+    console.log('Payments:', payments);
+    res.json(payments);
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    res.status(500).json({ error: 'Failed to fetch payments' });
   }
 });
 
