@@ -97,9 +97,15 @@ async function fetch_user(uid) {
   try {
     const users = client.db('buffet_booking').collection('users');
     const user = await users.findOne({ uid: uid });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     return user;
   } catch (err) {
     console.error('Unable to fetch from database!', err);
+    return null;
   }
 }
 

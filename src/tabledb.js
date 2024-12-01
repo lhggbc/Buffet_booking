@@ -160,6 +160,21 @@ async function fetch_payment(userid, eventname) {
   }
 }
 
+async function getAllPayments(userid) {
+  try {
+    const paymentsCollection = client.db('buffet_booking').collection('payments');
+
+    const payments = await paymentsCollection.find({ userid }).toArray();
+    console.log('userid:', userid);
+    console.log('Payments:', payments);
+
+    return payments;
+  } catch (err) {
+    console.error('Unable to fetch payments from database!', err);
+    throw err;
+  }
+}
+
 async function update_tablestatus(tableid, eventname, status) {
   try {
     const tables = client.db('buffet_booking').collection('tables');
@@ -190,4 +205,13 @@ async function update_tablestatus(tableid, eventname, status) {
 }
 
 init_db().catch(console.dir);
-export { fetch_tables, update_table, fetch_table, table_exist, update_payment, fetch_payment, update_tablestatus };
+export {
+  fetch_tables,
+  update_table,
+  fetch_table,
+  table_exist,
+  update_payment,
+  fetch_payment,
+  update_tablestatus,
+  getAllPayments,
+};
