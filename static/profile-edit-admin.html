@@ -1,3 +1,4 @@
+<!-- GUO Beichen 22103456D, Li Haige 22101812D -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -239,8 +240,6 @@
         </div>
         <div class="col-1"></div>
         <div class="col-6 d-flex flex-column mt-5 pb-5 border-bottom">
-          <form id="editProfileForm" class="mt-4" enctype="multipart/form-data">
-            <!-- 头像上传和预览部分 -->
             <label for="avatar-upload-form" class="profile-avatar" id="avatar-display-form">
               <input type="file" id="avatar-upload-form" accept="image/*" style="display: none" />
               <img id="avatar-form" src=".\images\default-avatar.jpg" alt="Avatar" />
@@ -330,4 +329,21 @@
     <script src="js/profile-edit-admin.js"></script>
     <script src=".\js\logout.js"></script>
   </body>
+  <footer class="bg-dark text-white text-center py-3 fixed-bottom">
+    © 22103456D GUO Beichen 22101812D Li Haige - EIE4432 Group Project
+    <div id="systemDateTime"></div>
+  </footer>
+
+  <script>
+    function formatDateTime() {
+      const now = new Date();
+      return now.toLocaleString();
+    }
+
+    document.getElementById('systemDateTime').textContent = formatDateTime();
+
+    setInterval(() => {
+      document.getElementById('systemDateTime').textContent = formatDateTime();
+    }, 1000);
+  </script>
 </html>
