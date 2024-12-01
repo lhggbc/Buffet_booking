@@ -280,7 +280,11 @@ function populateTableOptions(tables) {
     const seatingArea = document.querySelector(`.table-group[data-row="${rowNumber}"]`);
 
     if (!seatingArea) return; // Skip if the group doesn't exist
-
+    // Reset the price for this row
+    const priceText = seatingArea.querySelector(`.tableprice[data-row="${rowNumber}"]`);
+    if (priceText) {
+      priceText.textContent = `$${table.price}`; // Update the price in the legend
+    }
     // Create table rectangle
     const tableElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     tableElement.classList.add('table');
@@ -290,8 +294,6 @@ function populateTableOptions(tables) {
     tableElement.setAttribute('y', calculateY(rowNumber)); // Implement calculateY
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
-    //tableElement.setAttribute('onclick', 'selectTable(this)');
-    //tableElement.addEventListener('dblclick', () => showCustomerInfo(tableElement));
 
     // Set color based on availability
     tableElement.setAttribute('fill', table.status ? 'hsl(38, 61%, 73%)' : 'grey');

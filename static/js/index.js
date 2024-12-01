@@ -20,8 +20,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Alternate between hero-slider-1 and hero-slider-2
-      const imageIndex = index % 2 === 0 ? 1 : 2;
-      slide.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
+      const bgImage = event.bgimg
+        ? `/uploads/bgimg/${event.bgimg}`
+        : `./images/hero-slider-${index % 2 === 0 ? 1 : 2}.jpg`;
+      slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('${bgImage}')`;
 
       slide.innerHTML = `
                     <div class="hero-slide-content">
@@ -78,11 +80,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const eventCard = document.createElement('div');
         eventCard.className = 'event-card';
 
-        // Alternate the background image for event cards
-        const eventImageIndex = index % 2 === 0 ? 1 : 2;
+        const bgImage = event.bgimg
+          ? `/uploads/bgimg/${event.bgimg}`
+          : `./images/hero-slider-${index % 2 === 0 ? 1 : 2}.jpg`;
 
         eventCard.innerHTML = `
-      <div class="event-image" style="background-image: url('./images/hero-slider-${eventImageIndex}.jpg')">
+      <div class="event-image" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('${bgImage}')">
         <h3 class="event-name">${event.eventname || 'Untitled Event'}</h3>
         <p class="event-venue">Venue: ${event.venue || 'Unknown'}</p>
         <p class="event-tickets-left">Tickets left: ${event.ticketleft || 'N/A'}</p>

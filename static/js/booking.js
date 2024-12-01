@@ -86,6 +86,7 @@ function calculateY(rowNumber) {
 
 function populateTableOptions(tables) {
   const seatingArea = document.querySelector('.table-group');
+  const legendPrices = document.querySelectorAll('.tableprice'); // Select all the legend <text> elements
 
   // Ensure seatingArea exists
   if (!seatingArea) {
@@ -93,9 +94,32 @@ function populateTableOptions(tables) {
     return;
   }
 
+  // Ensure legend prices exist
+  if (!legendPrices || legendPrices.length === 0) {
+    console.error('Error: .tableprice elements not found in the DOM.');
+    return;
+  }
+
   seatingArea.innerHTML = ''; // Clear existing tables
   let x = 100; // Initial X position
   let y = 70; // Initial Y position
+
+  // Update legend prices based on specific tableid
+  tables.forEach((table) => {
+    if (table.tableid === 1) {
+      // Update row 1 price
+      const row1Text = Array.from(legendPrices).find((text) => text.dataset.row === '1');
+      if (row1Text) row1Text.textContent = `$${table.price}`;
+    } else if (table.tableid === 11) {
+      // Update row 2 price
+      const row2Text = Array.from(legendPrices).find((text) => text.dataset.row === '2');
+      if (row2Text) row2Text.textContent = `$${table.price}`;
+    } else if (table.tableid === 21) {
+      // Update row 3 price
+      const row3Text = Array.from(legendPrices).find((text) => text.dataset.row === '3');
+      if (row3Text) row3Text.textContent = `$${table.price}`;
+    }
+  });
 
   // Loop through tables and create SVG elements
   tables.forEach((table, index) => {
