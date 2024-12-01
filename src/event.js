@@ -12,9 +12,37 @@ import {
   update_tablestatus,
 } from './tabledb.js';
 import client from './dbclient.js';
+import path from 'path';
 
-const form = multer();
 const route = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = './static/uploads/bgimg/';
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif/;
+  const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mime = allowedTypes.test(file.mimetype);
+  if (ext && mime) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed (jpeg, jpg, png, gif).'));
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  // fileFilter: fileFilter,
+});
 
 route.get('/index', async (req, res) => {
   if (req.session.logged) {
@@ -87,14 +115,53 @@ route.get('/eventforpayment/:eventname', async (req, res) => {
 });
 
 // Route to handle adding/updating events
+route.post('/eventwithimg', upload.single('bgimg'), async (req, res) => {
+  const { eventname } = req.body; // Event name from the request body
+  const bgimg = req.file ? req.file.filename : null; // Get the uploaded file's name
+
+  if (!eventname) {
+    return res.status(400).json({ error: 'Event name is required.' });
+  }
+
+  if (!bgimg) {
+    return res.status(400).json({ error: 'Background image is required.' });
+  }
+
+  try {
+    const events = client.db('buffet_booking').collection('events'); // Replace with your database/collection
+    const result = await events.updateOne(
+      { eventname }, // Query to match the event by name
+      {
+        $set: {
+          bgimg: bgimg, // Save the image filename in the database
+        },
+      },
+      { upsert: true } // Create the event if it doesn't exist
+    );
+
+    if (result.modifiedCount > 0 || result.upsertedCount > 0) {
+      console.log(`${eventname} updated or added successfully.`);
+      return res.status(200).json({ message: 'Event updated or added successfully.' });
+    } else {
+      return res.status(400).json({ message: 'No changes made to the event.' });
+    }
+  } catch (err) {
+    console.error('Unable to update the database!', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Route to handle adding/updating events
 route.post('/events', async (req, res) => {
   const { eventname, date, venue, ticketleft, description } = req.body;
+  console.log('rebody', req.body);
 
   if (!eventname || !date || !venue || !ticketleft) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
 
   try {
+    console.log('update', req.body);
     const events = client.db('buffet_booking').collection('events');
     const result = await events.updateOne(
       { eventname }, // Query to match the event by name
