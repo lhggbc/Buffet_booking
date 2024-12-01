@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import { fetch_all_users, fetch_user, uid_exist, update_user } from './usersdb.js';
 import path from 'path';
 import bcrypt from 'bcrypt';
+import { getAllPayments } from './tabledb.js';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -230,6 +231,23 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
       status: 'failed',
       message: 'An unexpected error occurred. Please try again later.',
     });
+  }
+});
+
+router.get('/payments', async (req, res) => {
+  const userid = req.session.uid_admin;
+  if (!userid) {
+    return res.status(400).json({ error: 'Missing uid in request body' }); // 用户 ID 缺失
+  }
+
+  try {
+    const payments = await getAllPayments(userid);
+    console.log('userid:', userid);
+    console.log('Payments:', payments);
+    res.json(payments);
+  } catch (error) {
+    console.error('Error fetching payments:', error);
+    res.status(500).json({ error: 'Failed to fetch payments' });
   }
 });
 
