@@ -204,10 +204,10 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
     password,
     gender,
     birthdate,
-    avatar: avatarFile ? avatarFile.filename : 'No avatar uploaded',
+    avatar: avatarFile ? avatarFile.filename : 'images\\default-avatar.jpg',
   });
 
-  if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate || !avatarFile) {
+  if (!uid || !nickname || !email || !phonenum || !password || !gender || !birthdate) {
     return res.status(400).json({
       status: 'failed',
       message: 'Missing fields or avatar. Please fill in all the details and upload an avatar.',
@@ -280,7 +280,9 @@ login.post('/register', upload.single('avatar'), async (req, res) => {
     });
   }
 
-  const avatarPath = path.join('uploads', 'avatars', avatarFile.filename);
+  const avatarPath = avatarFile?.filename
+    ? path.join('uploads', 'avatars', avatarFile.filename)
+    : 'images\\default-avatar.jpg';
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);

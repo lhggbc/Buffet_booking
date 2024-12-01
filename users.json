@@ -1,26 +1,15 @@
 [
   {
     "uid": "admin",
-    "nickname": "admin",
+    "avatar": "uploads\\avatars\\avatar-1732516566265-410368153.jpg",
+    "birthdate": "2024-11-01",
     "email": "admin@gmail.com",
-    "phonenum": "1234567890",
-    "password": "admin123",
+    "enabled": "true",
     "gender": "male",
-    "birthdate": "2024-11-01",
-    "enabled": true,
-    "role": "admin",
-    "avatar": ""
-  },
-  {
-    "uid": "admin1",
-    "nickname": "admin1",
-    "email": "guobeichen0228@163.com",
+    "nickname": "admin",
+    "password": "$2b$10$wiWINVT4cNPoolz/xCP5B.FWdmFd94v1/HCwA3urB9IBTouGTCwv6",
     "phonenum": "12345678990",
-    "password": "admin1admin1",
-    "gender": "male",
-    "birthdate": "2024-11-01",
-    "avatar": "uploads\\avatars\\avatar-1732391366147-463200443.png",
-    "enabled": true,
-    "role": "user"
+    "register_date": "11/25/2024, 4:06:21 PM",
+    "role": "admin"
   }
 ]

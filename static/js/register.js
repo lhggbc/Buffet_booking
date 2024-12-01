@@ -63,8 +63,7 @@ document.getElementById('registerButton').addEventListener('click', async functi
   if (avatar.files.length > 0) {
     formData.append('avatar', avatar.files[0]);
   } else {
-    alert('Please upload an avatar.');
-    return;
+    formData.append('avatar', null);
   }
 
   try {
