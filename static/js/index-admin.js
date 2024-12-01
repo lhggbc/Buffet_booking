@@ -2,6 +2,8 @@ let events = []; // Global variable to store events
 let editingEventId = null; // To keep track of the event being edited
 
 document.addEventListener('DOMContentLoaded', async () => {
+  resetForm();
+  editingEventId = null; // Clear editing mode
   await fetchEvents(); // Fetch events on page load
   initializeSearch(); // Initialize the search functionality
 });
@@ -32,9 +34,10 @@ function populateSlider() {
     if (index === 0) {
       slide.classList.add('active'); // Set active class only for the first slide
     }
-
-    const imageIndex = index % 2 === 0 ? 1 : 2;
-    slide.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
+    const bgImage = event.bgimg
+      ? `/uploads/bgimg/${event.bgimg}`
+      : `./images/hero-slider-${index % 2 === 0 ? 1 : 2}.jpg`;
+    slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('${bgImage}')`;
 
     slide.innerHTML = `
       <div class="hero-slide-content">
@@ -83,8 +86,10 @@ function populateEventCards() {
   events.events.forEach((event, index) => {
     const eventCard = document.createElement('div');
     eventCard.className = 'event-card';
-    const imageIndex = index % 2 === 0 ? 1 : 2;
-    eventCard.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
+    const bgImage = event.bgimg
+      ? `/uploads/bgimg/${event.bgimg}`
+      : `./images/hero-slider-${index % 2 === 0 ? 1 : 2}.jpg`;
+    eventCard.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('${bgImage}')`;
     eventCard.innerHTML = `
       <h3>${event.eventname}</h3>
       <p>Date: ${event.date}</p>
@@ -124,6 +129,22 @@ async function deleteEvent(eventname) {
     populateSlider();
 
     alert('Event deleted successfully!');
+  } catch (error) {
+    console.error('Error deleting event:', error);
+  }
+}
+async function deleteevent(eventname) {
+  try {
+    const response = await fetch(`/book/events/${eventname}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error('Failed to delete event');
+
+    events.events = events.events.filter((event) => event.eventname !== eventname);
+
+    // Re-populate the event cards and slider instead of reloading
+    populateEventCards();
+    populateSlider();
   } catch (error) {
     console.error('Error deleting event:', error);
   }
@@ -176,19 +197,47 @@ async function addEvent() {
   const venue = document.getElementById('event-venue').value;
   const ticketLeft = document.getElementById('event-tickets').value;
   const description = document.getElementById('event-description').value;
+  const bgimg = document.getElementById('event-bgimg').files[0]; // Check for uploaded image file
 
   if (title && date && venue && ticketLeft && description) {
-    const eventData = { eventname: title, date, venue, ticketleft: ticketLeft, description };
+    const Left = parseNumberOrReturnString(ticketLeft);
+    const eventData = { eventname: title, date, venue, ticketleft: Left, description };
 
     try {
-      const response = await fetch('/book/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
-      });
+      let response;
+      if (editingEventId) {
+        // Editing an existing event
+        response = await fetch(`/book/events`, {
+          method: 'POST', // Use PUT for updating
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData),
+        });
+      } else {
+        // Adding a new event
+        response = await fetch('/book/events', {
+          method: 'POST', // Use POST for adding
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData),
+        });
+      }
 
       if (!response.ok) throw new Error('Failed to save event');
       const newEvent = await response.json();
+
+      if (bgimg) {
+        const formData = new FormData();
+        formData.append('eventname', title); // Include the event name
+        formData.append('bgimg', bgimg); // Include the uploaded image file
+
+        const imgResponse = await fetch('/book/eventwithimg', {
+          method: 'POST',
+          body: formData, // Send the image data
+        });
+
+        if (!imgResponse.ok) throw new Error('Failed to upload event image');
+        const imgResult = await imgResponse.json(); // Optionally handle the response
+        console.log('Image upload response:', imgResult);
+      }
 
       if (editingEventId) {
         // Update the existing event in the events array
@@ -205,6 +254,7 @@ async function addEvent() {
       populateEventCards(); // Re-populate event cards
       populateSlider(); // Re-populate slider
       alert('Event added/updated successfully!');
+      window.location.reload();
     } catch (error) {
       console.error('Error adding/updating event:', error);
     }
@@ -350,4 +400,12 @@ function filterEventCards(eventName) {
       card.style.display = 'none'; // Hide non-matching card
     }
   });
+}
+function parseNumberOrReturnString(value) {
+  // Check if the value is a string and represents a valid number
+  if (typeof value === 'string' && !isNaN(value) && value.trim() !== '') {
+    return parseInt(value, 10); // Return parsed integer
+  } else {
+    return value; // Return the original string
+  }
 }
