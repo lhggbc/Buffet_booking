@@ -103,7 +103,10 @@ async function update_payment(
   eventname,
   tablesarray,
   totalprice,
-  date,
+  datetime,
+  name,
+  phone,
+  people,
   method = 'None',
   status = false,
   timestamp = updateDateTime()
@@ -111,25 +114,31 @@ async function update_payment(
   try {
     const payments = client.db('buffet_booking').collection('payments');
     const result = await payments.updateOne(
-      { userid, eventname },
+      { userid, eventname }, // Match on user ID and event name
       {
         $set: {
           tablesarray,
           totalprice,
-          date,
+          datetime,
+          name,
+          phone,
+          people,
           timestamp,
           method,
           status,
         },
       },
-      { upsert: true }
+      { upsert: true } // Insert if no record exists
     );
 
     if (result.upsertedCount > 0) {
-      console.log('Added 1 payment');
+      console.log('Successfully added a new payment');
+      return true;
+    } else if (result.modifiedCount > 0) {
+      console.log('Successfully updated an existing payment');
       return true;
     } else {
-      console.log('Added 0 payment');
+      console.log('No changes were made to the payment record');
       return true;
     }
   } catch (err) {
@@ -151,5 +160,34 @@ async function fetch_payment(userid, eventname) {
   }
 }
 
+async function update_tablestatus(tableid, eventname, status) {
+  try {
+    const tables = client.db('buffet_booking').collection('tables');
+    const result = await tables.updateOne(
+      { tableid, eventname },
+      {
+        $set: {
+          status, // Only update the status field
+        },
+      },
+      { upsert: false } // Do not create a new document if it doesn't exist
+    );
+
+    if (result.modifiedCount > 0) {
+      console.log(`Table ${tableid} status updated successfully.`);
+      return true;
+    } else if (result.matchedCount > 0) {
+      console.log(`Table ${tableid} already has the desired status.`);
+      return true;
+    } else {
+      console.log(`Table ${tableid} not found.`);
+      return false;
+    }
+  } catch (err) {
+    console.error('Unable to update the database!', err);
+    return false;
+  }
+}
+
 init_db().catch(console.dir);
-export { fetch_tables, update_table, fetch_table, table_exist, update_payment, fetch_payment };
+export { fetch_tables, update_table, fetch_table, table_exist, update_payment, fetch_payment, update_tablestatus };

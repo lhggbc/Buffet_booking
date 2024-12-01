@@ -3,6 +3,7 @@ let editingEventId = null; // To keep track of the event being edited
 
 document.addEventListener('DOMContentLoaded', async () => {
   await fetchEvents(); // Fetch events on page load
+  initializeSearch(); // Initialize the search functionality
 });
 
 async function fetchEvents() {
@@ -11,7 +12,8 @@ async function fetchEvents() {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    events = await response.json(); // Store events globally
+    const data = await response.json(); // { status: 'success', events: [...] }
+    events = data; // Store the entire response
 
     populateSlider();
     populateEventCards(); // Populate the event cards
@@ -19,6 +21,7 @@ async function fetchEvents() {
     console.error('Error fetching events:', error);
   }
 }
+
 function populateSlider() {
   const eventSliderContainer = document.getElementById('event');
   eventSliderContainer.innerHTML = ''; // Clear existing content for slider
@@ -30,24 +33,49 @@ function populateSlider() {
       slide.classList.add('active'); // Set active class only for the first slide
     }
 
-    // Alternate between hero-slider-1 and hero-slider-2
     const imageIndex = index % 2 === 0 ? 1 : 2;
     slide.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
 
     slide.innerHTML = `
-            <div class="hero-slide-content">
-                <h1>${event.eventname}</h1>
-                <p>Date: ${event.date}</p>
-                <p>Time: ${event.time || 'TBD'}</p>
-                <p>Venue: ${event.venue}</p>
-                <p>Tickets left: ${event.ticketleft}</p>
-                <a href="booking.html?event=${index + 1}" class="find-table-btn">View Description</a>
-            </div>
-        `;
+      <div class="hero-slide-content">
+        <h1>${event.eventname}</h1>
+        <p>Date: ${event.date}</p>
+        <p>Venue: ${event.venue}</p>
+        <p>Tickets left: ${event.ticketleft}</p>
+        <button class="find-table-btn">${event.description}</button>
+      </div>
+    `;
 
     eventSliderContainer.appendChild(slide); // Append the slide to the slider container
   });
+
+  // Add navigation buttons
+  const slidebutton = document.createElement('div');
+  slidebutton.innerHTML = `
+    <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
+      <ion-icon name="chevron-back"></ion-icon>
+    </button>
+    <button class="slider-btn next" aria-label="slide to next" data-next-btn>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </button>`;
+  eventSliderContainer.appendChild(slidebutton);
+
+  // Attach event listeners after slider is populated
+  const prevBtn = document.querySelector('.slider-btn.prev');
+  const nextBtn = document.querySelector('.slider-btn.next');
+
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  // Update heroSlides variable after adding slides
+  heroSlides = document.querySelectorAll('.hero-slide');
+  currentSlide = 0; // Reset current slide index
+  showSlide(currentSlide); // Show the first slide
+
+  // Start automatic sliding
+  setInterval(nextSlide, 5000);
 }
+
 function populateEventCards() {
   const eventsListContainer = document.querySelector('.events-list');
   eventsListContainer.innerHTML = ''; // Clear existing content for event cards
@@ -55,19 +83,30 @@ function populateEventCards() {
   events.events.forEach((event, index) => {
     const eventCard = document.createElement('div');
     eventCard.className = 'event-card';
+    const imageIndex = index % 2 === 0 ? 1 : 2;
+    eventCard.style.backgroundImage = `url('./images/hero-slider-${imageIndex}.jpg')`;
     eventCard.innerHTML = `
-                <div class="event-image" style="background-image: url('./images/default-event.jpg');"> 
-                    <h3>${event.eventname}</h3>
-                    <p>Date: ${event.date}</p>
-                    <p>Venue: ${event.venue}</p>
-                    <p>Tickets left: ${event.ticketleft}</p>
-                    <div class="button-group">
-                        <button class="edit-btn" onclick="editEvent(${index})">Edit</button>
-                        <button class="delete-btn" onclick="deleteEvent('${event.eventname}')">Delete</button>
-                    </div>
-                </div>
-            `;
+      <h3>${event.eventname}</h3>
+      <p>Date: ${event.date}</p>
+      <p>Venue: ${event.venue}</p>
+      <p>Tickets left: ${event.ticketleft}</p>
+      <div class="button-group">
+        <button class="edit-btn" data-index="${index}">Edit</button>
+        <button class="delete-btn" data-eventname="${event.eventname}">Delete</button>
+      </div>
+    `;
     eventsListContainer.appendChild(eventCard); // Append the card to the events list
+
+    // Attach event listeners directly to the buttons
+    const editButton = eventCard.querySelector('.edit-btn');
+    editButton.addEventListener('click', function () {
+      editEvent(index);
+    });
+
+    const deleteButton = eventCard.querySelector('.delete-btn');
+    deleteButton.addEventListener('click', function () {
+      deleteEvent(event.eventname);
+    });
   });
 }
 
@@ -77,9 +116,14 @@ async function deleteEvent(eventname) {
       method: 'DELETE',
     });
     if (!response.ok) throw new Error('Failed to delete event');
-    events = events.filter((event) => event.eventname !== eventname); // Remove from local array
-    populateEventCards(); // Re-populate cards
+
+    events.events = events.events.filter((event) => event.eventname !== eventname);
+
+    // Re-populate the event cards and slider instead of reloading
+    populateEventCards();
     populateSlider();
+
+    alert('Event deleted successfully!');
   } catch (error) {
     console.error('Error deleting event:', error);
   }
@@ -87,10 +131,10 @@ async function deleteEvent(eventname) {
 
 function toggleEventForm() {
   const form = document.getElementById('event-form');
-  form.style.display = form.style.display === 'none' ? 'block' : 'none';
-
-  // Reset form fields
-  if (form.style.display === 'none') {
+  if (form.style.display === 'none' || form.style.display === '') {
+    form.style.display = 'block';
+  } else {
+    form.style.display = 'none';
     resetForm();
   }
 }
@@ -100,18 +144,29 @@ function resetForm() {
   document.getElementById('event-date').value = '';
   document.getElementById('event-venue').value = '';
   document.getElementById('event-tickets').value = '';
+  document.getElementById('event-description').value = '';
   editingEventId = null; // Reset editing ID
   document.getElementById('form-title').textContent = 'Add New Event';
 }
 
 function editEvent(index) {
-  const event = events[index];
+  const event = events.events[index];
+  if (!event) {
+    console.error(`No event found at index ${index}`);
+    return;
+  }
+
+  console.log('Editing Event:', event); // Debugging line
+
   document.getElementById('event-title').value = event.eventname;
   document.getElementById('event-date').value = event.date;
   document.getElementById('event-venue').value = event.venue;
   document.getElementById('event-tickets').value = event.ticketleft;
+  document.getElementById('event-description').value = event.description;
+
   editingEventId = event.eventname; // Store the name of the event being edited
   document.getElementById('form-title').textContent = 'Edit Event';
+
   toggleEventForm(); // Show form
 }
 
@@ -120,9 +175,10 @@ async function addEvent() {
   const date = document.getElementById('event-date').value;
   const venue = document.getElementById('event-venue').value;
   const ticketLeft = document.getElementById('event-tickets').value;
+  const description = document.getElementById('event-description').value;
 
-  if (title && date && venue && ticketLeft) {
-    const eventData = { eventname: title, date, venue, ticketleft: ticketLeft };
+  if (title && date && venue && ticketLeft && description) {
+    const eventData = { eventname: title, date, venue, ticketleft: ticketLeft, description };
 
     try {
       const response = await fetch('/book/events', {
@@ -135,14 +191,20 @@ async function addEvent() {
       const newEvent = await response.json();
 
       if (editingEventId) {
-        // Update the local events array
-        const index = events.findIndex((event) => event.eventname === editingEventId);
-        events[index] = newEvent; // Replace with updated event
+        // Update the existing event in the events array
+        const index = events.events.findIndex((event) => event.eventname === editingEventId);
+        if (index !== -1) {
+          events.events[index] = newEvent; // Replace with updated event
+        }
       } else {
-        events.push(newEvent); // Add new event to the array
+        // Add the new event to the events array
+        events.events.push(newEvent);
       }
-      populateEventCards(); // Refresh cards
+
       resetForm(); // Reset form fields
+      populateEventCards(); // Re-populate event cards
+      populateSlider(); // Re-populate slider
+      alert('Event added/updated successfully!');
     } catch (error) {
       console.error('Error adding/updating event:', error);
     }
@@ -151,4 +213,141 @@ async function addEvent() {
   } else {
     alert('Please fill out all fields.');
   }
+}
+
+var heroSlides = document.querySelectorAll('.hero-slide');
+const prevBtn = document.querySelector('.slider-btn.prev');
+const nextBtn = document.querySelector('.slider-btn.next');
+let currentSlide = 0;
+
+function showSlide(n) {
+  heroSlides[currentSlide].classList.remove('active');
+  currentSlide = (n + heroSlides.length) % heroSlides.length;
+  heroSlides[currentSlide].classList.add('active');
+}
+
+function prevSlide() {
+  showSlide(currentSlide - 1);
+}
+
+function nextSlide() {
+  showSlide(currentSlide + 1);
+}
+
+setInterval(nextSlide, 5000);
+
+let lastScrollTop = 0;
+const header = document.querySelector('.header');
+
+window.addEventListener('scroll', function () {
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+  if (scrollTop > lastScrollTop) {
+    // Scrolling down
+    header.classList.add('hide');
+    header.classList.remove('show'); // Ensure the show class is removed
+  } else if (scrollTop == 0) {
+    // Scrolling up
+    header.classList.remove('hide');
+    header.classList.add('show'); // Add show class to make it visible
+  }
+  lastScrollTop = scrollTop;
+});
+
+function initializeSearch() {
+  const searchInput = document.getElementById('event-search');
+  const suggestionsList = document.getElementById('suggestions');
+
+  // Handle input in the search bar
+  searchInput.addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    suggestionsList.innerHTML = ''; // Clear previous suggestions
+
+    if (query === '') {
+      // Show all event cards if query is empty
+      showAllEventCards();
+      suggestionsList.classList.remove('active');
+      return;
+    }
+
+    // Filter event cards based on input
+    const filteredEvents = events.events.filter(
+      (event) =>
+        event.eventname.toLowerCase().includes(query) ||
+        event.date.toLowerCase().includes(query) ||
+        event.venue.toLowerCase().includes(query)
+    );
+
+    // Show or hide event cards based on the filtered results
+    const allEventCards = document.querySelectorAll('.event-card');
+    allEventCards.forEach((card, index) => {
+      const event = events.events[index];
+      if (
+        event.eventname.toLowerCase().includes(query) ||
+        event.date.toLowerCase().includes(query) ||
+        event.venue.toLowerCase().includes(query)
+      ) {
+        card.style.display = 'block'; // Show matching card
+      } else {
+        card.style.display = 'none'; // Hide non-matching card
+      }
+    });
+
+    // Populate suggestions
+    const matchedSuggestions = events.events.filter((event) => event.eventname.toLowerCase().includes(query));
+
+    if (matchedSuggestions.length > 0) {
+      matchedSuggestions.forEach((event) => {
+        const suggestionItem = document.createElement('div');
+        suggestionItem.className = 'suggestion-item';
+        suggestionItem.textContent = event.eventname;
+        suggestionItem.onclick = () => {
+          searchInput.value = event.eventname; // Fill input with selected event
+          suggestionsList.innerHTML = ''; // Clear suggestions
+          filterEventCards(event.eventname); // Filter event cards based on selection
+        };
+        suggestionsList.appendChild(suggestionItem);
+      });
+      suggestionsList.classList.add('active'); // Show suggestions
+    } else {
+      suggestionsList.classList.remove('active'); // Hide suggestions if no matches
+    }
+  });
+
+  // Handle pressing 'Enter' key in the search bar
+  searchInput.addEventListener('keyup', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission or page refresh
+      const selectedEventName = this.value.trim();
+      if (selectedEventName !== '') {
+        filterEventCards(selectedEventName);
+        suggestionsList.classList.remove('active'); // Hide suggestions
+      }
+    }
+  });
+
+  // Hide suggestions when clicking outside
+  document.addEventListener('click', function (e) {
+    if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+      suggestionsList.classList.remove('active'); // Hide suggestions if clicked outside
+    }
+  });
+}
+
+function showAllEventCards() {
+  const allEventCards = document.querySelectorAll('.event-card');
+  allEventCards.forEach((card) => {
+    card.style.display = 'block'; // Show all cards
+  });
+}
+function filterEventCards(eventName) {
+  const allEventCards = document.querySelectorAll('.event-card');
+  allEventCards.forEach((card, index) => {
+    const event = events.events[index];
+    if (event.eventname === eventName) {
+      card.style.display = 'block'; // Show matching card
+    } else {
+      card.style.display = 'none'; // Hide non-matching card
+    }
+  });
 }

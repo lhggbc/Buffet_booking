@@ -157,10 +157,16 @@
         background-color: #3d3d3d; /* Light gray background on hover */
         color: hsl(38, 61%, 73%);
       }
+
+      .small-btn {
+        padding: 5px 10px; /* Smaller padding */
+        font-size: 12px; /* Smaller font size */
+        height: auto; /* Adjust height dynamically */
+      }
     </style>
   </head>
 
-  <body>
+  <body style="font-family: 'Georgia', serif">
     <header class="header" data-header>
       <div class="container">
         <a href="index.html" class="logo">
@@ -242,7 +248,7 @@
           <a href="booking.html?event=2" class="find-table-btn">View Description</a>
         </div>
       </div>
-      -->
+      
       <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
         <ion-icon name="chevron-back"></ion-icon>
       </button>
@@ -255,7 +261,14 @@
         <img src="./images/hero-icon.png" width="48" height="48" alt="booking icon" />
 
         <span class="label-2 text-center span">Book A Table</span>
-      </a>
+      </a>-->
+    </div>
+    <div id="description-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Event Description</h2>
+        <p id="modal-description"></p>
+      </div>
     </div>
 
     <section class="section events text-center" aria-labelledby="events-label" id="eventcards">
@@ -408,7 +421,7 @@
     </a>
 
     <script>
-      const heroSlides = document.querySelectorAll('.hero-slide');
+      /*const heroSlides = document.querySelectorAll('.hero-slide');
       const prevBtn = document.querySelector('.slider-btn.prev');
       const nextBtn = document.querySelector('.slider-btn.next');
       let currentSlide = 0;
@@ -495,7 +508,7 @@
         if (!searchInput.contains(e.target)) {
           suggestionsList.classList.remove('active'); // Hide suggestions if clicked outside
         }
-      });
+      });*/
     </script>
     <script src="js/index.js"></script>
   </body>

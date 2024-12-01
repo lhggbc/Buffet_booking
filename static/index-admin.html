@@ -280,7 +280,7 @@
     </style>
   </head>
 
-  <body>
+  <body style="font-family: 'Georgia', serif">
     <header class="header" data-header>
       <div class="container">
         <a href="index-admin.html" class="logo">
@@ -360,14 +360,14 @@
           <a href="booking.html?event=2" class="find-table-btn">View Description</a>
         </div>
       </div>
-    -->
+    
       <button class="slider-btn prev" aria-label="slide to previous" data-prev-btn>
         <ion-icon name="chevron-back"></ion-icon>
       </button>
 
       <button class="slider-btn next" aria-label="slide to next" data-next-btn>
         <ion-icon name="chevron-forward"></ion-icon>
-      </button>
+      </button>-->
     </div>
 
     <section class="section events text-center" aria-labelledby="events-label" id="eventcards">
@@ -404,6 +404,7 @@
           <input type="date" id="event-date" required />
           <input type="text" id="event-venue" placeholder="Event Venue" required />
           <input type="number" id="event-tickets" placeholder="Tickets Left" required />
+          <input type="text" id="event-description" placeholder="Description" required />
           <button onclick="addEvent()">Add Event</button>
           <button onclick="toggleEventForm()">Cancel</button>
         </div>
@@ -466,97 +467,6 @@
       <ion-icon name="chevron-up" aria-hidden="true"></ion-icon>
     </a>
 
-    <script>
-      const heroSlides = document.querySelectorAll('.hero-slide');
-      const prevBtn = document.querySelector('.slider-btn.prev');
-      const nextBtn = document.querySelector('.slider-btn.next');
-      let currentSlide = 0;
-
-      function showSlide(n) {
-        heroSlides[currentSlide].classList.remove('active');
-        currentSlide = (n + heroSlides.length) % heroSlides.length;
-        heroSlides[currentSlide].classList.add('active');
-      }
-
-      function prevSlide() {
-        showSlide(currentSlide - 1);
-      }
-
-      function nextSlide() {
-        showSlide(currentSlide + 1);
-      }
-
-      prevBtn.addEventListener('click', prevSlide);
-      nextBtn.addEventListener('click', nextSlide);
-      setInterval(nextSlide, 5000);
-
-      let lastScrollTop = 0;
-      const header = document.querySelector('.header');
-
-      window.addEventListener('scroll', function () {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (scrollTop > lastScrollTop) {
-          // Scrolling down
-          header.classList.add('hide');
-          header.classList.remove('show'); // Ensure the show class is removed
-        } else if (scrollTop == 0) {
-          // Scrolling up
-          header.classList.remove('hide');
-          header.classList.add('show'); // Add show class to make it visible
-        }
-        lastScrollTop = scrollTop;
-      });
-
-      //manage events
-      function deleteEvent(button) {
-        // Remove the event card from the DOM
-        const card = button.closest('.event-card');
-        if (card) {
-          card.remove();
-        }
-      }
-
-      function toggleEventForm() {
-        const form = document.getElementById('event-form');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-      }
-
-      function addEvent() {
-        const title = document.getElementById('event-title').value;
-        const date = document.getElementById('event-date').value;
-        const venue = document.getElementById('event-venue').value;
-
-        if (title && date && venue) {
-          const eventsList = document.querySelector('.events-list');
-
-          const newCard = document.createElement('div');
-          newCard.className = 'event-card';
-          newCard.innerHTML = `
-                <div class="event-image" style="background-image: url('./images/default-event.jpg');"> 
-                    <h3>${title}</h3>
-                    <p>Date: ${date}</p>
-                    <p>Venue: ${venue}</p>
-                    <div class="button-group">
-                        <a href="#" class="edit-btn">Edit</a>
-                        <button class="delete-btn" onclick="deleteEvent(this)">Delete</button>
-                    </div>
-                </div>
-            `;
-          eventsList.appendChild(newCard);
-
-          // Clear the input fields
-          document.getElementById('event-title').value = '';
-          document.getElementById('event-date').value = '';
-          document.getElementById('event-venue').value = '';
-
-          // Hide the form after adding
-          toggleEventForm();
-        } else {
-          alert('Please fill out all fields.');
-        }
-      }
-    </script>
     <script src="js/index-admin.js"></script>
   </body>
 </html>
