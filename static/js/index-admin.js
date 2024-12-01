@@ -202,7 +202,7 @@ async function addEvent() {
 
   if (title && date && venue && ticketLeft && description) {
     const Left = parseNumberOrReturnString(ticketLeft);
-    const eventData = { eventname: editingEventId, date, venue, ticketleft: Left, description };
+    const eventData = { eventname: title, date, venue, ticketleft: Left, description };
 
     try {
       let response;
