@@ -195,6 +195,15 @@ route.post('/events', async (req, res) => {
   try {
     console.log('update', req.body);
     const events = client.db('buffet_booking').collection('events');
+    await events.updateOne(
+      { eventname },
+      {
+        $set: {
+          description: 'Welcome! ' + description,
+        },
+      },
+      { upsert: true }
+    );
     const result = await events.updateOne(
       { eventname }, // Query to match the event by name
       {

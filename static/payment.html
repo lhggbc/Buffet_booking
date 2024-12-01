@@ -773,11 +773,15 @@
 
       // Function to validate credit card fields
       function validateCreditCardFields() {
+        const cardname = document.getElementById('card-name').value;
         const cardNumber = document.getElementById('card-number').value;
         const cardExpiry = document.getElementById('expiry').value;
         const cardCvc = document.getElementById('cvv').value;
 
         // Basic validation checks
+        if (!cardname) {
+          alert('Please enter name');
+        }
         if (!/^(\d{4}[- ]?){3}\d{4}$/.test(cardNumber)) {
           alert('Please enter a valid credit card number.');
           return false;
