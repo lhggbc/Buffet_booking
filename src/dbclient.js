@@ -1,3 +1,4 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import config from './config.js';
 const connect_uri = config.CONNECTION_STR;

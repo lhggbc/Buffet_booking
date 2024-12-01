@@ -1,3 +1,4 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 let events = []; // Global variable to store events
 let editingEventId = null; // To keep track of the event being edited
 

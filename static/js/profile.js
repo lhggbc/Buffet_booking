@@ -1,3 +1,4 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 document.addEventListener('DOMContentLoaded', async function () {
   const response = await fetch('/auth/me');
   const result = await response.json();

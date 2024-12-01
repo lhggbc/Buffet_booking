@@ -1,3 +1,4 @@
+//GUO Beichen 22103456D, Li Haige 22101812D
 // Initialize event selector on page load
 document.addEventListener('DOMContentLoaded', initEventSelector);
 
