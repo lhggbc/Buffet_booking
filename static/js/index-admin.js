@@ -2,6 +2,8 @@ let events = []; // Global variable to store events
 let editingEventId = null; // To keep track of the event being edited
 
 document.addEventListener('DOMContentLoaded', async () => {
+  resetForm();
+  editingEventId = null; // Clear editing mode
   await fetchEvents(); // Fetch events on page load
   initializeSearch(); // Initialize the search functionality
 });
@@ -199,15 +201,25 @@ async function addEvent() {
 
   if (title && date && venue && ticketLeft && description) {
     const Left = parseNumberOrReturnString(ticketLeft);
-    console.log(Left);
     const eventData = { eventname: title, date, venue, ticketleft: Left, description };
 
     try {
-      const response = await fetch('/book/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eventData),
-      });
+      let response;
+      if (editingEventId) {
+        // Editing an existing event
+        response = await fetch(`/book/events`, {
+          method: 'POST', // Use PUT for updating
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData),
+        });
+      } else {
+        // Adding a new event
+        response = await fetch('/book/events', {
+          method: 'POST', // Use POST for adding
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData),
+        });
+      }
 
       if (!response.ok) throw new Error('Failed to save event');
       const newEvent = await response.json();
@@ -242,6 +254,7 @@ async function addEvent() {
       populateEventCards(); // Re-populate event cards
       populateSlider(); // Re-populate slider
       alert('Event added/updated successfully!');
+      window.location.reload();
     } catch (error) {
       console.error('Error adding/updating event:', error);
     }
