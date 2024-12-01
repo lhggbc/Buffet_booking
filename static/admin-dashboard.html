@@ -1,3 +1,4 @@
+<!-- GUO Beichen 22103456D, Li Haige 22101812D -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -13,7 +14,6 @@
 
   <style>
     .container {
-      /* font-family: 'Georgia', 'Times New Roman', serif; */
       max-width: 1960px;
       margin: auto;
       padding: 20px;
@@ -60,27 +60,27 @@
     }
     .header {
       visibility: visible;
-      transition: top 0.3s; /* Smooth transition for the header */
-      position: fixed; /* Keep header fixed at the top */
+      transition: top 0.3s;
+      position: fixed;
       width: 100%;
-      z-index: 1000; /* Ensure it's above other content */
-      top: 0; /* Start at the top */
+      z-index: 1000;
+      top: 0;
     }
     .header.hide {
       transform: translateY(-100%);
       transition-delay: 250ms;
-      visibility: hidden; /* Hide visibility when scrolling down */
+      visibility: hidden;
     }
 
     .header.show {
-      visibility: visible; /* Ensure it's visible when shown */
-      transform: translateY(0); /* Reset translation */
+      visibility: visible;
+      transform: translateY(0);
     }
 
     .gourmet-gala {
-      font-size: 4rem; /* Large text size */
-      color: hsl(0, 0%, 100%); /* Dark gray color */
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elegance */
+      font-size: 4rem;
+      color: hsl(0, 0%, 100%);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
       font-family: 'Georgia', serif;
     }
   </style>
@@ -160,13 +160,11 @@
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
         if (scrollTop > lastScrollTop) {
-          // Scrolling down
           header.classList.add('hide');
-          header.classList.remove('show'); // Ensure the show class is removed
+          header.classList.remove('show');
         } else if (scrollTop == 0) {
-          // Scrolling up
           header.classList.remove('hide');
-          header.classList.add('show'); // Add show class to make it visible
+          header.classList.add('show');
         }
         lastScrollTop = scrollTop;
       });
@@ -175,4 +173,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src=".\js\logout.js"></script>
   </body>
+  <footer class="bg-dark text-white text-center py-3 fixed-bottom">
+    © 22103456D GUO Beichen 22101812D Li Haige - EIE4432 Group Project
+    <div id="systemDateTime"></div>
+  </footer>
+
+  <script>
+    function formatDateTime() {
+      const now = new Date();
+      return now.toLocaleString();
+    }
+
+    document.getElementById('systemDateTime').textContent = formatDateTime();
+
+    setInterval(() => {
+      document.getElementById('systemDateTime').textContent = formatDateTime();
+    }, 1000);
+  </script>
 </html>

@@ -150,3 +150,25 @@ document.getElementById('deleteButton').addEventListener('click', async function
     alert('An unknown error occurred. Please try again later.');
   }
 });
+
+// 获取文件输入框和头像预览的 img 标签
+const avatarInput = document.getElementById('avatar-upload-form');
+const avatarPreview = document.getElementById('avatar-form');
+
+// 监听文件输入框的变化事件
+avatarInput.addEventListener('change', (event) => {
+  const file = event.target.files[0]; // 获取用户选择的文件
+
+  if (file) {
+    // 创建文件的 URL 预览
+    const fileURL = URL.createObjectURL(file);
+
+    // 将 img 的 src 设置为文件预览 URL
+    avatarPreview.src = fileURL;
+
+    // 释放之前的 URL 对象（优化内存）
+    avatarPreview.onload = () => {
+      URL.revokeObjectURL(fileURL);
+    };
+  }
+});
