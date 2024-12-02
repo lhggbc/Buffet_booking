@@ -122,12 +122,12 @@ router.post('/profile-edit-admin', upload.single('avatar'), async (req, res) => 
     });
   }
 
-  if (await uid_exist(uid)) {
-    return res.status(400).json({
-      status: 'failed',
-      message: `User ID ${uid} already exists.`,
-    });
-  }
+  // if (await uid_exist(uid)) {
+  //   return res.status(400).json({
+  //     status: 'failed',
+  //     message: `User ID ${uid} already exists.`,
+  //   });
+  // }
 
   if (nickname.length < 3) {
     return res.status(400).json({
