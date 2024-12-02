@@ -118,15 +118,15 @@ async function fetchCustomerData(eventname) {
   }
 }
 
-// Function to handle table selection
 function selectTable(table) {
   // Check current fill color to determine the state
-  if (table.style.fill === 'grey') {
+  const currentFill = table.getAttribute('fill');
+  if (currentFill === 'grey') {
     // Set to available
-    table.style.fill = 'hsl(38, 61%, 73%)'; // Change to your desired available color
+    table.setAttribute('fill', 'hsl(38, 61%, 73%)'); // Change to your desired available color
   } else {
     // Set to unavailable
-    table.style.fill = 'grey'; // Set to grey to mark as unavailable
+    table.setAttribute('fill', 'grey'); // Set to grey to mark as unavailable
   }
 }
 
@@ -182,8 +182,8 @@ function save() {
   tables.forEach((table) => {
     const tableId = parseInt(table.getAttribute('data-tableid'), 10);
     const priceAttr = table.getAttribute('data-price');
-    const price = priceAttr ? parseInt(priceAttr) : 0; // Ensure price is a number
-    const status = table.style.fill !== 'grey'; // true if available, false if unavailable
+    const price = priceAttr ? parseFloat(priceAttr) : 0; // Ensure price is a number
+    const status = table.getAttribute('fill') !== 'grey'; // true if available, false if unavailable
     if (status) {
       availableTablesCount++; // Increment count of tables with status true
     }
@@ -211,6 +211,7 @@ function save() {
     alert('No valid table data to save.');
     return;
   }
+  console.log(tableData);
 
   // Send table data to the server
   fetch('/book/tables/save', {
@@ -274,18 +275,27 @@ async function initTables(eventname) {
 
 function populateTableOptions(tables) {
   // Assuming each row has its own group with data-row attribute
-  tables.forEach((table, index) => {
-    console.log('tablestatus   ', table.tableid, '   ', table.status);
+  const seatingAreas = document.querySelectorAll('.table-group'); // Select all seating areas
+  seatingAreas.forEach((area) => {
+    area.innerHTML = ''; // Clear the existing tables and labels in the group
+  });
+
+  tables.forEach((table) => {
+    console.log('Table status:', table.tableid, 'Status:', table.status);
+
     // Determine row based on tableId
     const rowNumber = determineRowNumber(table.tableid); // Implement this based on your logic
-    const seatingArea = document.querySelector(`.table-group[data-row="${rowNumber}"]`);
 
+    // Find the seating area for the current row
+    const seatingArea = document.querySelector(`.table-group[data-row="${rowNumber}"]`);
     if (!seatingArea) return; // Skip if the group doesn't exist
-    // Reset the price for this row
+
+    // Reset the price for this row (if needed)
     const priceText = seatingArea.querySelector(`.tableprice[data-row="${rowNumber}"]`);
     if (priceText) {
       priceText.textContent = `$${table.price}`; // Update the price in the legend
     }
+
     // Create table rectangle
     const tableElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     tableElement.classList.add('table');
@@ -296,9 +306,12 @@ function populateTableOptions(tables) {
     tableElement.setAttribute('width', 60);
     tableElement.setAttribute('height', 60);
 
-    // Set color based on availability
-    tableElement.setAttribute('fill', table.status ? 'hsl(38, 61%, 73%)' : 'grey');
-    //tableElement.style.cursor = table.status ? 'pointer' : 'not-allowed';
+    // Set color based on availability (respect the status)
+    if (table.status) {
+      tableElement.setAttribute('fill', 'hsl(38, 61%, 73%)'); // Available color
+    } else {
+      tableElement.setAttribute('fill', 'grey'); // Unavailable color
+    }
 
     seatingArea.appendChild(tableElement);
 
