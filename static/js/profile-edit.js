@@ -31,13 +31,7 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   function getValueOrDefault(elementId, defaultValue) {
     const element = document.getElementById(elementId);
 
-    // 如果是 <input> 或 <textarea>，使用 .value；否则使用 .textContent
-    const value = element
-      ? 'value' in element
-        ? element.value.trim() // 如果是输入框，取 .value
-        : element.textContent?.trim() // 否则取 .textContent
-      : null;
-    // 如果值为空或不存在，返回默认值
+    const value = element ? ('value' in element ? element.value.trim() : element.textContent?.trim()) : null;
     return value ? value : defaultValue;
   }
 
@@ -47,11 +41,9 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   const phonenum = getValueOrDefault('phonenum-form', result.user.phonenum);
   const password = getValueOrDefault('password-form', result.user.password);
 
-  // 处理文件上传
   const avatarInput = document.getElementById('avatar-upload-form');
   const avatar = avatarInput && avatarInput.files.length > 0 ? avatarInput.files[0] : result.user.avatar;
 
-  // 直接使用已有值
   const gender = result.user.gender;
   const birthdate = result.user.birthdate;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -101,7 +93,7 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
     const result = await response.json();
     if (response.ok && result.status === 'success') {
       alert('Profile updated successfully.');
-      window.location.href = '/profile.html'; // 根据实际情况调整重定向页面
+      window.location.href = '/profile.html';
     } else if (result.status === 'failed') {
       alert(result.message);
     } else {
@@ -113,29 +105,22 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   }
 });
 
-// 获取文件输入框和头像预览的 img 标签
 const avatarInput = document.getElementById('avatar-upload-form');
 const avatarPreview = document.getElementById('avatar-form');
 
-// 监听文件输入框的变化事件
 avatarInput.addEventListener('change', (event) => {
-  const file = event.target.files[0]; // 获取用户选择的文件
+  const file = event.target.files[0];
 
   if (file) {
-    // 创建文件的 URL 预览
     const fileURL = URL.createObjectURL(file);
-
-    // 将 img 的 src 设置为文件预览 URL
     avatarPreview.src = fileURL;
 
-    // 释放之前的 URL 对象（优化内存）
     avatarPreview.onload = () => {
       URL.revokeObjectURL(fileURL);
     };
   }
 });
 
-// 点击头像时触发文件选择框
 // const avatarLabel = document.getElementById('avatar-display-form');
 // avatarLabel.addEventListener('click', () => {
 //   avatarInput.click();

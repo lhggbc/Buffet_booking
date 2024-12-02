@@ -108,7 +108,6 @@ avatarInput.addEventListener('change', function () {
 
     reader.readAsDataURL(file);
   } else {
-    // 如果没有文件，重置为默认头像
     avatarPreviewImg.setAttribute('src', './images/default-avatar.jpg');
   }
 });

@@ -28,7 +28,7 @@ async function loadUsers() {
         const response = await fetch(`/admin/me`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json', // 必须明确指定内容类型
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ uid: user.uid }),
         });

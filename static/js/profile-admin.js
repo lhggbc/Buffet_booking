@@ -5,18 +5,16 @@ async function loadPayments() {
       method: 'GET',
     });
 
-    const payments = await response.json(); // 假设服务器返回的是 JSON 数据
-    console.log(payments); // 打印服务器返回的付款信息
+    const payments = await response.json();
+    console.log(payments);
 
     const bookingList = document.getElementById('bookingList');
-    bookingList.innerHTML = ''; // 清空现有内容
+    bookingList.innerHTML = '';
 
     payments.forEach((payment) => {
-      // 创建预订卡片容器
       const bookingCard = document.createElement('div');
       bookingCard.className = 'card booking-card mb-5';
 
-      // 构建卡片内容
       bookingCard.innerHTML = `
         <div class="booking-header">
           Buffet Event - ${payment.eventname}
@@ -53,7 +51,6 @@ async function loadPayments() {
   }
 }
 
-// 辅助函数，根据支付状态返回相应的徽章
 function getStatusBadge(status) {
   switch (status) {
     case true:
@@ -65,10 +62,8 @@ function getStatusBadge(status) {
   }
 }
 
-// 页面加载完毕后调用 loadPayments 函数
 window.addEventListener('DOMContentLoaded', loadPayments);
 
-// 搜索功能
 document.getElementById('searchInput').addEventListener('input', function () {
   const filter = this.value.toLowerCase();
   const bookingCards = document.querySelectorAll('.booking-card');
