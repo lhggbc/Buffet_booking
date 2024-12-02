@@ -108,7 +108,7 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
   formData.append('passwordChangeFlag', passwordChangeFlag);
 
   try {
-    const response = await fetch('/auth/edit', {
+    const response = await fetch('/admin/profile-edit-admin', {
       method: 'POST',
       body: formData,
     });
