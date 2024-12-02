@@ -207,9 +207,10 @@ async function addEvent() {
     try {
       let response;
       if (editingEventId) {
+        console.log(editingEventId);
         // Editing an existing event
         response = await fetch(`/book/events`, {
-          method: 'POST', // Use PUT for updating
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(eventData),
         });
@@ -257,7 +258,7 @@ async function addEvent() {
       alert('Event added/updated successfully!');
       window.location.reload();
     } catch (error) {
-      console.error('Error adding/updating event:', error);
+      console.error('Error adding/updating event:', editingEventId, error);
     }
 
     toggleEventForm(); // Hide form

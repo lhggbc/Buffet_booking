@@ -195,6 +195,49 @@ route.post('/events', async (req, res) => {
   try {
     console.log('update', req.body);
     const events = client.db('buffet_booking').collection('events');
+    await events.updateOne(
+      { eventname },
+      {
+        $set: {
+          description: 'Welcome! ' + description,
+        },
+      },
+      { upsert: true }
+    );
+    const result = await events.updateOne(
+      { eventname }, // Query to match the event by name
+      {
+        $set: {
+          date,
+          venue,
+          ticketleft,
+          description,
+        },
+      },
+      { upsert: true } // Create if not exists
+    );
+
+    if (result.modifiedCount > 0 || result.upsertedCount > 0) {
+      console.log(eventname, 'updated');
+      return res.status(200).json({ message: 'Event updated or added successfully.' });
+    } else {
+      return res.status(400).json({ message: 'No changes made.' });
+    }
+  } catch (err) {
+    console.error('Unable to update the database!', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+route.post('/addevents', async (req, res) => {
+  const { eventname, date, venue, ticketleft, description } = req.body;
+  console.log('rebody', req.body);
+
+  if (!eventname || !date || !venue || !ticketleft) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  try {
+    const events = client.db('buffet_booking').collection('events');
     const result = await events.updateOne(
       { eventname }, // Query to match the event by name
       {
